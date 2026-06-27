@@ -1,0 +1,8 @@
+.vercel
+deploy-log.txt
+domain-log.txt
+*.bak
+*.bak-*
+*.jpg~
+*.png~
+node_modules

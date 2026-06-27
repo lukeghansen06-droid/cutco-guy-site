@@ -1,0 +1,16 @@
+{
+  "name": "CutcoWithLuke — Luke Hansen, Your Cutco Guy",
+  "short_name": "CutcoWithLuke",
+  "description": "Your Cutco guy on the North Shore. Explore the full lineup, build a wish list, and book a no-pressure demo.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070b14",
+  "theme_color": "#070b14",
+  "categories": ["shopping", "lifestyle"],
+  "icons": [
+    { "src": "/favicon.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/favicon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
