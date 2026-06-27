@@ -95,7 +95,7 @@
   .delta.flat{color:var(--muted);background:rgba(255,255,255,.06)}
   .kpi.hot{border-color:rgba(255,45,85,.4);box-shadow:var(--glow-red),var(--shadow)}
   .kpi.hot .num{background:linear-gradient(180deg,#fff,#ffb9c6);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .spark{margin-top:14px;height:34px;width:100%}
+  .spark{height:34px;width:100%}.kpi{max-height:200px}
   .funnel{display:flex;flex-direction:column;gap:12px}
   .fstage{display:grid;grid-template-columns:108px 1fr auto;align-items:center;gap:12px}
   .fstage .nm{font-size:13px;color:var(--ink);display:flex;align-items:center;gap:7px}
@@ -312,7 +312,7 @@
         '<div class="label">'+c.label+'</div>'+
         '<div class="num" id="kpi'+i+'" data-v="0">0</div>'+
         '<div class="foot">'+c.foot+'</div>'+
-        (c.spark?'<canvas class="spark" id="spark0"></canvas>':'')+
+        (c.spark?'<div style="position:relative;height:36px;margin-top:12px"><canvas id="spark0"></canvas></div>':'')+
       '</div>').join('');
     cards.forEach((c,i)=>countUp($('kpi'+i),c.num));
     drawSpark('spark0',(d.days||[]).map(x=>x.n||0));
