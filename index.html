@@ -29,7 +29,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="CutcoWithLuke" />
 <link rel="apple-touch-icon" href="/favicon.png" />
-<script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})})}</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -642,7 +642,7 @@
         <div class="portrait float">
           <span class="ph">🙋‍♂️</span>
           <img src="luke-headshot.jpg" alt="Luke Hansen, independent Cutco representative" style="object-position:55% 12%" decoding="async"
-               onload="this.previousElementSibling.style.display='none';this.style.display='block'">
+               onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
           <span class="tag">🏆 Key Salesman</span>
         </div>
         <div>
@@ -681,19 +681,19 @@
       <div class="shot">
         <span class="ph">🐯</span>
         <img src="luke-1.jpg" alt="Luke with the DePauw Tiger mascot"
-             onload="this.previousElementSibling.style.display='none';this.style.display='block'">
+             onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">Go Tigers — DePauw 🐯</span>
       </div>
       <div class="shot">
         <span class="ph">📷</span>
         <img src="luke-2.jpg" alt="Luke shooting wildlife on safari in Tanzania"
-             onload="this.previousElementSibling.style.display='none';this.style.display='block'">
+             onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">A sunrise I won't forget 🌅</span>
       </div>
       <div class="shot">
         <span class="ph">🏡</span>
         <img src="luke-3.jpg" alt="Luke at home on the North Shore with his cat Willow"
-             onload="this.previousElementSibling.style.display='none';this.style.display='block'">
+             onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">Home on the North Shore with Willow 🐾</span>
       </div>
     </div>
@@ -724,7 +724,7 @@
     <p class="sub reveal">The people who shaped how I treat folks — show up, do it right, and take care of each other.</p>
     <div class="famwrap reveal">
       <div class="famphoto">
-        <img src="family.jpg" alt="Luke with his mom Dr. Nora Hansen and sister Maggie" decoding="async" />
+        <img src="family.jpg" alt="Luke with his mom Dr. Nora Hansen and sister Maggie" decoding="async" loading="lazy" />
         <span class="cap">Me, Mom &amp; Maggie 💙</span>
       </div>
       <div>
@@ -746,8 +746,8 @@
           </div>
         </div>
         <div class="famgallery">
-          <img src="family-2.jpg" alt="The Hansen family gathered around the table" decoding="async" />
-          <img src="family-mom-willow.jpg" alt="Mom with Willow the cat" decoding="async" />
+          <img src="family-2.jpg" alt="The Hansen family gathered around the table" decoding="async" loading="lazy" />
+          <img src="family-mom-willow.jpg" alt="Mom with Willow the cat" decoding="async" loading="lazy" />
         </div>
       </div>
     </div>
@@ -764,19 +764,19 @@
       <div class="shot">
         <span class="ph">🐱</span>
         <img src="willow.jpg" alt="Willow the Maine Coon cat"
-             onload="this.previousElementSibling.style.display='none';this.style.display='block'">
+             onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">Willow · our majestic Maine Coon 🐱</span>
       </div>
       <div class="shot">
         <span class="ph">🐺</span>
         <img src="roxie.jpg" alt="Roxie the Pomsky"
-             onload="this.previousElementSibling.style.display='none';this.style.display='block'">
+             onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">Roxie · the Pomsky 🐺</span>
       </div>
       <div class="shot">
         <span class="ph">🐶</span>
         <img src="rosie.jpg" alt="Rosie the Cavapoo"
-             onload="this.previousElementSibling.style.display='none';this.style.display='block'">
+             onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">Rosie · the Cavapoo 🐶</span>
       </div>
     </div>
@@ -1763,7 +1763,7 @@
       var card=document.createElement('div'); card.className='pcard'+(isSet?' is-set':'');
       var iu=imgUrl(p.n);
       var pic=iu
-        ? '<div class="pic"><img src="'+iu+'" alt="'+esc(p.n)+'" decoding="async" onerror="var pp=this.parentNode;this.remove();var s=pp&&pp.querySelector(\'svg\');if(s)s.style.display=\'\'"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:none">'+(ICONS[p.ic]||ICONS.knife)+'</svg></div>'
+        ? '<div class="pic"><img src="'+iu+'" alt="'+esc(p.n)+'" loading="lazy" decoding="async" onerror="var pp=this.parentNode;this.remove();var s=pp&&pp.querySelector(\'svg\');if(s)s.style.display=\'\'"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:none">'+(ICONS[p.ic]||ICONS.knife)+'</svg></div>'
         : '<div class="pic"><svg viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[p.ic]||ICONS.knife)+'</svg></div>';
       var pr=PRICES[p.n], pp=parsePrice(pr);
       var val=VALUES[p.n];
@@ -1999,5 +1999,6 @@
   window.va = window.va || function () { (window.vai = window.vai || []).push(arguments); };
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})})}</script>
 </body>
 </html>

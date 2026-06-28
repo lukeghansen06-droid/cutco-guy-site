@@ -7,3 +7,6 @@ domain-log.txt
 
 stats.html.bak-*
 *.bak
+
+optimize/
+originals/

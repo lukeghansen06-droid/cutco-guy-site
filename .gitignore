@@ -6,3 +6,6 @@ domain-log.txt
 *.jpg~
 *.png~
 node_modules
+originals/
+optimize/.prev_index.html
+optimize/.baseline_index.html
