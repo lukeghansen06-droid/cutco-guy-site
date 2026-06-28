@@ -18,3 +18,12 @@
 Changes are saved in the working tree but NOT yet deployed (a stale git index.lock + a
 flush-timing gap caused the last push to commit nothing). To ship: run `update-site.bat`
 (it deletes the stale lock, commits, pushes → Vercel auto-deploys in ~20s).
+| 5 | WebP for hero + gallery display images | 2308.5 | 1887.2 | KEPT ✅ |
+| 6 | Non-blocking Google Font (preload swap) | 1887.2 | 1767.6 | KEPT ✅ |
+| 7 | Lazy-load below-fold brand-banner showcase | 1767.6 | 1332.6 | KEPT ✅ |
+
+## 🎯 GOAL REACHED — 1,332.6 ms (target was < 1,500)
+Full run: **37,994 ms → 1,332 ms (96.5% faster)**, guard valid every round.
+- Image payload 21.9 MB → ~2 MB (compression + WebP).
+- Critical path: 13 requests → 2 (hero + favicon); everything else lazy.
+- Render-blocking resources: 2 → 0 (SW script moved, font made async).

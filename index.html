@@ -32,7 +32,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -569,12 +569,12 @@
       <h1 class="reveal">Your whole kitchen,<br><span class="grad-ink">and a guy who's got you.</span></h1>
       <p class="lead reveal">Hi, I'm Luke — and I'd genuinely love to help. Cutco isn't just knives; it's kitchen cutlery built to last a lifetime — knives, shears, gadgets, utensils, full sets and gifts. I'll help you find exactly what fits <em>your</em> kitchen, with zero pressure and a guarantee that never runs out.</p>
 
-      <!-- hero portrait slot: drop a file named luke-hero.jpg into this folder (the smiling Tanzania photo) -->
+      <!-- hero portrait slot: drop a file named luke-hero.webp into this folder (the smiling Tanzania photo) -->
       <div class="hero-portrait reveal">
         <span class="ring"></span>
         <div class="disc">
           <span class="ph">🙋‍♂️</span>
-          <img src="luke-hero.jpg" alt="Luke, your Cutco guy" style="object-position:46% 26%" decoding="async" fetchpriority="high"
+          <img src="luke-hero.webp" alt="Luke, your Cutco guy" style="object-position:46% 26%" decoding="async" fetchpriority="high"
                onload="this.previousElementSibling.style.display='none';this.style.display='block'">
         </div>
       </div>
@@ -606,7 +606,7 @@
     <div class="showcase reveal">
       <span class="glow"></span>
       <div class="frame" id="brandFrame">
-        <img src="brand-banner.jpg" alt="Luke Hansen — Cutco Key Salesman 2026 · DePauw Soccer · From Chicago" decoding="async" />
+        <img src="brand-banner.jpg" alt="Luke Hansen — Cutco Key Salesman 2026 · DePauw Soccer · From Chicago" decoding="async" loading="lazy" />
       </div>
     </div>
   </div></section>
@@ -677,22 +677,22 @@
     <h2 class="reveal">A little more of me</h2>
     <p class="sub reveal">A few snapshots — on the field, around the kitchen, and right here on the North Shore.</p>
     <div class="gallery stagger reveal">
-      <!-- drop luke-1.jpg / luke-2.jpg / luke-3.jpg into this folder to fill these -->
+      <!-- drop luke-1.webp / luke-2.webp / luke-3.webp into this folder to fill these -->
       <div class="shot">
         <span class="ph">🐯</span>
-        <img src="luke-1.jpg" alt="Luke with the DePauw Tiger mascot"
+        <img src="luke-1.webp" alt="Luke with the DePauw Tiger mascot"
              onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">Go Tigers — DePauw 🐯</span>
       </div>
       <div class="shot">
         <span class="ph">📷</span>
-        <img src="luke-2.jpg" alt="Luke shooting wildlife on safari in Tanzania"
+        <img src="luke-2.webp" alt="Luke shooting wildlife on safari in Tanzania"
              onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">A sunrise I won't forget 🌅</span>
       </div>
       <div class="shot">
         <span class="ph">🏡</span>
-        <img src="luke-3.jpg" alt="Luke at home on the North Shore with his cat Willow"
+        <img src="luke-3.webp" alt="Luke at home on the North Shore with his cat Willow"
              onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">Home on the North Shore with Willow 🐾</span>
       </div>
@@ -747,7 +747,7 @@
         </div>
         <div class="famgallery">
           <img src="family-2.jpg" alt="The Hansen family gathered around the table" decoding="async" loading="lazy" />
-          <img src="family-mom-willow.jpg" alt="Mom with Willow the cat" decoding="async" loading="lazy" />
+          <img src="family-mom-willow.webp" alt="Mom with Willow the cat" decoding="async" loading="lazy" />
         </div>
       </div>
     </div>
@@ -760,22 +760,22 @@
     <h2 class="reveal">The four-legged crew</h2>
     <p class="sub reveal">The Hansen house runs on a lot of love (and a lot of fur). Here's who you'd meet at home. 🐾</p>
     <div class="gallery stagger reveal">
-      <!-- drop willow.jpg / roxie.jpg / rosie.jpg into this folder to fill these -->
+      <!-- drop willow.webp / roxie.webp / rosie.webp into this folder to fill these -->
       <div class="shot">
         <span class="ph">🐱</span>
-        <img src="willow.jpg" alt="Willow the Maine Coon cat"
+        <img src="willow.webp" alt="Willow the Maine Coon cat"
              onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">Willow · our majestic Maine Coon 🐱</span>
       </div>
       <div class="shot">
         <span class="ph">🐺</span>
-        <img src="roxie.jpg" alt="Roxie the Pomsky"
+        <img src="roxie.webp" alt="Roxie the Pomsky"
              onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">Roxie · the Pomsky 🐺</span>
       </div>
       <div class="shot">
         <span class="ph">🐶</span>
-        <img src="rosie.jpg" alt="Rosie the Cavapoo"
+        <img src="rosie.webp" alt="Rosie the Cavapoo"
              onload="this.previousElementSibling.style.display='none';this.style.display='block'" loading="lazy" />
         <span class="cap">Rosie · the Cavapoo 🐶</span>
       </div>
@@ -2000,5 +2000,6 @@
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})})}</script>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" /></noscript>
 </body>
 </html>
