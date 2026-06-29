@@ -1,174 +1,249 @@
-# Cutco Site Upgrade — Design Spec
+# Cutco Site Upgrade — Design Spec (v2: Guided Conversion System)
 
 **Date:** 2026-06-29
 **Project:** cutco-guy-site (cutcowithluke.com)
 **Owner:** Luke Hansen
-**Approach:** Surgical Polish + High-Impact Features (no rebuild)
+**Approach:** Surgical content reuse + multi-page restructure (NO framework rebuild)
 **Status:** Awaiting Luke's review before any live-site changes
 
+> **v2 note:** v1 was a single-page polish. Luke redirected to a multi-page **guided conversion system**: keep the content and dark premium style, but route visitors by intent across focused pages instead of one massive scroll. This spec supersedes v1.
+
 ---
 
-## 1. Scope
+## 1. Vision & Scope
+
+Turn the site from one long scrapbook-style page into a clean, **app-style guided conversion system**. The homepage becomes a short, premium **hub**; the rest of the content lives in focused pages, each with **one obvious next action**. Every page answers three questions: *Why trust Luke? Why is this worth my time? What do I click next?*
 
 ### In scope
-Upgrade the existing single-page dark site (`index.html`, ~2,100 lines) to feel **more premium, faster, more trustworthy, and more conversion-focused** — while keeping the current dark aesthetic, brand voice, and overall page structure.
+- Restructure the existing single page into **6 primary pages + 1 low-priority page**, sharing one design system.
+- Keep the **dark premium aesthetic**, brand voice, and (almost) all content — reorganized, merged, and de-cluttered.
+- Premium polish: typography, spacing, motion, mobile, speed (carried from v1).
+- Conversion system: sticky mobile Book bar, trust signals at decision points, clean Full/Quick demo, intent-based routing.
+- New/upgraded features: **knife/set recommender**, **testimonial capture + auto-display**, **AI assistant polish**, **lead/reminder capture**.
+- Ship it: after Luke approves the local preview, deploy to production.
 
-Work happens in three phases:
-1. **Premium polish** (visuals, typography, spacing, motion, mobile, speed)
-2. **Conversion** (sticky mobile booking, trust signals, cleaner booking options, review placement)
-3. **Features** (knife/set recommender → testimonial capture/display → assistant polish → lead capture)
-
-### Explicitly OUT of scope (YAGNI)
-- No framework rebuild (no React/Vue/build step). Stays a static single-page site.
-- No redesign of the brand, color identity, or section order beyond what improves clarity.
-- No new backend beyond the existing `api/track.js` pattern, unless a feature truly needs it (lead capture — see §6).
-- No feature that doesn't serve: **trust, speed, booking, referrals, reviews, or product clarity.** If it doesn't, it gets cut.
-- No gimmicks, no "AI-generated clutter," no decorative noise.
-
-### Guiding principle
-The site already works and looks good. Every change must make it *measurably* cleaner, faster, or more persuasive — never just "different."
+### Out of scope (YAGNI)
+- No React/Vue/Svelte, no bundler, no build step. Plain static HTML/CSS/JS.
+- No splitting into 10+ nav links. Top nav stays 6 items; everything else nests inside pages or the footer.
+- No deleting content wholesale — content is **relocated**, not destroyed.
+- No feature that doesn't serve trust, speed, booking, referrals, reviews, or product clarity.
+- No fake anything: placeholder reviews are removed; no "we texted you" unless a real text sends.
 
 ---
 
-## 2. Conversion Goals (the point of all this)
+## 2. Sitemap
 
-Primary actions we want more of, in priority order:
-1. **Book a demo** (Calendly — Full or Quick)
-2. **Leave a review** (existing review form)
-3. **Refer someone** (existing referral section)
-4. **Understand the product** quickly (quiz/recommender, assistant, browse)
+```
+/                      Home — the hub (short, premium, conversion-focused)
+/book                  Book a Demo — the money page
+/find                  Find Your Cutco — recommender + assistant + explorer + browse
+/meet                  Meet Luke — personal brand / trust
+/reviews               Reviews + Referrals — social proof + refer-a-friend
+/faq                   FAQ + Guarantee — kill objections, build safety
+/work                  Work With Me — recruiting (low priority; linked from footer)
+/stats   (private)     Existing analytics dashboard — UNCHANGED
+/leads   (private)     New: key-gated list of captured leads
+```
 
-Design implications:
-- A booking call-to-action should be reachable within **one tap/scroll from anywhere**, especially on mobile.
-- Every booking button sits next to a **trust signal** (guarantee badge, star rating, or a real review).
-- Copy must repeatedly and plainly reassure: **no pressure, easy, free, you're in control.**
-- Reduce decision friction: one obvious primary action per section; secondary actions visually quieter.
+**Top nav (all pages):** Home · Book · Find Your Cutco · Meet Luke · Reviews · FAQ
+**Footer (all pages):** contact info, Work With Me, social, copyright, privacy note.
+**Global:** sticky "Book a Demo" bar on mobile; hamburger menu on mobile.
 
-Success looks like: a first-time mobile visitor understands who Luke is, trusts him, and can book in under ~20 seconds without hunting.
-
----
-
-## 3. Phase-by-Phase Checklist
-
-### Phase 1 — Premium Polish (looks + speed + mobile)
-- [ ] **Typography:** consistent type scale (clamp-based sizes), refined heading font/weights, consistent line-height and measure (line length). No more than 2 font families.
-- [ ] **Spacing rhythm:** standardize section padding and vertical rhythm via CSS variables; remove inconsistent gaps.
-- [ ] **Color/contrast pass:** keep the dark palette (`--bg #070b14`, cyan/blue/teal/gold accents); verify WCAG AA contrast on text and buttons.
-- [ ] **Motion polish:** smoother scroll-reveal, subtle hero motion, refined hover/focus states; everything wrapped in `prefers-reduced-motion` guard.
-- [ ] **Image handling:** ensure all photos are `.webp` where possible, add explicit `width`/`height` (prevent layout shift), `loading="lazy"` + `decoding="async"` on below-the-fold images, keep hero eager.
-- [ ] **Speed:** defer non-critical inline scripts, minify-friendly cleanup, audit the 5 inline `<script>` blocks, ensure no render-blocking work.
-- [ ] **Mobile layout:** full audit (see §5).
-- [ ] **Cleanup:** remove dead/duplicate CSS, unused rules, and any clutter that reads as over-built.
-
-### Phase 2 — Conversion
-- [ ] **Sticky mobile "Book a Demo" bar:** fixed bottom bar on phones, one primary tap → Calendly; hides on desktop; dismissable-but-returns; doesn't cover key content.
-- [ ] **Cleaner Full Demo / Quick Demo options:** redesign the two-option booking block so the difference is instantly clear; one primary, one secondary.
-- [ ] **Trust signals near booking:** guarantee badge + star-rating summary + one real short review adjacent to each main booking CTA.
-- [ ] **Review placement:** surface 1–2 strong testimonials right before/around booking sections (social proof at the decision point).
-- [ ] **Reassurance copy:** add concise "no pressure / free / 15-min / you choose" microcopy near CTAs.
-
-### Phase 3 — Features (in this priority order)
-- [ ] **1. Knife/Set Recommender:** short, friendly quiz (3–5 questions: how you cook, household size, budget feel, gift vs self) → recommends a sensible *starting point* (a piece or set) with a one-line why and a book/browse CTA. Simple, not gimmicky. Upgrades/replaces the current `#quiz` "find your starting point."
-- [ ] **2. Testimonial capture + display:** existing review form feeds a display area so submitted reviews actually appear on the page (with light moderation/approval so nothing spammy shows publicly).
-- [ ] **3. AI Assistant polish:** improve `#assistant` UX (clearer prompts, nicer styling, better empty/error states, suggested questions) — no model/back-end risk introduced.
-- [ ] **4. Reminder / lead capture:** see §6 — collect name + phone/email + preferred reminder time, deliver to Luke by email or a simple list. **No fake SMS.**
-
-Each phase ends in a **local preview** Luke reviews before we even consider pushing.
+Clean URLs (`/book` not `/book.html`) via `vercel.json` `cleanUrls: true`.
 
 ---
 
-## 4. Implementation Constraints (exact)
+## 3. Page-by-Page Section Plan
 
-- **Single-page, static.** All work stays in `index.html` + existing assets. No build tooling, no npm framework deps, no bundler.
-- **Inline-CSS-first.** The site uses one inline `<style>` block and CSS custom properties (`--bg --panel --line --ink --mut --cyan --blue --teal --gold --ang`). New styles extend these variables; do not introduce a competing system or external CSS framework.
-- **Vanilla JS only.** Existing behavior is plain inline JS (5 blocks). New interactivity stays vanilla, progressive-enhancement style (page must still render/scroll if JS fails).
-- **Fonts:** at most one self-hosted/Google web font for display + system stack for body. Must be `font-display: swap` and not block render.
-- **Accessibility:** keyboard-navigable, visible focus states, alt text on images, `prefers-reduced-motion` respected, AA contrast.
-- **No external trackers** beyond the existing Vercel Web Analytics.
-- **Backend:** reuse the `api/track.js` (Vercel function + KV) pattern only if needed; lead capture may add one small serverless function or use a form-to-email service (decided in §6).
-- **Privacy:** keep the existing "privacy-light, no names/IPs stored" posture for analytics. Lead capture is the only place that intentionally collects contact info, and only with the visitor's action.
-- **Preserve the dashboard:** `stats.html` + `api/track.js` keep working unchanged.
+### `/` Home (hub)
+Short and premium. Sections, in order:
+1. **Hero** — who Luke is + one-line promise + primary CTA (Book) + secondary (Find Your Cutco).
+2. **Quick trust bar** — guarantee badge, star-rating summary, "North Shore / DePauw," (real) impact stat. Compact strip.
+3. **"What are you here for?" path selector** — the routing core. Cards: *Book a demo* → /book · *Find the right Cutco* → /find · *Get to know Luke* → /meet · *See reviews* → /reviews · *Questions?* → /faq.
+4. **Book preview** — short pitch + button to /book.
+5. **Product starting-point preview** — teaser of the recommender → /find.
+6. **Reviews/trust preview** — 1–2 real testimonials → /reviews (hidden until real reviews exist).
+7. **Final CTA** — single clear "Book a demo" with no-pressure microcopy.
+
+Home does NOT contain the full catalog, full FAQ, recruiting, or scrapbook.
+
+### `/book` Book a Demo (money page)
+- Intro: two clear options — **Full Hour** vs **Quick 20** (one primary, one secondary).
+- **What happens in the demo** (from `howitworks`).
+- **No-pressure explanation** (from `promise`).
+- In-person OR Google Meet/Zoom note.
+- **Objection answers** right next to the booking buttons (from `why` — "why meet me vs. buying cold").
+- **Calendly embedded** cleanly (not just a link).
+- How to prepare (from `prep`).
+- Sticky mobile Book bar present.
+
+### `/find` Find Your Cutco (guided product flow)
+Combine today's scattered tools into one "tell me what you need, I'll guide you" flow:
+- **Recommender quiz** (upgraded `quiz`): 3–5 friendly questions → a sensible starting point (piece or set) + one-line why + Book/Browse CTA.
+- **Intent paths:** My kitchen · Gift · New home/apartment · I cook a lot · I barely cook · I already own Cutco · Best 1–3 pieces · Full setup.
+- **AI assistant** (polished `assistant`) — ask anything, suggested questions.
+- **Product explorer / browse + prices** (`explore` + `browse`).
+- **Specials** (`specials`) — shown only when a real special is active, else hidden.
+Goal: visitor feels smarter and booking feels like the natural next step.
+
+### `/meet` Meet Luke (trust, not oversharing)
+Warmer, cleaner versions of: Chicago / North Shore / DePauw, soccer, family, pets (`crew`), off-the-clock (`life`, `gallery`), values/why-I-do-Cutco (`philosophy`, `spain`). Trimmed for trust, not a scrapbook. Ends with a Book CTA.
+
+### `/reviews` Reviews + Referrals
+- **Real testimonials only.** All placeholder/sample reviews removed immediately.
+- **Review form** → auto-displays new (real) reviews with anti-spam safeguards.
+- **Referral form** + examples of good people to refer + a respectful "referrals are appreciated and always handled respectfully" note.
+- Empty-state until real reviews exist (no fake filler).
+
+### `/faq` FAQ + Guarantee
+Directly handle skepticism: Is this pushy? · Do I have to buy? · How much? · What is Cutco? · What is Vector? · Is this legit? · Forever Guarantee (how it works) · Sharpening · I already own Cutco · I don't cook much. Plus the full **guarantee** explainer. Ends with a reassured Book CTA.
+
+### `/work` Work With Me (low priority)
+Recruiting/opportunity (`work`), kept separate so it never competes with the customer flow. Linked from the footer + a small standalone page.
+
+### Footer (global) & Contact
+`contact` content → footer (email, area served, social) on every page, plus a contact block on `/book`.
 
 ---
 
-## 5. Mobile Requirements
+## 4. Content Mapping (what moves / merges / stays / hides)
 
-Mobile is the primary audience. Every change is checked on a phone-width viewport first.
+| Existing section | Destination | Action |
+|---|---|---|
+| `brand` | Home hero + global header | Reuse, tighten |
+| `stats` | Home quick trust bar | Reuse **only if a real stat**; else drop |
+| `kitchen` | Find (intro) + Home preview | Merge |
+| `help` ("what I help with") | Find | Move |
+| `quiz` | Find — **recommender** | Upgrade |
+| `assistant` | Find | Move + polish |
+| `explore` | Find | Move |
+| `browse` | Find | Move |
+| `specials` | Find | Move; **hide until a real special** |
+| `book` | Book (Full Hour) | Move, redesign options |
+| `quickq` ("quick question") | Book (secondary) + links to assistant | Merge |
+| `howitworks` | Book | Move |
+| `prep` | Book | Move |
+| `promise` | Book | Move |
+| `why` | Book (objection block) + Home trust | Split/reuse |
+| `meet` | Meet | Move |
+| `gallery` | Meet | Move, trim |
+| `spain` | Meet | Move |
+| `family` | Meet | Move |
+| `crew` (pets) | Meet | Move |
+| `life` | Meet | Move, trim |
+| `philosophy` | Meet (+ small Home line) | Move |
+| `reviews` | Reviews | Move; **remove placeholders** |
+| `refer` | Reviews | Move |
+| `guarantee` | FAQ | Move |
+| `faq` | FAQ | Move |
+| `work` | Work With Me | Move, de-prioritize |
+| `contact` | Global footer + Book | Move |
 
+**Hidden until ready:** placeholder reviews (until real ones), specials (until a real special), any feature that can't be made reliable (flagged before launch).
+
+---
+
+## 5. Conversion Goals
+
+Priority of desired actions: **1) Book a demo → 2) Leave a review → 3) Refer someone → 4) Understand the product.**
+
+- Every page has exactly **one obvious primary next action.**
+- `/book` is the money page; all roads lead there.
+- A booking CTA is reachable in **one tap** on mobile (sticky bar) from every page.
+- Each main booking button is flanked by a **trust signal** (guarantee badge, rating, or real review) and **no-pressure microcopy**.
+- The path selector on Home routes intent fast so nobody is forced through irrelevant content.
+- Target experience: a first-time mobile visitor trusts Luke and can book in ~20 seconds.
+
+---
+
+## 6. Mobile Requirements (primary audience)
+
+- [ ] **Sticky "Book a Demo" bar** on phones — thumb-reachable, never covers key content.
+- [ ] **Hamburger menu** — simple, fast, closes on selection; nav also degrades gracefully.
 - [ ] No horizontal scroll at any width ≥ 320px.
-- [ ] Tap targets ≥ 44×44px; adequate spacing between tappable items.
-- [ ] Body text ≥ 16px effective; headings scale with `clamp()`.
-- [ ] Sticky "Book a Demo" bar present, thumb-reachable, never covers content it shouldn't.
-- [ ] Images sized responsively, no layout shift on load (explicit dimensions).
-- [ ] Forms (review, lead capture) usable one-handed; correct input types (`tel`, `email`) and autocomplete.
-- [ ] Fast first paint on a mid-tier phone; no heavy blocking scripts.
-- [ ] Animations subtle on mobile and disabled under reduced-motion.
+- [ ] Tap targets ≥ 44×44px with spacing.
+- [ ] Body text ≥ 16px; headings via `clamp()`.
+- [ ] Each page = one obvious next action above the fold or via sticky bar.
+- [ ] Responsive images with explicit dimensions (no layout shift); lazy-load below the fold.
+- [ ] Fast first paint on a mid-tier phone; no render-blocking scripts.
+- [ ] Subtle motion; disabled under `prefers-reduced-motion`.
+- [ ] Correct input types (`tel`, `email`) and autocomplete on all forms.
 
 ---
 
-## 6. Reminder / Lead-Capture Decision
+## 7. Technical Implementation Plan
 
-**Chosen: safest lightweight version first.**
-- Collect: **name, phone OR email, preferred reminder time**, optional note.
-- Delivery: send the lead to Luke by **email** (or store in a simple list/log Luke can check). Implementation candidates, cheapest/most reliable first:
-  1. A static-friendly **form-to-email** service (e.g. a free form endpoint) — zero backend risk.
-  2. Or a small **Vercel serverless function** mirroring the `api/track.js` pattern that emails/stores the lead.
-- **No fake SMS.** We do not display "we texted you" unless a real text is actually sent.
-- Real SMS only added later *if* it's genuinely easy, free/cheap, and reliable. A clean working email/list capture is the priority over a fragile texting setup.
+### Architecture
+- **Static multi-page site.** One HTML file per page (`index.html`, `book.html`, `find.html`, `meet.html`, `reviews.html`, `faq.html`, `work.html`), plus private `stats.html` (unchanged) and `leads.html` (new, key-gated).
+- **Shared design system:** extract the inline styles into `assets/styles.css` (standardized tokens building on existing `--bg --panel --line --ink --mut --cyan --blue --teal --gold --ang`, plus new type-scale and spacing tokens). All pages link it.
+- **Shared behavior:** `assets/app.js` for nav/hamburger, sticky Book bar, and shared components.
+- **Shared chrome (header/nav/footer):** authored once and duplicated into each page's HTML for robustness (renders without JS); the hamburger/sticky behaviors are progressive enhancement via `app.js`. (No build step, so duplication is the reliable choice; a single source comment marks the canonical block to keep them in sync.)
+- **Routing:** `vercel.json` with `cleanUrls: true` (and sensible `trailingSlash`) so links are `/book`, `/find`, etc.
 
----
+### Features
+- **Recommender** (`/find`): vanilla-JS quiz; deterministic mapping of answers → recommended starting point; no backend.
+- **Reviews** (`/reviews`): submit → `api/reviews.js` (Vercel KV, mirroring `api/track.js`) → page fetches + renders. **Auto-display** with safeguards: honeypot field, min/max length, basic profanity/link filter, rate-limit per IP-hash, and a private kill-switch flag to hide a bad entry if ever needed. No fake/sample reviews shipped.
+- **Lead/reminder capture:** form (name + phone/email + preferred reminder time + note) → `api/lead.js` → (a) email the lead to Luke and (b) store in KV for the `/leads` key-gated list. Email delivery uses a free/reliable service (Resend free tier or a form-to-email endpoint — chosen in the plan; flagged as the one external dependency). **No SMS unless a real text actually sends.**
+- **Assistant polish** (`/find`): clearer prompts, suggested questions, nicer styling, solid empty/error states. No new model risk.
 
-## 7. Files / Components Likely to Change
+### SEO / PWA / housekeeping
+- Per-page `<title>`, meta description, canonical, and Open Graph.
+- Update `sitemap.xml` and `robots.txt` for the new pages.
+- Update `manifest.json` (start_url stays `/`) and `sw.js` cache list to include new pages; ensure SW serves fresh HTML (network-first for documents) to avoid stale pages after deploy.
+- Keep Vercel Web Analytics on every page.
+- Preserve `stats.html` + `api/track.js` exactly.
 
-| File | Change |
-|------|--------|
-| `index.html` | Main work: typography, spacing, motion, mobile, sticky CTA, trust signals, recommender, testimonial display, assistant polish, lead-capture form. |
-| `index.html` `<style>` block | New/standardized CSS variables, type scale, spacing tokens, component styles. |
-| `index.html` `<script>` blocks | Recommender logic, sticky-bar behavior, testimonial render, lead-capture submit, assistant UX. |
-| image assets (`*.webp`, `originals/*`) | Possibly re-export/compress; ensure webp + dimensions. New favicon untouched. |
-| `api/` (maybe new `api/lead.js`) | Only if lead capture uses a serverless function. |
-| `manifest.json` / `sw.js` | Light touch only if needed for PWA/caching correctness; otherwise untouched. |
-| `stats.html`, `api/track.js` | **Untouched** (dashboard preserved). |
-| `docs/superpowers/specs/...` | This spec + the implementation plan. |
-
-A separate implementation plan (next step) will break these into ordered, individually-reviewable tasks.
+### Constraints (hard)
+- Vanilla JS only; progressive enhancement (content readable with JS off).
+- ≤ 2 font families; `font-display: swap`; no render-blocking fonts.
+- Accessibility: keyboard nav, visible focus, alt text, AA contrast, reduced-motion.
+- No external trackers beyond Vercel Analytics. Privacy-light analytics posture preserved.
+- Only the lead form and review form intentionally collect input, and only on user action.
 
 ---
 
 ## 8. Acceptance Criteria (before ANYTHING goes live)
 
-A phase is "ready to show Luke" only when:
-- [ ] It renders correctly in a **local preview** at desktop AND phone widths.
-- [ ] No console errors; page works with JS disabled (content still visible).
-- [ ] No horizontal scroll; tap targets and contrast meet §5.
-- [ ] Existing features still work (booking links, assistant, review form, browse, referrals, dashboard).
-- [ ] Lighthouse (or equivalent) shows **no regression** in Performance/Accessibility/Best-Practices/SEO vs. the current live site; ideally an improvement.
-- [ ] Visual diff is an obvious upgrade, not just a change.
+Per page, "ready to show Luke" requires:
+- [ ] Renders correctly in **local preview** at desktop AND phone widths.
+- [ ] No console errors; content visible with JS disabled.
+- [ ] No horizontal scroll; tap targets, type sizes, and contrast meet §6.
+- [ ] Nav + sticky Book bar work; hamburger opens/closes; every nav/footer link resolves (no 404s, no dead anchors).
+- [ ] Existing capabilities still work: Calendly booking, assistant, review submit, browse, referrals, dashboard.
+- [ ] **No placeholder/fake reviews anywhere.**
+- [ ] Each page has one clear primary CTA.
+- [ ] Lighthouse (or equivalent): **no regression** vs. current live site on Performance / Accessibility / Best-Practices / SEO; ideally improved.
 
-Nothing is pushed to `main` (i.e., goes live) until **Luke reviews the local preview and explicitly approves.**
+Whole-site gate before go-live:
+- [ ] All internal links between pages verified.
+- [ ] Recommender, reviews, lead capture tested end-to-end locally (or against a Vercel **preview** deploy, never production).
+- [ ] Luke reviews the full preview and **explicitly approves**.
 
 ---
 
 ## 9. Rollback / Safety Plan
 
-**Live site protection is non-negotiable.** Facts:
-- The repo **auto-deploys to cutcowithluke.com on every push to `main`.**
-- Therefore: **all work happens on the `upgrade/surgical-polish` branch. We never push to `main` until Luke approves.**
+**Live site protection is non-negotiable.** The repo **auto-deploys to cutcowithluke.com on every push to `main`.** Therefore:
 
-Safeguards:
-1. **Branch isolation:** working branch is `upgrade/surgical-polish`. `main` stays exactly as the live site until approval.
-2. **Snapshot:** current live commit is **`27c26bb`** ("Update Cutco site"). Luke's earlier uncommitted WIP is preserved in a git **stash** (`pre-upgrade-snapshot`).
-3. **Local preview only:** review via a local static server / opened file. No deploy happens from previewing.
-4. **Go-live procedure (only after approval):** merge `upgrade/surgical-polish` → `main`, then push. Vercel re-deploys in ~20s.
-5. **Instant rollback options if anything looks wrong after go-live:**
-   - **Vercel dashboard:** promote the previous deployment back to production (one click, ~seconds). OR
-   - **Git:** `git revert` the merge / reset `main` to `27c26bb` and push.
-6. **Incremental go-live (optional):** phases can go live one at a time, each reversible on its own, to de-risk.
+1. **Branch isolation:** all work on `upgrade/surgical-polish`. `main` stays as the live site until approval.
+2. **Snapshot:** live commit is **`27c26bb`**. Luke's earlier uncommitted WIP is preserved in git **stash** (`pre-upgrade-snapshot`).
+3. **Preview safely:** local static server for visual review; for the API-backed features (reviews/leads), use a **Vercel preview deployment** of the branch (separate URL, never the live domain) — Vercel builds previews for non-main branches.
+4. **Go-live (only after Luke's approval):** merge `upgrade/surgical-polish` → `main`, push; Vercel deploys in ~20s.
+5. **Instant rollback if needed:** Vercel dashboard → promote the previous deployment (seconds); or `git revert` / reset `main` to `27c26bb` and push.
+6. **Incremental option:** pages can ship in waves (e.g. structure first, features second), each independently reversible, to de-risk.
 
 ---
 
-## 10. Open Questions for Luke
+## 10. Decisions Locked & Remaining Flags
 
-1. Lead capture delivery: email is fine, or do you also want it logged somewhere you can browse (e.g. the existing dashboard style)?
-2. Testimonials: should submitted reviews show publicly **only after you approve each one** (recommended), or auto-show?
-3. Any section you'd like trimmed or merged for clarity (28 sections is a lot)? Or leave structure as-is and just polish?
+**Locked (per Luke):**
+- Multi-page guided conversion system; 6-item nav; recruiting de-prioritized.
+- Dark premium style retained; cleaner and more intentional.
+- Reviews auto-display; **all placeholder reviews removed now**.
+- Leads → email Luke **and** a browsable `/leads` list.
+- Build everything, preview, then **go live**.
+
+**Flags to confirm during planning (won't block the spec):**
+1. **Email service for leads** — needs one free signup (e.g. Resend) OR a form-to-email endpoint. I'll pick the most reliable free option and confirm before wiring it.
+2. **Auto-display reviews** carry inherent spam risk; safeguards above mitigate it, and the private kill-switch lets you hide a bad one without manual pre-approval.
+3. **Recruiting placement** — footer link + small `/work` page (not in top nav). Confirm that's the right prominence.
