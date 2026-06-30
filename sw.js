@@ -5,7 +5,7 @@
  * API: never cached.
  * Bump CACHE when you want every old cache wiped on the next visit.
  */
-const CACHE = 'cutco-v2';
+const CACHE = 'cutco-v3';
 const PRECACHE = ['/', '/index.html', '/favicon.png', '/manifest.json'];
 
 self.addEventListener('install', (e) => {

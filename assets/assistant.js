@@ -180,7 +180,10 @@ function reply(q) {
     return { t: `Two easy ways: buy through me (I place the order with Cutco for you) or browse everything on <a href="${CUTCO_PRODUCTS}" target="_blank" rel="noopener">cutco.com</a>. <a href="${PHONE}">Text Luke</a> your list and he'll take care of the rest.` };
 
   if (/(return|refund|money back|money-back|trial|send it back)/.test(n))
-    return { t: `New purchases come with a <strong>15-day money-back trial</strong>, and after that the Forever Guarantee covers sharpening, repair, and replacement. Low-risk and easy.` };
+    return { t: `New purchases come with a <strong>15-day money-back guarantee</strong>, and after that the Forever Guarantee covers sharpening, repair, and replacement for life. About as low-risk as it gets. 👍` };
+
+  if (/(soccer|\bspain\b|depauw|tiger|f[uú]tbol|sport|athlete)/.test(n))
+    return { t: `Ha, off-topic but I'm into it ⚽ — I play soccer at DePauw and I'm headed to Spain with the team this summer (brushing up on my español 🇪🇸). But knives are my real specialty here — tell me what you're cutting or who you're shopping for and I've got you. 🔪` };
 
   if (/(where are you|where.*located|location|near me|north shore|chicago|winnetka|travel|service area)/.test(n))
     return { t: `Luke's based on the North Shore (Winnetka) and serves Chicago, the North Shore, and the DePauw area — in person or over video anywhere. 📍` };
@@ -210,7 +213,7 @@ function reply(q) {
     return { t: `Cutco blades are high-carbon stainless steel, made in the USA, paired with their signature ergonomic handles — built to be used hard and kept for life.` };
 
   if (/(phone|number|email|contact|reach luke|call you|get in touch)/.test(n))
-    return { t: `Easiest ways to reach Luke: <a href="${PHONE}">text or call ${PHONE_DISPLAY}</a> or <a href="mailto:lukeghansen06@gmail.com">email</a>. He answers personally — usually fast. 🙂` };
+    return { t: `Easiest ways to reach Luke: <a href="${PHONE}">text or call ${PHONE_DISPLAY}</a> or <a href="mailto:Lukehansen01@gmail.com">email</a>. He answers personally — usually fast. 🙂` };
 
   if (/(bye|goodbye|see ya|see you|that.s all|thats all|nothing else|all good)/.test(n))
     return { t: `Take care! 👋 <a href="${BOOK}">Book the full demo</a> to see everything in person — it's the fun part. 💙` };
@@ -404,7 +407,7 @@ function init() {
 
   // Empty state: welcome message + chips
   addBotMsg(
-    `Hi! I’m Luke’s Cutco assistant 🔪 — ask me what you cook or who you’re shopping for and I’ll recommend the right pieces. What are you looking for?`,
+    `Hey! 👋 I'm Luke's Cutco sidekick 🔪 Ask me anything — what you cook, who you're shopping for, how the Forever Guarantee works, or whether this is pushy (it's not 😄). I'll point you to the right pieces, and if I can't, I'll just have Luke text you. What's on your mind?`,
     null,
     true  // isWelcome — suppress /book nudge on the greeting
   );
