@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reviews &amp; Referrals &mdash; CutcoWithLuke | Luke Hansen, North Shore Chicago</title>
+<meta name="description" content="Real reviews from real demos with Luke Hansen, your Cutco guy on the North Shore. Leave a review or refer a friend &mdash; every word here is genuine." />
+<link rel="canonical" href="https://cutcowithluke.com/reviews" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#070b14" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="CutcoWithLuke" />
+<link rel="apple-touch-icon" href="/favicon.png" />
+<meta property="og:title" content="Reviews &amp; Referrals &mdash; CutcoWithLuke" />
+<meta property="og:description" content="Real reviews from real demos. Leave your own or refer a friend to Luke Hansen, your Cutco guy on the North Shore." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://cutcowithluke.com/reviews" />
+<meta property="og:image" content="https://cutcowithluke.com/og-image.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="CutcoWithLuke" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Reviews &amp; Referrals &mdash; CutcoWithLuke" />
+<meta name="twitter:description" content="Real reviews from real demos with Luke Hansen, your Cutco guy on the North Shore." />
+<meta name="twitter:image" content="https://cutcowithluke.com/og-image.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/assets/styles.css" />
+<style>
+  /* ---- Reviews page styles ---- */
+
+  .eyebrow {
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: var(--space-3);
+  }
+
+  .sub {
+    color: var(--mut);
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  /* Page sections */
+  section {
+    padding-block: var(--pad-section);
+  }
+
+  section + section {
+    border-top: 1px solid var(--line);
+  }
+
+  /* Reviews empty-state / wall */
+  .reviews-empty {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: var(--space-6) var(--space-5);
+    text-align: center;
+    color: var(--mut);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .reviews-empty strong {
+    color: var(--ink);
+  }
+
+  /* Form panel */
+  .form-panel {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: var(--space-5);
+    max-width: 620px;
+    margin-inline: auto;
+  }
+
+  .form-panel:focus-within {
+    border-color: rgba(34, 211, 238, .35);
+  }
+
+  /* Form fields */
+  .field {
+    display: grid;
+    gap: var(--space-1);
+    margin-bottom: var(--space-4);
+  }
+
+  .field label {
+    font-size: .875rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--ink);
+    font-size: 1rem;
+    font-family: inherit;
+    padding: .75em 1em;
+    line-height: 1.5;
+    transition: border-color .2s;
+    min-height: 44px;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, .15);
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a3b4ca' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1em center;
+    padding-right: 2.5em;
+    cursor: pointer;
+  }
+
+  .field-note {
+    font-size: .8rem;
+    color: var(--mut);
+    margin-top: .25rem;
+  }
+
+  /* Rating stars (radio group) */
+  .rating-group {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .rating-group label {
+    font-size: 1.75rem;
+    cursor: pointer;
+    color: var(--mut);
+    line-height: 1;
+    transition: color .15s, transform .15s;
+    /* min tap target */
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rating-group input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .rating-group label:hover,
+  .rating-group label:hover ~ label {
+    color: var(--gold);
+  }
+
+  .rating-group input[type="radio"]:checked + label,
+  .rating-group input[type="radio"]:checked ~ input ~ label + label {
+    color: var(--gold);
+  }
+
+  /* Referral rows */
+  .refer-row {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: var(--space-4);
+    margin-bottom: var(--space-3);
+    background: var(--panel-2);
+  }
+
+  .refer-row + .refer-row {
+    margin-top: 0;
+  }
+
+  /* Referral prompt tiles */
+  .refer-prompts {
+    display: grid;
+    gap: .75rem;
+    max-width: 720px;
+    margin: var(--space-4) auto var(--space-5);
+  }
+
+  @media (min-width: 600px) {
+    .refer-prompts { grid-template-columns: 1fr 1fr; }
+  }
+
+  .refer-prompt {
+    display: flex;
+    gap: .875rem;
+    align-items: flex-start;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 12px;
+    padding: .875rem 1rem;
+    transition: border-color .2s, transform .2s;
+  }
+
+  .refer-prompt:hover {
+    border-color: rgba(34, 211, 238, .3);
+    transform: translateX(2px);
+  }
+
+  .refer-prompt .pe {
+    font-size: 1.35rem;
+    flex: 0 0 auto;
+  }
+
+  .refer-prompt .pt {
+    color: var(--ink);
+    font-size: .9rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  /* Privacy note */
+  .priv-note {
+    font-size: .8rem;
+    color: var(--mut);
+    margin-top: var(--space-3);
+    line-height: 1.6;
+  }
+
+  /* Row utility */
+  .cta-row {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--space-4);
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     CANONICAL HEADER — edit components/header.html, paste here
+     ============================================================ -->
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__logo">CutcoWithLuke</a>
+
+    <nav class="site-header__nav" data-menu id="site-nav" aria-label="Primary navigation">
+      <a data-nav="home"    href="/"        >Home</a>
+      <a data-nav="book"    href="/book"    >Book</a>
+      <a data-nav="find"    href="/find"    >Find Your Cutco</a>
+      <a data-nav="meet"    href="/meet"    >Meet Luke</a>
+      <a data-nav="reviews" href="/reviews" >Reviews</a>
+      <a data-nav="faq"     href="/faq"     >FAQ</a>
+    </nav>
+
+    <a href="/book" class="btn btn-primary">Book a Demo</a>
+
+    <button
+      class="btn btn-ghost"
+      data-burger
+      aria-expanded="false"
+      aria-controls="site-nav"
+      aria-label="Open navigation menu"
+    >&#9776;</button>
+  </div>
+</header>
+
+<a class="book-bar" href="/book">Book a Demo &rarr;</a>
+
+<main>
+
+  <!-- ============================================================
+       1. Page intro — trust framing
+       ============================================================ -->
+  <section id="reviews-intro">
+    <div class="container" style="text-align:center">
+      <div class="eyebrow reveal">Real people, real demos</div>
+      <h1 class="reveal">Reviews &amp; Referrals</h1>
+      <p class="sub reveal" style="margin-bottom:var(--space-4)">
+        Every word on this page comes from an actual person I've worked with &mdash; no stock quotes, no made-up names, no placeholders. If we've met, I'd love to hear from you. If you know someone I should meet, I'd be grateful for the introduction.
+      </p>
+      <div class="reveal" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+        <span class="pill">100% real reviews only</span>
+        <span class="pill gold">Zero pressure, always</span>
+        <span class="pill">Referrals handled respectfully</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       2. Reviews display mount
+       ============================================================ -->
+  <section id="reviews-section">
+    <div class="container">
+      <h2 class="reveal">What people are saying</h2>
+      <p class="sub reveal" style="text-align:center;margin-bottom:var(--space-5)">
+        Had a good experience with me? I'd love it if you added yours below.
+      </p>
+
+      <!-- live reviews fetched + rendered by /assets/reviews-ui.js (Task 2.5) -->
+      <div id="reviews-list" data-mount="reviews">
+        <div class="reviews-empty reveal">
+          <p style="margin:0;font-size:1.05rem">
+            <strong>Reviews from real demos will appear here.</strong><br>
+            Be one of the first &mdash; leave a review using the form below.
+          </p>
+        </div>
+      </div>
+
+      <div class="cta-row reveal" style="margin-top:var(--space-5)">
+        <a href="#review-form" class="btn btn-grad" style="padding:14px 26px">Leave a review &darr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. Review form
+       ============================================================ -->
+  <section id="leave-review">
+    <div class="container">
+      <h2 class="reveal" style="text-align:center">Share your experience</h2>
+      <p class="sub reveal" style="text-align:center;margin-bottom:var(--space-5)">
+        How did I do? A quick note means a lot &mdash; and helps other people know what to expect.
+      </p>
+
+      <!-- submit handler added by reviews-ui.js (Task 2.5) -->
+      <form id="review-form" class="form-panel reveal" novalidate>
+
+        <!-- Honeypot — hidden from real users, filled only by bots -->
+        <input
+          type="text"
+          name="website"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+          style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"
+        />
+
+        <div class="field">
+          <label for="review-name">Your name</label>
+          <input
+            type="text"
+            id="review-name"
+            name="rname"
+            required
+            autocomplete="name"
+            placeholder="First name + last initial is perfect"
+          />
+        </div>
+
+        <div class="field">
+          <label>Your rating</label>
+          <div class="rating-group" role="group" aria-label="Star rating">
+            <input type="radio" name="rating" id="star1" value="1" required />
+            <label for="star1" title="1 star">&#9733;</label>
+            <input type="radio" name="rating" id="star2" value="2" />
+            <label for="star2" title="2 stars">&#9733;</label>
+            <input type="radio" name="rating" id="star3" value="3" />
+            <label for="star3" title="3 stars">&#9733;</label>
+            <input type="radio" name="rating" id="star4" value="4" />
+            <label for="star4" title="4 stars">&#9733;</label>
+            <input type="radio" name="rating" id="star5" value="5" checked />
+            <label for="star5" title="5 stars">&#9733;</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="review-text">Your review</label>
+          <textarea
+            id="review-text"
+            name="rtext"
+            required
+            placeholder="What was the demo like? Did I take good care of you? Anything you'd tell a friend?"
+          ></textarea>
+          <span class="field-note">Real words only &mdash; I read every one and genuinely appreciate it.</span>
+        </div>
+
+        <button type="submit" class="btn btn-grad" style="padding:13px 24px">Send my review &rarr;</button>
+
+        <p class="priv-note">
+          Thanks for sharing &mdash; it genuinely means a lot. A quick spam check on my end and your review goes up on the wall.
+        </p>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. Referral section — who to refer + referral form
+       ============================================================ -->
+  <section id="referrals">
+    <div class="container">
+      <h2 class="reveal" style="text-align:center">Know someone I should meet?</h2>
+      <p class="sub reveal" style="text-align:center;margin-bottom:var(--space-3)">
+        Referrals are how I get to do this at all. If someone comes to mind, I'd be genuinely grateful for the intro &mdash; and I always reach out respectfully. No pressure to them, ever.
+      </p>
+      <p class="sub reveal" style="text-align:center;margin-bottom:var(--space-4);font-size:.9rem">
+        A few kinds of people who often enjoy seeing the knives:
+      </p>
+
+      <!-- Referral prompt tiles — generic guidance, NOT fabricated testimonials -->
+      <div class="refer-prompts stagger reveal">
+        <div class="refer-prompt">
+          <span class="pe">&#128141;</span>
+          <span class="pt">Someone recently engaged or getting married &mdash; building a home together.</span>
+        </div>
+        <div class="refer-prompt">
+          <span class="pe">&#127968;</span>
+          <span class="pt">A friend who just moved into a new place or their first apartment.</span>
+        </div>
+        <div class="refer-prompt">
+          <span class="pe">&#127891;</span>
+          <span class="pt">A recent grad setting up their own kitchen for the first time.</span>
+        </div>
+        <div class="refer-prompt">
+          <span class="pe">&#128104;&#8205;&#127859;</span>
+          <span class="pt">Anyone who genuinely loves to cook, bake, or host people.</span>
+        </div>
+        <div class="refer-prompt">
+          <span class="pe">&#127873;</span>
+          <span class="pt">Someone who&rsquo;s tough to shop for &mdash; a gift that lasts a lifetime.</span>
+        </div>
+        <div class="refer-prompt">
+          <span class="pe">&#128299;</span>
+          <span class="pt">A parent or relative whose kitchen knives have seen better days.</span>
+        </div>
+        <div class="refer-prompt">
+          <span class="pe">&#129309;</span>
+          <span class="pt">A coworker or neighbor who&rsquo;s mentioned wanting to upgrade their kitchen.</span>
+        </div>
+      </div>
+
+      <div class="form-panel reveal" style="margin-top:var(--space-5)">
+        <div class="eyebrow" style="text-align:center">Pass along a name</div>
+        <h3 style="text-align:center;margin:var(--space-2) 0 var(--space-4)">Send me an introduction</h3>
+
+        <!-- submit handler added by reviews-ui.js (Task 2.5) -->
+        <form id="referral-form" novalidate>
+
+          <!-- Honeypot — hidden from real users, filled only by bots -->
+          <input
+            type="text"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"
+          />
+
+          <fieldset style="border:none;padding:0;margin:0 0 var(--space-4)">
+            <legend style="font-size:.875rem;font-weight:700;color:var(--ink);margin-bottom:var(--space-3)">Person you&rsquo;re referring</legend>
+
+            <div class="refer-row">
+              <div class="field">
+                <label for="ref-name-1">Their name</label>
+                <input
+                  type="text"
+                  id="ref-name-1"
+                  name="ref_name[]"
+                  required
+                  autocomplete="off"
+                  placeholder="First name or full name"
+                />
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label for="ref-contact-1">Best way to reach them</label>
+                <input
+                  type="text"
+                  id="ref-contact-1"
+                  name="ref_contact[]"
+                  required
+                  autocomplete="off"
+                  placeholder="Phone number, email, or &ldquo;ask me to connect you&rdquo;"
+                />
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="ref-by">Your name (so I can thank you!)</label>
+            <input
+              type="text"
+              id="ref-by"
+              name="ref_by"
+              required
+              autocomplete="name"
+              placeholder="Your name"
+            />
+          </div>
+
+          <div class="field" style="margin-bottom:var(--space-4)">
+            <label for="ref-note">Anything you&rsquo;d like me to know? <span style="font-weight:400;color:var(--mut)">(optional)</span></label>
+            <textarea
+              id="ref-note"
+              name="ref_note"
+              placeholder="Context helps &mdash; e.g. &ldquo;she just moved and needs a full set&rdquo; or &ldquo;it&rsquo;s a birthday gift idea.&rdquo;"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-grad" style="padding:13px 24px">Send Luke the intro &#128591;</button>
+
+          <p class="priv-note">
+            &#128274; Private &mdash; this goes straight to me and is never shown on the site.
+            Referrals are always appreciated and always handled respectfully. I&rsquo;ll reach out to your friend warmly and with zero pressure. If it&rsquo;s not right for them, that&rsquo;s completely fine.
+          </p>
+
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. Closing CTA
+       ============================================================ -->
+  <section>
+    <div class="container" style="text-align:center">
+      <h2 class="reveal">Ready to see the knives yourself?</h2>
+      <p class="sub reveal" style="margin-bottom:var(--space-4)">
+        20 minutes or a relaxed hour &mdash; in person or over video. Zero pressure, ever.
+      </p>
+      <div class="cta-row reveal">
+        <a href="/book" class="btn btn-grad" style="padding:14px 26px">Book a Demo &rarr;</a>
+        <a href="/find" class="btn btn-ghost" style="padding:14px 26px">Find Your Cutco</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     CANONICAL FOOTER — edit components/footer.html, paste here
+     ============================================================ -->
+<footer class="site-footer">
+  <div class="container">
+    <p>
+      <strong>Luke Hansen</strong> &mdash; Your Cutco Guy<br>
+      Serving Winnetka, Glencoe, Northbrook &amp; the North Shore of Chicago
+    </p>
+    <p>
+      <a href="mailto:lukeghansen06@gmail.com">lukeghansen06@gmail.com</a>
+    </p>
+    <nav aria-label="Footer navigation">
+      <a href="/work">Work With Me</a> &middot;
+      <a href="/book">Book a Demo</a> &middot;
+      <a href="/faq">FAQ</a>
+    </nav>
+    <p style="margin-top:1em; font-size:.8em; color:var(--mut)">
+      &copy; <span id="footer-year"></span> CutcoWithLuke &mdash;
+      <a href="/privacy">Privacy</a> &middot;
+      Products sold through Vector Marketing.
+    </p>
+  </div>
+</footer>
+
+<script defer src="/_vercel/insights/script.js"></script>
+<script type="module" src="/assets/app.js"></script>
+</body>
+</html>
