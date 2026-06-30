@@ -172,6 +172,24 @@ img, video {
   border-color: rgba(255,255,255,.2);
 }
 
+/* Gradient primary CTA (premium emphasis) */
+.btn-grad {
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  color: #06121f;
+  border-color: transparent;
+  font-weight: 700;
+}
+.btn-grad:hover { filter: brightness(1.07); transform: translateY(-1px); }
+
+/* Gold accent button */
+.btn-gold {
+  background: var(--gold);
+  color: #241a02;
+  border-color: transparent;
+  font-weight: 700;
+}
+.btn-gold:hover { filter: brightness(1.05); transform: translateY(-1px); }
+
 /* --- 5. Card ---------------------------------------------- */
 
 .card {
