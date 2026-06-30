@@ -7,7 +7,7 @@ import { isAdmin as isAdminReq } from '../lib/admin.js';
 const KEY = 'analytics';
 const MAX = 4000; // keep the most recent N events
 
-const TYPES = ['add', 'view', 'ask', 'cat', 'search', 'quiz', 'book', 'send', 'page'];
+const TYPES = ['add', 'view', 'ask', 'cat', 'search', 'quiz', 'book', 'send', 'page', 'ev'];
 
 function clean(s, max) {
   return String(s == null ? '' : s).slice(0, max).replace(/[<>]/g, '').trim();

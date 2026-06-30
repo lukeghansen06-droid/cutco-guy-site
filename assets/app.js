@@ -69,5 +69,30 @@ if (typeof document !== "undefined") {
         });
       }, { passive: true });
     }
+
+    // --- Sticky mobile bar: upgrade the single "Book" bar into Book + Text Luke ---
+    const bar = document.querySelector(".book-bar");
+    if (bar && !document.querySelector(".mobile-cta")) {
+      const wrap = document.createElement("div");
+      wrap.className = "mobile-cta";
+      wrap.innerHTML =
+        '<a class="btn btn-primary" href="/book" data-ev="mobile_sticky_book_click">Book a Demo</a>' +
+        '<a class="btn btn-ghost" href="sms:+13126594280" data-ev="text_luke_click">Text Luke</a>';
+      bar.replaceWith(wrap);
+    }
+
+    // --- Lightweight event tracking: any [data-ev] click pings /api/track ---
+    document.addEventListener("click", (e) => {
+      const el = e.target.closest && e.target.closest("[data-ev]");
+      if (!el) return;
+      try {
+        const body = JSON.stringify({ t: "ev", l: el.getAttribute("data-ev") });
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon("/api/track", new Blob([body], { type: "application/json" }));
+        } else {
+          fetch("/api/track", { method: "POST", headers: { "Content-Type": "application/json" }, body, keepalive: true }).catch(() => {});
+        }
+      } catch (_) {}
+    }, { passive: true });
   });
 }

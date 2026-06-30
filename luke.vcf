@@ -1,0 +1,12 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Hansen;Luke;;;
+FN:Luke Hansen
+ORG:CutcoWithLuke
+TITLE:Independent Cutco Representative
+TEL;TYPE=CELL,VOICE:+13126594280
+EMAIL;TYPE=INTERNET:Lukehansen01@gmail.com
+URL:https://cutcowithluke.com
+ADR;TYPE=WORK:;;Winnetka;North Shore;IL;;USA
+NOTE:Cutco demos, gifts, owner service and sharpening on the North Shore of Chicago.
+END:VCARD

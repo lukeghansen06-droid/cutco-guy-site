@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Luke Hansen — Cutco on the North Shore | Digital Card</title>
+<meta name="description" content="Luke Hansen, your North Shore Cutco rep. Book a demo, text or email Luke, save his contact, or share his site." />
+<link rel="canonical" href="https://cutcowithluke.com/card" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+<meta property="og:title" content="Luke Hansen — CutcoWithLuke" />
+<meta property="og:description" content="Book a demo, text Luke, or save his contact. North Shore Cutco done right." />
+<meta property="og:type" content="profile" />
+<meta property="og:url" content="https://cutcowithluke.com/card" />
+<meta property="og:image" content="https://cutcowithluke.com/og-image.jpg" />
+<meta property="og:site_name" content="CutcoWithLuke" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="theme-color" content="#070b14" />
+<link rel="stylesheet" href="/assets/styles.css" />
+<style>
+  .card-page{max-width:520px;margin:0 auto;text-align:center}
+  .card-portrait{width:128px;height:128px;border-radius:50%;object-fit:cover;border:2px solid var(--line);box-shadow:0 0 0 6px rgba(34,211,238,.12),0 18px 44px -16px rgba(0,0,0,.7);margin:0 auto var(--space-3)}
+  .card-stack{display:flex;flex-direction:column;gap:12px;margin:var(--space-4) auto 0;max-width:340px}
+  .card-stack .btn{width:100%;padding:15px;font-size:1.05rem}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__logo">CutcoWithLuke</a>
+    <nav class="site-header__nav" data-menu id="site-nav" aria-label="Primary navigation">
+      <a data-nav="home" href="/">Home</a>
+      <a data-nav="book" href="/book">Book</a>
+      <a data-nav="find" href="/find">Find Your Cutco</a>
+      <a data-nav="meet" href="/meet">Meet Luke</a>
+      <a data-nav="reviews" href="/reviews">Reviews</a>
+      <a data-nav="faq" href="/faq">FAQ</a>
+    </nav>
+    <a href="/book" class="btn btn-primary" data-ev="hero_book_click">Book a Demo</a>
+    <button class="btn btn-ghost" data-burger aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation menu">&#9776;</button>
+  </div>
+</header>
+<a class="book-bar" href="/book">Book a Demo &rarr;</a>
+
+<main id="main-content">
+  <section class="section">
+    <div class="container card-page">
+      <img class="card-portrait" src="/luke-headshot.jpg" alt="Luke Hansen, Cutco rep on the North Shore" width="128" height="128" />
+      <p class="section-eyebrow">North Shore Cutco</p>
+      <h1 style="margin:0 0 6px">Luke Hansen</h1>
+      <p style="color:var(--mut);margin:0">Cutco demos, gifts, owner service &amp; sharpening &mdash; Winnetka &amp; the North Shore.</p>
+
+      <div class="card-stack">
+        <a class="btn btn-primary" href="/book" data-ev="book_full_click">Book a Demo</a>
+        <a class="btn btn-ghost" href="sms:+13126594280" data-ev="text_luke_click">Text Luke &mdash; 312-659-4280</a>
+        <a class="btn btn-ghost" href="mailto:Lukehansen01@gmail.com" data-ev="text_luke_click">Email Luke</a>
+        <a class="btn btn-ghost" href="/luke.vcf" download data-ev="save_contact_click">Save My Contact</a>
+        <a class="btn btn-ghost" href="/find" data-ev="hero_find_click">Find My Cutco</a>
+      </div>
+
+      <div style="margin:var(--space-5) auto 0">
+        <div class="qr-card">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&amp;margin=0&amp;data=https%3A%2F%2Fcutcowithluke.com%2Fcard"
+               alt="QR code linking to cutcowithluke.com" width="220" height="220"
+               onerror="this.closest('.qr-card').style.display='none'" />
+        </div>
+        <p style="color:var(--mut);font-size:.85rem;margin-top:10px">Scan to open this card &mdash; or share <strong>cutcowithluke.com</strong></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p><strong>Luke Hansen</strong> &mdash; Your Cutco Guy<br>Serving Winnetka, Glencoe, Northbrook &amp; the North Shore of Chicago</p>
+    <p><a href="mailto:Lukehansen01@gmail.com">Lukehansen01@gmail.com</a> &middot; <a href="sms:+13126594280">Text 312-659-4280</a> &middot; <a href="/luke.vcf" download>Save my contact</a></p>
+    <nav aria-label="Footer navigation"><a href="/book">Book a Demo</a> &middot; <a href="/find">Find Your Cutco</a> &middot; <a href="/faq">FAQ</a> &middot; <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">Official Cutco pricing</a></nav>
+    <p style="margin-top:1em;font-size:.8em;color:var(--mut)">&copy; <span id="footer-year"></span> CutcoWithLuke &mdash; <a href="/privacy">Privacy</a> &middot; Products sold through Vector Marketing.</p>
+  </div>
+</footer>
+
+<script type="module" src="/assets/app.js"></script>
+</body>
+</html>
