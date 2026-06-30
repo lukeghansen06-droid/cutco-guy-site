@@ -64,14 +64,14 @@
       margin-block: 0 var(--space-4);
     }
     .hero-gradient {
-      background: linear-gradient(120deg, var(--cyan), #a5b4fc, var(--cyan));
-      background-size: 200% auto;
+      background: linear-gradient(105deg, var(--cyan) 0%, #a5b4fc 38%, var(--gold) 66%, var(--cyan) 100%);
+      background-size: 240% auto;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      animation: gradshift 7s linear infinite;
+      animation: gradshift 9s linear infinite;
     }
-    @keyframes gradshift { to { background-position: 200% center; } }
+    @keyframes gradshift { to { background-position: 240% center; } }
     @media (prefers-reduced-motion: reduce) {
       .hero-gradient { animation: none; background: none; color: var(--cyan); }
     }
@@ -106,15 +106,19 @@
     }
 
     .hero-banner {
-      max-width: 720px;
+      max-width: 960px;
       margin-inline: auto;
-      margin-block: 0 var(--space-5);
-      border-radius: 18px;
+      margin-block: var(--space-2) var(--space-5);
+      border-radius: 22px;
       overflow: hidden;
-      border: 1px solid var(--line);
-      box-shadow: 0 24px 60px -20px rgba(0,0,0,.6);
+      border: 1px solid rgba(236,200,133,.28);
+      box-shadow:
+        0 0 0 1px rgba(34,211,238,.10),
+        0 44px 96px -34px rgba(0,0,0,.78),
+        0 0 70px -22px rgba(34,211,238,.22);
     }
     .hero-banner img { display: block; width: 100%; height: auto; }
+    @media (min-width: 980px) { .hero-banner { max-width: 1040px; } }
 
     .hero-cta-row {
       display: flex;

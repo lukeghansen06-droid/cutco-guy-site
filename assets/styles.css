@@ -8,7 +8,7 @@
 /* Pages should also add <link rel="preconnect" href="https://fonts.googleapis.com">
    and <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    in <head> before this stylesheet for fastest load. */
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
 
 /* --- 1. Design Tokens ------------------------------------- */
 :root {
@@ -823,3 +823,80 @@ h1,h2,h3 { letter-spacing:-.01em; }
 .intro-box textarea{width:100%;min-height:120px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:14px;font:inherit;line-height:1.55;resize:vertical}
 .qr-card{display:inline-block;background:#fff;padding:14px;border-radius:16px;line-height:0}
 .qr-card img{width:220px;height:220px;display:block}
+
+/* ============================================================
+   Section 16 — Premium polish: type, color, motion
+   (North Shore Cutco concierge — Fraunces display + Inter body,
+    steel-cyan + champagne-gold, orchestrated motion)
+   ============================================================ */
+:root{
+  --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --font-body:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-ui:"Sora",var(--font-body);
+  --mut:#b9c5da;                 /* lighter muted text for contrast on dark */
+  --gold:#ecc885;                /* champagne gold accent */
+  --gold-deep:#d4a955;
+  --radius:18px;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --glow-cyan:0 18px 54px -20px rgba(34,211,238,.55);
+  --glow-gold:0 18px 54px -20px rgba(236,200,133,.45);
+  /* bigger, more confident type scale */
+  --fs-base:1.03rem;
+  --fs-lg:clamp(1.12rem,1.02rem + .55vw,1.34rem);
+  --fs-h3:clamp(1.4rem,1.1rem + 1.2vw,1.85rem);
+  --fs-h2:clamp(2.05rem,1.5rem + 2.7vw,3.2rem);
+  --fs-h1:clamp(2.8rem,2rem + 4.8vw,4.7rem);
+}
+body{font-family:var(--font-body);letter-spacing:-.005em}
+h1,h2{font-family:var(--font-display);font-weight:600;letter-spacing:-.02em;line-height:1.05}
+h3,h4{font-family:var(--font-ui);font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.lead,.hero-lead{font-size:var(--fs-lg);color:var(--mut)}
+
+/* Eyebrows / labels — champagne gold with a meaningful hairline */
+.eyebrow,.section-eyebrow,.hero-eyebrow{font-family:var(--font-ui);font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--gold);display:inline-flex;align-items:center;gap:.65em}
+.eyebrow::before,.section-eyebrow::before,.hero-eyebrow::before{content:"";width:26px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
+
+/* Headline sheen — light catching steel, drifting to champagne */
+.hero-gradient,.grad-ink{
+  background:linear-gradient(105deg,var(--cyan) 0%,#a5b4fc 38%,var(--gold) 66%,var(--cyan) 100%);
+  background-size:240% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:sheen 9s linear infinite;
+}
+@keyframes sheen{to{background-position:240% center}}
+
+/* Scroll reveal — rise + blur-in (smoother) */
+.reveal{opacity:0;transform:translateY(22px);filter:blur(6px);transition:opacity .8s var(--ease),transform .8s var(--ease),filter .8s var(--ease)}
+.reveal.in{opacity:1;transform:none;filter:none}
+
+/* Orchestrated hero load sequence */
+.hero-section .hero-eyebrow,.hero-section .hero-h1,.hero-section .hero-lead,.hero-section .hero-banner,.hero-section .hero-cta-row{animation:heroIn .9s var(--ease) both}
+.hero-section .hero-h1{animation-delay:.07s}
+.hero-section .hero-lead{animation-delay:.16s}
+.hero-section .hero-banner{animation-delay:.24s}
+.hero-section .hero-cta-row{animation-delay:.34s}
+@keyframes heroIn{from{opacity:0;transform:translateY(26px);filter:blur(9px)}to{opacity:1;transform:none;filter:none}}
+
+/* Cards — gradient hairline + soft lift */
+.card,.path-card{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012))}
+.card:hover,.path-card:hover{transform:translateY(-5px);border-color:rgba(34,211,238,.42);box-shadow:0 26px 64px -28px rgba(34,211,238,.42)}
+
+/* CTA hierarchy — primary dominant, secondary quiet, bigger tap targets */
+.btn{padding:.84em 1.65em;font-size:1.02rem;border-radius:13px}
+.btn-primary{color:#04121a;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:var(--glow-cyan)}
+.btn-primary:hover{filter:brightness(1.06);transform:translateY(-2px);box-shadow:0 22px 60px -18px rgba(34,211,238,.8)}
+.btn-grad{color:#04121a}
+.btn-ghost{color:var(--ink);background:rgba(255,255,255,.045);border:1px solid var(--line);font-weight:600}
+.btn-ghost:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.24)}
+
+/* Sections breathe a little more */
+.section{padding-block:clamp(3.5rem,7vw,6.5rem)}
+.section-alt{background:linear-gradient(180deg,rgba(255,255,255,.025),transparent)}
+
+/* Visible keyboard focus everywhere */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+
+@media (prefers-reduced-motion: reduce){
+  .hero-gradient,.grad-ink{animation:none}
+  .reveal{opacity:1;transform:none;filter:none;transition:none}
+  .hero-section .hero-eyebrow,.hero-section .hero-h1,.hero-section .hero-lead,.hero-section .hero-banner,.hero-section .hero-cta-row{animation:none;opacity:1;transform:none;filter:none}
+}
