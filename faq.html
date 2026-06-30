@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FAQ &amp; Guarantee — Cutco Knives with Luke Hansen | North Shore Chicago</title>
+<meta name="description" content="Real answers to the questions people always ask before booking a Cutco demo with Luke Hansen — no pressure, no gimmicks. Covers Cutco, Vector Marketing, the Forever Guarantee, sharpening, and more." />
+<link rel="canonical" href="https://cutcowithluke.com/faq" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+<meta property="og:title" content="FAQ &amp; Guarantee — CutcoWithLuke" />
+<meta property="og:description" content="Honest answers about Cutco, Vector Marketing, the Forever Guarantee, and what to expect from a demo. Book whenever you're ready." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://cutcowithluke.com/faq" />
+<meta property="og:image" content="https://cutcowithluke.com/og-image.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="CutcoWithLuke" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="FAQ &amp; Guarantee — CutcoWithLuke" />
+<meta name="twitter:description" content="Honest answers about Cutco, the Forever Guarantee, and what to expect from a demo with Luke Hansen." />
+<meta name="twitter:image" content="https://cutcowithluke.com/og-image.jpg" />
+<meta name="theme-color" content="#070b14" />
+<link rel="manifest" href="/manifest.json" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="CutcoWithLuke" />
+<link rel="apple-touch-icon" href="/favicon.png" />
+<link rel="stylesheet" href="/assets/styles.css" />
+
+<style>
+  /* ---- FAQ + Guarantee page styles ---- */
+
+  /* Eyebrow label */
+  .eyebrow {
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: var(--space-3);
+  }
+
+  /* Sub-heading / intro paragraph */
+  .sub {
+    color: var(--mut);
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  /* CTA button row */
+  .cta-row {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--space-5);
+  }
+
+  /* Pills / tags */
+  .pill {
+    display: inline-block;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: .35em .85em;
+    border-radius: 99px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--mut);
+  }
+  .pill.gold {
+    color: var(--gold);
+    border-color: rgba(251,191,36,.35);
+    background: rgba(251,191,36,.08);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: center;
+    margin-top: var(--space-4);
+  }
+
+  /* Card icon */
+  .ico {
+    font-size: 2rem;
+    margin-bottom: var(--space-3);
+    display: block;
+  }
+
+  /* Grid utilities */
+  .grid { display: grid; gap: var(--space-3); }
+  @media (min-width: 640px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Page sections */
+  section {
+    padding-block: var(--pad-section);
+  }
+  section + section {
+    border-top: 1px solid var(--line);
+  }
+
+  /* FAQ accordion */
+  details.faq {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 14px;
+    padding: 0 18px;
+    margin: 0 auto 10px;
+    max-width: 800px;
+    transition: border-color .2s;
+  }
+  details.faq[open] { border-color: rgba(34,211,238,.3); }
+  details.faq:hover { box-shadow: 0 16px 44px -16px rgba(34,211,238,.4), 0 0 30px -10px rgba(168,85,247,.4); }
+
+  details.faq summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px 0;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+  }
+  details.faq summary::-webkit-details-marker { display: none; }
+  details.faq summary::after {
+    content: "+";
+    color: var(--teal);
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform .25s;
+  }
+  details.faq[open] summary::after { transform: rotate(45deg); }
+  details.faq p { margin: 0 0 16px; color: var(--mut); line-height: 1.65; }
+  details.faq a { color: #7dd3fc; }
+
+  summary:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Guarantee card slight glow on hover */
+  .card { transition: border-color .2s, box-shadow .2s; }
+  .card:hover {
+    border-color: rgba(34,211,238,.25);
+    box-shadow: 0 12px 32px -12px rgba(34,211,238,.3);
+  }
+
+  /* Hero section */
+  .faq-hero {
+    text-align: center;
+    padding-block: var(--pad-section);
+  }
+  .faq-hero h1 { margin-bottom: .4em; }
+  .faq-hero .sub { margin-inline: auto; margin-top: .5em; }
+
+  /* CTA section */
+  .cta-section {
+    text-align: center;
+  }
+  .cta-section h2 { margin-bottom: .4em; }
+  .cta-section .sub { margin-inline: auto; margin-top: .5em; }
+
+  /* Reveal / stagger (hooks for app.js) */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .55s var(--ease), transform .55s var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+  .stagger.in > * { animation: rise .5s var(--ease) both; }
+  .stagger.in > *:nth-child(2) { animation-delay: .08s; }
+  .stagger.in > *:nth-child(3) { animation-delay: .16s; }
+  .stagger.in > *:nth-child(4) { animation-delay: .24s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .stagger.in > * { animation: none; transition: none; opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     CANONICAL HEADER — edit components/header.html, paste here
+     ============================================================ -->
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__logo">CutcoWithLuke</a>
+
+    <nav class="site-header__nav" data-menu id="site-nav" aria-label="Primary navigation">
+      <a data-nav="home"    href="/"        >Home</a>
+      <a data-nav="book"    href="/book"    >Book</a>
+      <a data-nav="find"    href="/find"    >Find Your Cutco</a>
+      <a data-nav="meet"    href="/meet"    >Meet Luke</a>
+      <a data-nav="reviews" href="/reviews" >Reviews</a>
+      <a data-nav="faq"     href="/faq"     >FAQ</a>
+    </nav>
+
+    <a href="/book" class="btn btn-primary">Book a Demo</a>
+
+    <button
+      class="btn btn-ghost"
+      data-burger
+      aria-expanded="false"
+      aria-controls="site-nav"
+      aria-label="Open navigation menu"
+    >&#9776;</button>
+  </div>
+</header>
+
+<a class="book-bar" href="/book">Book a Demo &rarr;</a>
+
+<main>
+
+  <!-- ============================================================
+       1. Hero
+       ============================================================ -->
+  <section class="faq-hero">
+    <div class="container">
+      <div class="eyebrow reveal">Questions &amp; Answers</div>
+      <h1 class="reveal">FAQ &amp; Guarantee</h1>
+      <p class="sub reveal">Real answers to the stuff people wonder before reaching out. No spin, no sales talk — just honest info.</p>
+      <div class="tags reveal">
+        <span class="pill">No pressure, ever</span>
+        <span class="pill">Cutco — Made in USA since 1949</span>
+        <span class="pill">Forever Guarantee</span>
+        <span class="pill">Free sharpening for life</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       2. FAQ Accordions
+       ============================================================ -->
+  <section id="faq" aria-labelledby="faq-heading">
+    <div class="container">
+      <h2 id="faq-heading" class="reveal" style="text-align:center;margin-bottom:.4em">Good questions, real answers</h2>
+      <p class="sub reveal" style="text-align:center;margin-bottom:var(--space-6)">The stuff people usually wonder before reaching out.</p>
+
+      <div class="reveal">
+
+        <!-- 1. Pressure -->
+        <details class="faq">
+          <summary>Is this going to be a pushy sales pitch?</summary>
+          <p>Nope — promise. I show you what fits, answer your questions, and you decide in your own time. No pressure, ever.</p>
+        </details>
+
+        <!-- 2. Obligation -->
+        <details class="faq">
+          <summary>Do I have to buy anything?</summary>
+          <p>Not at all. Plenty of people just want to see the cutlery and ask questions — that's genuinely welcome.</p>
+        </details>
+
+        <!-- 3. What is Cutco -->
+        <details class="faq">
+          <summary>What is Cutco?</summary>
+          <p>Cutco is an American kitchen cutlery brand that's been making knives and kitchen tools in Olean, New York since 1949. The full line covers kitchen knives, scissors, peelers, serving pieces, and table knives — all made in the USA and all backed by the Forever Guarantee. You can browse the entire product line at <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">cutco.com</a>.</p>
+        </details>
+
+        <!-- 4. What is Vector -->
+        <details class="faq">
+          <summary>What is Vector Marketing?</summary>
+          <p>Vector Marketing is the company that distributes Cutco products through independent sales reps like me. I work as a Cutco rep through Vector — think of it as being an authorized local contact for Cutco. I don't set my own prices (they match <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">cutco.com</a> exactly), and you order directly through Cutco. Vector is not an MLM: I don't recruit you, and I don't earn from a "downline" — I'm here to help you find the right stuff.</p>
+        </details>
+
+        <!-- 5. Skepticism / legit -->
+        <details class="faq">
+          <summary>Honestly — why are some people skeptical of Cutco?</summary>
+          <p>Fair question, and I'd rather answer it than dodge it. Cutco is sold by independent reps through Vector Marketing, and some people have run into pushy reps or heard "MLM" and tuned out. I get it. Here's my deal: it's <strong>not</strong> MLM — I don't recruit you to buy in, and I don't earn from a "downline." I just help you find the right cutlery, you buy directly from Cutco at the same prices listed on <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">cutco.com</a>, and the product is genuinely good and guaranteed for life. If I ever feel pushy, call me on it.</p>
+        </details>
+
+        <!-- 6. Price -->
+        <details class="faq">
+          <summary>How much does it cost?</summary>
+          <p>There's something for every budget, and you can see every product and current price yourself on <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">cutco.com</a> anytime. In the demo we'll find what fits you — no surprises.</p>
+        </details>
+
+        <!-- 7. Demo length -->
+        <details class="faq">
+          <summary>How long does the demo take?</summary>
+          <p>About 20 minutes if you already know what you want, or a relaxed hour for the full experience. In person or over video — your call.</p>
+        </details>
+
+        <!-- 8. Forever Guarantee overview -->
+        <details class="faq">
+          <summary>How does the Forever Guarantee work?</summary>
+          <p>Cutco's Forever Guarantee covers free sharpening and service for life, per Cutco's current terms (a small return-shipping fee applies). If a product doesn't perform the way it should, Cutco corrects it or replaces it — no drama. New purchases also come with a 15-day money-back window. Full details are on <a href="https://www.cutco.com/products/the-forever-guarantee" target="_blank" rel="noopener">Cutco's site</a> — or just ask me and I'll walk you through it.</p>
+        </details>
+
+        <!-- 9. Sharpening -->
+        <details class="faq">
+          <summary>How does the sharpening work?</summary>
+          <p>When a blade loses its edge, send it back to Cutco and they sharpen it — free. A small return shipping fee is all that applies, and there's no limit on how many times you can use it. Text me at <a href="sms:+13126594280">312-659-4280</a> and I'll walk you through the whole process so you don't have to figure out any paperwork.</p>
+        </details>
+
+        <!-- 10. Already own Cutco -->
+        <details class="faq">
+          <summary>What if I already own Cutco?</summary>
+          <p>Great — that means you already know the quality. I can help you fill gaps in your set, point you toward seasonal owner promotions, or walk through sharpening your existing pieces. No need to buy anything new; I'm happy to help with what you already have.</p>
+        </details>
+
+        <!-- 11. Don't cook much -->
+        <details class="faq">
+          <summary>What if I don't cook much?</summary>
+          <p>Still worth a look. A good chef's knife and a pair of kitchen shears cover most of what a light cook needs — and they'll last a lifetime. I'll always show you only what makes sense for how you actually cook, never more.</p>
+        </details>
+
+        <!-- 12. Shipping -->
+        <details class="faq">
+          <summary>How long does shipping take?</summary>
+          <p>Quick — most orders arrive in about <strong>2–4 business days</strong>. I'll keep you in the loop from order to doorstep.</p>
+        </details>
+
+        <!-- 13. Quick question -->
+        <details class="faq">
+          <summary>What if I just have a quick question?</summary>
+          <p>Text me — <a href="sms:+13126594280">312-659-4280</a> — or email <a href="mailto:lukeghansen06@gmail.com">lukeghansen06@gmail.com</a>. I'm always happy to help, no strings attached.</p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. Forever Guarantee Explainer
+       ============================================================ -->
+  <section id="guarantee" aria-labelledby="guarantee-heading">
+    <div class="container">
+      <h2 id="guarantee-heading" class="reveal" style="text-align:center;margin-bottom:.4em">The Forever Guarantee, explained</h2>
+      <p class="sub reveal" style="text-align:center;margin-bottom:var(--space-6)">It's the part people underestimate most. Here's what "guaranteed for life" actually means — in plain English.</p>
+
+      <div class="grid grid-2 stagger reveal">
+        <div class="card">
+          <span class="ico">&#10024;</span>
+          <h3>Forever sharp</h3>
+          <p style="color:var(--mut);line-height:1.65;margin:0">When a blade loses its edge, send it in and Cutco sharpens it — free, for life. A small return shipping fee is all that applies.</p>
+        </div>
+        <div class="card">
+          <span class="ico">&#128296;</span>
+          <h3>Performance, guaranteed</h3>
+          <p style="color:var(--mut);line-height:1.65;margin:0">If your Cutco ever doesn't perform the way it should, Cutco corrects it or replaces the product. No drama.</p>
+        </div>
+        <div class="card">
+          <span class="ico">&#128106;</span>
+          <h3>Travels with the owner</h3>
+          <p style="color:var(--mut);line-height:1.65;margin:0">The guarantee follows the product, not the receipt — so gifts and hand-me-downs are covered the same as a first purchase.</p>
+        </div>
+        <div class="card">
+          <span class="ico">&#8617;&#65039;</span>
+          <h3>15-day money back</h3>
+          <p style="color:var(--mut);line-height:1.65;margin:0">New purchases come with a 15-day, no-questions money-back window. Try it in your kitchen first.</p>
+        </div>
+      </div>
+
+      <div class="reveal" style="margin-top:var(--space-5)">
+        <details class="faq">
+          <summary>What if I chip or damage it myself?</summary>
+          <p>Even accidental damage is covered — Cutco will replace the item for half the current retail price, per their terms. Hard to beat.</p>
+        </details>
+        <details class="faq">
+          <summary>How do I actually use the guarantee?</summary>
+          <p>Easiest path: just text me — <a href="sms:+13126594280">312-659-4280</a>. I'll walk you through sharpening, service, or a replacement so you don't have to figure out any paperwork.</p>
+        </details>
+      </div>
+
+      <p class="reveal" style="text-align:center;color:var(--mut);font-size:.8rem;margin-top:var(--space-4)">
+        Full, current guarantee terms are on Cutco's official site &mdash;
+        <a href="https://www.cutco.com/products/the-forever-guarantee" target="_blank" rel="noopener" style="color:#7dd3fc">read the Forever Guarantee at cutco.com</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. Book CTA
+       ============================================================ -->
+  <section class="cta-section" aria-labelledby="cta-heading">
+    <div class="container">
+      <h2 id="cta-heading" class="reveal">Ready to see it for yourself?</h2>
+      <p class="sub reveal" style="margin-bottom:var(--space-5)">No obligation, no pressure — just a relaxed look at the cutlery, answered questions, and you decide what's right. Book whenever works for you.</p>
+      <div class="cta-row reveal">
+        <a href="/book" class="btn btn-primary" style="font-size:1.05rem;padding:.85em 2em">Book a Demo</a>
+        <a href="/find" class="btn btn-ghost" style="font-size:1.05rem;padding:.85em 2em">Find Your Cutco</a>
+      </div>
+      <div class="tags reveal" style="margin-top:var(--space-4)">
+        <span class="pill">Free to meet</span>
+        <span class="pill">No obligation</span>
+        <span class="pill">In person or over video</span>
+        <span class="pill gold">Forever Guarantee on everything</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     CANONICAL FOOTER — edit components/footer.html, paste here
+     ============================================================ -->
+<footer class="site-footer">
+  <div class="container">
+    <p>
+      <strong>Luke Hansen</strong> &mdash; Your Cutco Guy<br>
+      Serving Winnetka, Glencoe, Northbrook &amp; the North Shore of Chicago
+    </p>
+    <p>
+      <a href="mailto:lukeghansen06@gmail.com">lukeghansen06@gmail.com</a>
+    </p>
+    <nav aria-label="Footer navigation">
+      <a href="/work">Work With Me</a> &middot;
+      <a href="/book">Book a Demo</a> &middot;
+      <a href="/faq">FAQ</a>
+    </nav>
+    <p style="margin-top:1em; font-size:.8em; color:var(--mut)">
+      &copy; <span id="footer-year"></span> CutcoWithLuke &mdash;
+      <a href="/privacy">Privacy</a> &middot;
+      Products sold through Vector Marketing.
+    </p>
+  </div>
+</footer>
+
+<script defer src="/_vercel/insights/script.js"></script>
+<script type="module" src="/assets/app.js"></script>
+
+<!-- FAQPage structured data — matches visible Q&A exactly -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this going to be a pushy sales pitch?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nope — promise. I show you what fits, answer your questions, and you decide in your own time. No pressure, ever."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I have to buy anything?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not at all. Plenty of people just want to see the cutlery and ask questions — that's genuinely welcome."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is Cutco?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cutco is an American kitchen cutlery brand that's been making knives and kitchen tools in Olean, New York since 1949. The full line covers kitchen knives, scissors, peelers, serving pieces, and table knives — all made in the USA and all backed by the Forever Guarantee. You can browse the entire product line at cutco.com."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is Vector Marketing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Vector Marketing is the company that distributes Cutco products through independent sales reps. Prices match cutco.com exactly, and you order directly through Cutco. Vector is not an MLM: there is no recruiting and no downline — reps like Luke are simply here to help you find the right products."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Honestly — why are some people skeptical of Cutco?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fair question. Cutco is sold by independent reps through Vector Marketing, and some people have run into pushy reps or heard \"MLM\" and tuned out. Here's the reality: it's not MLM — reps don't recruit customers to buy in and don't earn from a downline. Customers buy directly from Cutco at the same prices listed on cutco.com, and the product is genuinely good and guaranteed for life."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does it cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There's something for every budget, and you can see every product and current price yourself on cutco.com anytime. In the demo we'll find what fits you — no surprises."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does the demo take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "About 20 minutes if you already know what you want, or a relaxed hour for the full experience. In person or over video — your call."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the Forever Guarantee work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cutco's Forever Guarantee covers free sharpening and service for life (a small return-shipping fee applies). If a product doesn't perform the way it should, Cutco corrects it or replaces it. New purchases also come with a 15-day money-back window."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the sharpening work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When a blade loses its edge, send it back to Cutco and they sharpen it free. A small return shipping fee is all that applies, and there's no limit on how many times you can use it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I already own Cutco?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Great — that means you already know the quality. Luke can help you fill gaps in your set, point you toward seasonal owner promotions, or walk through sharpening your existing pieces. No need to buy anything new."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I don't cook much?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Still worth a look. A good chef's knife and a pair of kitchen shears cover most of what a light cook needs — and they'll last a lifetime. Luke will always show you only what makes sense for how you actually cook, never more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does shipping take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Quick — most orders arrive in about 2–4 business days."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I just have a quick question?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Text Luke at 312-659-4280 or email lukeghansen06@gmail.com. Happy to help, no strings attached."
+      }
+    }
+  ]
+}
+</script>
+</body>
+</html>
