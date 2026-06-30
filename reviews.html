@@ -253,6 +253,93 @@
     justify-content: center;
     margin-top: var(--space-4);
   }
+
+  /* ---- Rating hover-fill (Task 2.5) ---- */
+  /* .star-lit class toggled by reviews-ui.js on hover/focus/selection */
+  .rating-group label.star-lit {
+    color: var(--gold);
+  }
+
+  /* ---- Review cards (fetched + rendered by reviews-ui.js) ---- */
+  .review-wall {
+    display: grid;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  @media (min-width: 620px) {
+    .review-wall { grid-template-columns: 1fr 1fr; }
+  }
+
+  .review-card {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .review-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .review-card__name {
+    font-weight: 700;
+    color: var(--ink);
+    font-size: .9375rem;
+  }
+
+  .review-card__stars {
+    color: var(--gold);
+    font-size: 1rem;
+    letter-spacing: .05em;
+    flex-shrink: 0;
+  }
+
+  .review-card__time {
+    color: var(--mut);
+    font-size: .8rem;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  .review-card__text {
+    color: var(--ink);
+    font-size: .9375rem;
+    line-height: 1.65;
+    margin: 0;
+    max-width: none;
+  }
+
+  /* ---- Form status messages (aria-live region) ---- */
+  .review-status {
+    min-height: 1.5em;
+    font-size: .9rem;
+    padding: 0;
+    border-radius: var(--radius);
+    transition: background .2s;
+  }
+
+  .review-status--success {
+    color: var(--teal);
+    background: rgba(94, 234, 212, .08);
+    border: 1px solid rgba(94, 234, 212, .25);
+    padding: var(--space-3) var(--space-4);
+    margin-top: var(--space-3);
+  }
+
+  .review-status--error {
+    color: #f87171;
+    background: rgba(248, 113, 113, .08);
+    border: 1px solid rgba(248, 113, 113, .25);
+    padding: var(--space-3) var(--space-4);
+    margin-top: var(--space-3);
+  }
 </style>
 </head>
 <body>
@@ -575,5 +662,6 @@
 
 <script defer src="/_vercel/insights/script.js"></script>
 <script type="module" src="/assets/app.js"></script>
+<script type="module" src="/assets/reviews-ui.js"></script>
 </body>
 </html>
