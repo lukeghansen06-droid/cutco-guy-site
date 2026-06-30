@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex,nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<title>Review moderation · CutcoWithLuke</title>
+<style>
+  :root{ --bg:#070b14; --panel:rgba(255,255,255,.05); --line:rgba(255,255,255,.12);
+         --ink:#eef1ff; --mut:#9aa3c4; --cyan:#22d3ee; --green:#34d399; --red:#fb7185; --gold:#fbbf24; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,Inter,sans-serif;line-height:1.5}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 18px 80px}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--mut);font-size:14px;margin:0 0 22px}
+  .gate{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;max-width:420px;margin:60px auto;text-align:center}
+  .gate input{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.35);color:var(--ink);font-size:15px;margin:14px 0}
+  .btn{font:inherit;font-weight:700;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:11px;padding:11px 16px;cursor:pointer}
+  .btn:hover{filter:brightness(1.12)}
+  .btn-go{background:linear-gradient(135deg,var(--cyan),#6366f1);border-color:transparent;color:#04121a}
+  .btn-yes{background:rgba(52,211,153,.16);border-color:rgba(52,211,153,.4);color:#a7f3d0}
+  .btn-no{background:rgba(251,113,133,.14);border-color:rgba(251,113,133,.4);color:#fecdd3}
+  .err{color:var(--red);font-size:13px;min-height:18px}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:30px 0 12px;display:flex;align-items:center;gap:9px}
+  .count{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:2px 10px;font-size:12px;color:var(--ink)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px}
+  .stars{color:var(--gold);letter-spacing:2px;font-size:15px}
+  .who{color:var(--mut);font-size:13px;margin-top:6px}
+  .txt{margin:8px 0 0;color:var(--ink)}
+  .row{display:flex;gap:10px;margin-top:13px;flex-wrap:wrap}
+  .empty{color:var(--mut);font-size:14px;padding:14px 0}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0e2a2f;border:1px solid var(--line);
+         color:#d7fff0;padding:11px 18px;border-radius:12px;font-size:14px;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="gate" class="gate" style="display:none">
+    <h1>🔒 Review moderation</h1>
+    <p class="sub" style="margin:8px 0 0">Luke only. Enter your dashboard key.</p>
+    <input id="key" type="password" placeholder="Access key" autocomplete="off" />
+    <div class="err" id="gateErr"></div>
+    <button class="btn btn-go" style="width:100%" onclick="enter()">Enter &rarr;</button>
+  </div>
+
+  <div id="app" style="display:none">
+    <h1>Review moderation</h1>
+    <p class="sub">Approve a review to put it live on your site. Reject to delete it.</p>
+
+    <h2>⏳ Waiting for you <span class="count" id="pendCount">0</span></h2>
+    <div id="pending"></div>
+
+    <h2>✅ Live on the site <span class="count" id="liveCount">0</span></h2>
+    <div id="approved"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = new URLSearchParams(location.search).get('key') || '';
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); };
+  var stars = function(n){ n=Math.max(0,Math.min(5,n|0)); return '★★★★★'.slice(0,n)+'☆☆☆☆☆'.slice(0,5-n); };
+  function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(function(){t.classList.remove('show');},2600); }
+
+  function showGate(msg){ $('gate').style.display='block'; $('app').style.display='none'; if(msg)$('gateErr').textContent=msg; var i=$('key'); if(i){i.focus(); i.onkeydown=function(e){ if(e.key==='Enter') enter(); };} }
+  window.enter = function(){ var v=($('key').value||'').trim(); if(!v){ $('gateErr').textContent='Enter your key.'; return; } var u=new URL(location.href); u.searchParams.set('key',v); location.href=u.toString(); };
+
+  function card(r, kind){
+    var actions = kind==='pending'
+      ? '<button class="btn btn-yes" data-approve="'+r.id+'">✓ Approve &amp; publish</button>'+
+        '<button class="btn btn-no" data-reject="'+r.id+'">✕ Reject</button>'
+      : '<button class="btn btn-no" data-unpublish="'+r.id+'">Hide from site</button>';
+    return '<div class="card"><div class="stars" aria-label="'+r.rating+' of 5">'+stars(r.rating)+'</div>'+
+           '<p class="txt">“'+esc(r.text)+'”</p>'+
+           '<div class="who">— '+esc(r.name)+'</div>'+
+           '<div class="row">'+actions+'</div></div>';
+  }
+
+  function render(d){
+    var pending=d.pending||[], approved=d.reviews||[];
+    $('pendCount').textContent=pending.length;
+    $('liveCount').textContent=approved.length;
+    $('pending').innerHTML = pending.length ? pending.map(function(r){return card(r,'pending');}).join('') : '<div class="empty">Nothing waiting. You’re all caught up. 🎉</div>';
+    $('approved').innerHTML = approved.length ? approved.map(function(r){return card(r,'approved');}).join('') : '<div class="empty">No live reviews yet.</div>';
+    bind();
+  }
+
+  function bind(){
+    document.querySelectorAll('[data-approve]').forEach(function(b){ b.onclick=function(){ act('approve', b.getAttribute('data-approve')); }; });
+    document.querySelectorAll('[data-reject]').forEach(function(b){ b.onclick=function(){ act('reject', b.getAttribute('data-reject')); }; });
+    document.querySelectorAll('[data-unpublish]').forEach(function(b){ b.onclick=function(){ act('unpublish', b.getAttribute('data-unpublish')); }; });
+  }
+
+  function act(action, id){
+    fetch('/api/reviews?key='+encodeURIComponent(KEY), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:action,id:id}) })
+      .then(function(r){ return r.json(); })
+      .then(function(){ toast(action==='approve'?'Published to your site ✓':action==='reject'?'Rejected':'Hidden from site'); load(); })
+      .catch(function(){ toast('Something went wrong — try again'); });
+  }
+
+  function load(){
+    if(!KEY){ showGate(); return; }
+    fetch('/api/reviews?key='+encodeURIComponent(KEY), {cache:'no-store'})
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        // Admin responses include a `pending` array; the public shape does not.
+        if(!d || d.pending===undefined){ showGate('That key didn’t work. Try again.'); return; }
+        $('gate').style.display='none'; $('app').style.display='block';
+        render(d);
+      })
+      .catch(function(){ showGate('Could not reach the server. Try again in a moment.'); });
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>

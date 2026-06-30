@@ -1,9 +1,9 @@
 import { kv } from '@vercel/kv';
+import { isAdmin as isAdminReq } from '../lib/admin.js';
 
 // Private visitor analytics for Luke. No personal data is stored — only
 // event types, the label tapped/typed, and a timestamp. Admin GET (with the
 // secret key) returns aggregated stats for the private dashboard.
-const ADMIN = process.env.REVIEW_ADMIN_KEY || 'luke-cutco-northshore-2026';
 const KEY = 'analytics';
 const MAX = 4000; // keep the most recent N events
 
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const isAdmin = (req.query.key || '') === ADMIN;
+  const isAdmin = isAdminReq(req);
 
   try {
     // ---- POST: log an event (public) or admin reset ----
