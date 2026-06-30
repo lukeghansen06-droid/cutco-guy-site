@@ -227,9 +227,9 @@
       <div class="eyebrow reveal" style="text-align:center">The whole lineup</div>
       <h2 class="reveal" style="margin-top:8px;text-align:center">Explore every Cutco piece</h2>
       <p class="sub reveal" style="text-align:center">
-        Want to see the whole lineup? Ask my assistant up above for a recommendation, or browse every product, set, and current price on Cutco&rsquo;s official site &mdash; then send me what you love and I&rsquo;ll take care of the rest.
+        The whole 79-piece lineup, right here &mdash; search it, filter by category, or tap a quick-pick to start. Save what you love to a list and text it straight to me.
       </p>
-      <div class="exp-tools reveal" hidden>
+      <div class="exp-tools reveal">
         <div class="exp-search">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input id="expSearch" type="search" placeholder="Search the whole lineup &mdash; try &ldquo;good vegetable knife&rdquo;&hellip;" aria-label="Search Cutco products" autocomplete="off">
@@ -246,8 +246,9 @@
           <option value="sets">&#x1F381; Sets &amp; Gifts</option>
         </select>
       </div>
-      <div class="exp-count" id="expCount" hidden></div>
-      <div class="exp-grid" id="expGrid" hidden></div>
+      <div class="exp-quick" id="expQuick" aria-label="Quick picks"></div>
+      <div class="exp-count" id="expCount" aria-live="polite"></div>
+      <div class="exp-grid" id="expGrid"></div>
       <p class="exp-pricenote" id="priceNote"></p>
       <div style="text-align:center;margin-top:18px" class="reveal">
         <a class="btn btn-ghost" style="padding:13px 24px" href="https://www.cutco.com/shop/kitchen-knives" target="_blank" rel="noopener">See the full catalog &amp; live prices on cutco.com &#x2197;</a>
@@ -326,6 +327,18 @@
 <script type="module" src="/assets/app.js"></script>
 <script type="module" src="/assets/recommender-ui.js"></script>
 <script type="module" src="/assets/assistant.js"></script>
+
+<!-- wishlist (My Cutco list) -->
+<button type="button" class="cartfab" id="cartFab" aria-label="Open my saved Cutco list">&#9825; My list <span class="cnt" id="cartCnt">0</span></button>
+<div class="drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="My Cutco wish list">
+  <div class="drawer-back" data-close></div>
+  <div class="drawer-panel">
+    <div class="drawer-head"><h3>My Cutco list</h3><button type="button" class="drawer-x" data-close aria-label="Close">&times;</button></div>
+    <div class="drawer-body" id="cartBody"></div>
+    <div class="drawer-foot" id="cartFoot"></div>
+  </div>
+</div>
+<script defer src="/assets/explorer.js"></script>
 </body>
 </html>
               
