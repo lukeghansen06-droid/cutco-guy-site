@@ -12,7 +12,7 @@ test("gift + starter budget -> giftable starter", () => {
 });
 test("already owns -> recommends a complement, never a full duplicate set", () => {
   const r = recommend({cook:"some",household:"2-4",purpose:"self",budget:"mid",owns:true});
-  expect(r.id).not.toBe("full-set");
+  expect(r.id).toBe("complement-knife");
 });
 test("barely cooks -> a small essential, not a full set", () => {
   const r = recommend({cook:"barely",household:"1",purpose:"self",budget:"mid",owns:false});

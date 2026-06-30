@@ -162,16 +162,16 @@
       <p class="sub reveal" style="margin:8px auto 24px;max-width:500px">
         Pick whatever sounds most like you &mdash; I&rsquo;ll guide you from there.
       </p>
-      <div class="chips reveal" role="list" style="justify-content:center;flex-wrap:wrap;gap:10px">
-        <a class="btn btn-ghost" href="#recommender" role="listitem" data-intent="my-kitchen"   style="padding:12px 20px;min-height:44px;font-size:14px">My kitchen</a>
-        <a class="btn btn-ghost" href="#recommender" role="listitem" data-intent="gift"          style="padding:12px 20px;min-height:44px;font-size:14px">Gift</a>
-        <a class="btn btn-ghost" href="#recommender" role="listitem" data-intent="new-home"      style="padding:12px 20px;min-height:44px;font-size:14px">New home / apartment</a>
-        <a class="btn btn-ghost" href="#recommender" role="listitem" data-intent="cook-a-lot"    style="padding:12px 20px;min-height:44px;font-size:14px">I cook a lot</a>
-        <a class="btn btn-ghost" href="#recommender" role="listitem" data-intent="barely-cook"   style="padding:12px 20px;min-height:44px;font-size:14px">I barely cook</a>
-        <a class="btn btn-ghost" href="#recommender" role="listitem" data-intent="already-own"   style="padding:12px 20px;min-height:44px;font-size:14px">I already own Cutco</a>
-        <a class="btn btn-ghost" href="#recommender" role="listitem" data-intent="best-1-3"      style="padding:12px 20px;min-height:44px;font-size:14px">Best 1&ndash;3 pieces</a>
-        <a class="btn btn-ghost" href="#recommender" role="listitem" data-intent="full-setup"    style="padding:12px 20px;min-height:44px;font-size:14px">Full setup</a>
-      </div>
+      <ul class="chips reveal" role="list" style="justify-content:center;flex-wrap:wrap;gap:10px;list-style:none;padding:0;margin:0">
+        <li><a class="btn btn-ghost" href="#recommender" data-intent="my-kitchen"   style="padding:12px 20px;min-height:44px;font-size:14px">My kitchen</a></li>
+        <li><a class="btn btn-ghost" href="#recommender" data-intent="gift"          style="padding:12px 20px;min-height:44px;font-size:14px">Gift</a></li>
+        <li><a class="btn btn-ghost" href="#recommender" data-intent="new-home"      style="padding:12px 20px;min-height:44px;font-size:14px">New home / apartment</a></li>
+        <li><a class="btn btn-ghost" href="#recommender" data-intent="cook-a-lot"    style="padding:12px 20px;min-height:44px;font-size:14px">I cook a lot</a></li>
+        <li><a class="btn btn-ghost" href="#recommender" data-intent="barely-cook"   style="padding:12px 20px;min-height:44px;font-size:14px">I barely cook</a></li>
+        <li><a class="btn btn-ghost" href="#recommender" data-intent="already-own"   style="padding:12px 20px;min-height:44px;font-size:14px">I already own Cutco</a></li>
+        <li><a class="btn btn-ghost" href="#recommender" data-intent="best-1-3"      style="padding:12px 20px;min-height:44px;font-size:14px">Best 1&ndash;3 pieces</a></li>
+        <li><a class="btn btn-ghost" href="#recommender" data-intent="full-setup"    style="padding:12px 20px;min-height:44px;font-size:14px">Full setup</a></li>
+      </ul>
     </div>
   </section>
 
@@ -324,5 +324,6 @@
 
 <script defer src="/_vercel/insights/script.js"></script>
 <script type="module" src="/assets/app.js"></script>
+<script type="module" src="/assets/recommender-ui.js"></script>
 </body>
 </html>
