@@ -177,10 +177,7 @@
     pointer-events: none;
   }
 
-  .rating-group label:hover,
-  .rating-group label:hover ~ label {
-    color: var(--gold);
-  }
+  /* hover-fill added via JS in Task 2.5 */
 
   .rating-group input[type="radio"]:checked + label,
   .rating-group input[type="radio"]:checked ~ input ~ label + label {
@@ -371,9 +368,9 @@
           />
         </div>
 
-        <div class="field">
-          <label>Your rating</label>
-          <div class="rating-group" role="group" aria-label="Star rating">
+        <fieldset class="rating-fieldset">
+          <legend>Your rating</legend>
+          <div class="rating-group">
             <input type="radio" name="rating" id="star1" value="1" required />
             <label for="star1" title="1 star">&#9733;</label>
             <input type="radio" name="rating" id="star2" value="2" />
@@ -382,10 +379,10 @@
             <label for="star3" title="3 stars">&#9733;</label>
             <input type="radio" name="rating" id="star4" value="4" />
             <label for="star4" title="4 stars">&#9733;</label>
-            <input type="radio" name="rating" id="star5" value="5" checked />
+            <input type="radio" name="rating" id="star5" value="5" />
             <label for="star5" title="5 stars">&#9733;</label>
           </div>
-        </div>
+        </fieldset>
 
         <div class="field">
           <label for="review-text">Your review</label>
