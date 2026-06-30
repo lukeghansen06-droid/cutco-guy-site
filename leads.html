@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- PRIVATE — not indexed, not linked from any public page -->
+<meta name="robots" content="noindex,nofollow" />
+<title>Leads — Private | CutcoWithLuke</title>
+<link rel="stylesheet" href="/assets/styles.css" />
+<style>
+  /* Minimal private dashboard — utilitarian, no public nav */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: var(--fs-base);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ---- Gate ---- */
+  #gate {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: var(--bg);
+    z-index: 10;
+  }
+  .gate-box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: clamp(28px, 6vw, 48px);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  .gate-lock { font-size: 2.5rem; margin-bottom: 1rem; }
+  .gate-box h1 { font-size: 1.4rem; margin-bottom: .5rem; }
+  .gate-box p  { color: var(--mut); font-size: .9rem; margin-bottom: 1.5rem; }
+  .gate-box input {
+    display: block;
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel-2);
+    color: var(--ink);
+    font-size: 1rem;
+    margin-bottom: .75rem;
+  }
+  .gate-box input:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .gate-box .btn { width: 100%; padding: 13px; }
+  .gate-err { color: #ff6b86; font-size: .85rem; min-height: 1.2rem; margin-top: .5rem; }
+
+  /* ---- App ---- */
+  #app {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: clamp(24px, 5vw, 48px) clamp(16px, 4vw, 32px);
+  }
+  .dash-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1rem;
+  }
+  .dash-header h1 { font-size: clamp(1.3rem, 2.5vw, 1.8rem); }
+  .dash-private-note {
+    font-size: .75rem;
+    color: var(--mut);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 4px 10px;
+  }
+  #lead-count { color: var(--mut); font-size: .9rem; }
+
+  /* ---- Lead cards ---- */
+  .lead-list { display: flex; flex-direction: column; gap: 1rem; }
+
+  .lead-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(16px, 3vw, 24px);
+  }
+  .lead-card.referral { border-left: 3px solid var(--gold); }
+
+  .lead-card__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .5rem .75rem;
+    margin-bottom: .6rem;
+  }
+  .lead-name  { font-weight: 700; font-size: 1.05rem; }
+  .lead-type  {
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: var(--mut);
+  }
+  .lead-type.email { color: var(--cyan); border-color: var(--cyan); }
+  .lead-type.phone { color: var(--teal); border-color: var(--teal); }
+  .lead-ts   { font-size: .78rem; color: var(--mut); margin-left: auto; }
+
+  .lead-contact { font-size: .95rem; margin-bottom: .4rem; }
+  .lead-when    { font-size: .85rem; color: var(--mut); margin-bottom: .3rem; }
+  .lead-note    {
+    font-size: .85rem;
+    color: var(--mut);
+    background: var(--panel-2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: .5rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .lead-note .referral-badge {
+    display: inline-block;
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--gold);
+    margin-right: 4px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--mut);
+    font-size: 1rem;
+  }
+
+  /* ---- Status ---- */
+  #status-msg {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--mut);
+    font-size: 1rem;
+  }
+  #status-msg.error { color: #ff6b86; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     Gate — shown when no valid key is in the URL
+     ============================================================ -->
+<div id="gate" style="display:none">
+  <div class="gate-box">
+    <div class="gate-lock">&#128274;</div>
+    <h1>Private Leads</h1>
+    <p>Luke only. Enter your access key to view captured leads.</p>
+    <input id="gateKey" type="password" placeholder="Access key" autocomplete="off" />
+    <button class="btn btn-grad" onclick="submitKey()">Enter &rarr;</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     App — shown after successful key validation
+     ============================================================ -->
+<div id="app" style="display:none">
+  <div class="dash-header">
+    <div>
+      <h1>&#128222; Leads</h1>
+      <div id="lead-count"></div>
+    </div>
+    <span class="dash-private-note">&#128274; Private &mdash; not linked publicly</span>
+  </div>
+  <div id="status-msg">Loading&hellip;</div>
+  <div id="lead-list" class="lead-list" style="display:none"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // -------------------------------------------------------------------------
+  // Security: escape all user-supplied content before DOM insertion
+  // -------------------------------------------------------------------------
+  function esc(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // -------------------------------------------------------------------------
+  // Helpers
+  // -------------------------------------------------------------------------
+  function $(id) { return document.getElementById(id); }
+
+  function relativeTime(ts) {
+    if (!ts) return '';
+    const diff  = Date.now() - Number(ts);
+    const mins  = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days  = Math.floor(diff / 86400000);
+    if (mins  <  1)  return 'just now';
+    if (mins  < 60)  return mins  + 'm ago';
+    if (hours < 24)  return hours + 'h ago';
+    if (days  <  7)  return days  + 'd ago';
+    return new Date(Number(ts)).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function formatDate(ts) {
+    if (!ts) return '';
+    return new Date(Number(ts)).toLocaleString(undefined, {
+      month: 'short', day: 'numeric', year: 'numeric',
+      hour: 'numeric', minute: '2-digit',
+    });
+  }
+
+  // -------------------------------------------------------------------------
+  // Render a single lead card — ALL user fields escaped
+  // -------------------------------------------------------------------------
+  function renderLead(lead) {
+    const isReferral = String(lead.note || '').startsWith('REFERRAL:');
+    const typeClass  = esc(lead.contactType || '').toLowerCase();
+
+    // Escape ALL user-supplied fields
+    const safeName    = esc(lead.name);
+    const safeContact = esc(lead.contact);
+    const safeType    = esc(lead.contactType || '');
+    const safeWhen    = esc(lead.when || '');
+    const safeNote    = esc(lead.note || '');
+    const safeTs      = esc(formatDate(lead.ts));
+    const safeRel     = esc(relativeTime(lead.ts));
+
+    // Build note HTML — highlight REFERRAL: prefix
+    let noteHtml = '';
+    if (safeNote) {
+      if (isReferral) {
+        const body = safeNote.slice('REFERRAL:'.length).trimStart();
+        noteHtml = `<div class="lead-note"><span class="referral-badge">Referral:</span>${body}</div>`;
+      } else {
+        noteHtml = `<div class="lead-note">${safeNote}</div>`;
+      }
+    }
+
+    const whenHtml = safeWhen
+      ? `<div class="lead-when">&#128336; Best time: ${safeWhen}</div>`
+      : '';
+
+    return `
+      <div class="lead-card${isReferral ? ' referral' : ''}">
+        <div class="lead-card__top">
+          <span class="lead-name">${safeName}</span>
+          <span class="lead-type ${typeClass}">${safeType || 'email'}</span>
+          <span class="lead-ts" title="${safeTs}">${safeRel}</span>
+        </div>
+        <div class="lead-contact">${safeContact}</div>
+        ${whenHtml}
+        ${noteHtml}
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------------------------
+  // Gate logic — mirrors stats.html key-in-URL pattern
+  // -------------------------------------------------------------------------
+  const qs  = new URLSearchParams(location.search);
+  const KEY = (qs.get('key') || '').trim();
+
+  window.submitKey = function () {
+    const v = ($('gateKey').value || '').trim();
+    if (!v) { $('gateErr').textContent = 'Enter your key.'; return; }
+    const u = new URL(location.href);
+    u.searchParams.set('key', v);
+    location.href = u.toString();
+  };
+
+  // -------------------------------------------------------------------------
+  // Load leads
+  // -------------------------------------------------------------------------
+  async function load() {
+    if (!KEY) {
+      // No key in URL — show gate
+      $('gate').style.display = 'flex';
+      $('app').style.display  = 'none';
+      const ki = $('gateKey');
+      if (ki) ki.onkeydown = e => { if (e.key === 'Enter') submitKey(); };
+      return;
+    }
+
+    // Key present — show app shell, start fetch
+    $('gate').style.display = 'none';
+    $('app').style.display  = 'block';
+
+    let data;
+    try {
+      const r = await fetch('/api/leads?key=' + encodeURIComponent(KEY), { cache: 'no-store' });
+      if (r.status === 401) {
+        $('status-msg').textContent = 'Bad or missing key — check your URL and try again.';
+        $('status-msg').className = 'error';
+        return;
+      }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      data = await r.json();
+    } catch (err) {
+      $('status-msg').textContent = 'Could not load leads (' + esc(err.message) + '). Try refreshing.';
+      $('status-msg').className = 'error';
+      return;
+    }
+
+    const leads = (data.leads || []);
+
+    // Update count header
+    $('lead-count').textContent = leads.length === 0
+      ? 'No leads yet'
+      : leads.length + ' lead' + (leads.length === 1 ? '' : 's') + ' (newest first)';
+
+    if (leads.length === 0) {
+      $('status-msg').textContent = 'No leads captured yet — check back after the form goes live.';
+      $('status-msg').className = '';
+      return;
+    }
+
+    // Leads are stored newest-first (lpush), render them in that order
+    $('status-msg').style.display = 'none';
+    const list = $('lead-list');
+    list.style.display = 'flex';
+    // SECURITY: renderLead escapes every user field via esc()
+    list.innerHTML = leads.map(renderLead).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', load);
+})();
+</script>
+
+</body>
+</html>

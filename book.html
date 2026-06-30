@@ -196,6 +196,121 @@
   </section>
 
   <!-- lead-form mount: Task 2.7 -->
+  <!-- ============================================================
+       4b. Lead / reminder capture form
+       ============================================================ -->
+  <style>
+    /* Lead form — scoped to #reminder-form */
+    .lf-panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:clamp(24px,5vw,48px);max-width:560px;margin:0 auto}
+    .lf-field{display:flex;flex-direction:column;gap:6px;margin-bottom:var(--space-4)}
+    .lf-field label{font-size:var(--fs-sm);font-weight:700;color:var(--ink)}
+    .lf-field input,.lf-field select,.lf-field textarea{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--radius);color:var(--ink);font-family:inherit;font-size:var(--fs-base);padding:12px 14px;width:100%;box-sizing:border-box;min-height:44px;transition:border-color var(--dur) var(--ease)}
+    .lf-field input:focus,.lf-field select:focus,.lf-field textarea:focus{outline:2px solid var(--gold);outline-offset:2px;border-color:var(--gold)}
+    .lf-field textarea{min-height:84px;resize:vertical}
+    .lf-field select option{background:var(--panel);color:var(--ink)}
+    .lf-radio-row{display:flex;gap:20px;flex-wrap:wrap;padding:4px 0}
+    .lf-radio-row label{display:flex;align-items:center;gap:8px;font-size:var(--fs-base);font-weight:400;cursor:pointer;min-height:44px}
+    .lf-radio-row input[type="radio"]{accent-color:var(--gold);width:18px;height:18px;cursor:pointer;flex-shrink:0}
+    .lf-opt{font-size:var(--fs-sm);font-weight:400;color:var(--mut)}
+    .lead-status{margin-top:var(--space-3);font-size:var(--fs-sm);min-height:20px;border-radius:var(--radius);padding:0;transition:all .2s}
+    .lead-status:not(:empty){padding:10px 14px}
+    .lead-status--success{background:rgba(34,211,102,.1);color:#4ade80;border:1px solid rgba(34,211,102,.3)}
+    .lead-status--error{background:rgba(255,70,85,.1);color:#ff6b86;border:1px solid rgba(255,70,85,.3)}
+  </style>
+
+  <section id="reminder-form" style="padding:var(--pad-section) 0;border-top:1px solid var(--line)">
+    <div class="container">
+      <div class="reveal" style="text-align:center;margin-bottom:clamp(24px,4vw,40px)">
+        <span class="eyebrow">Can't book right now?</span>
+        <h2 style="margin:var(--space-2) 0 var(--space-3)">Leave your info &mdash; I'll reach out</h2>
+        <p class="sub" style="max-width:520px;margin:0 auto">No pressure, no spam. Drop your name and the best way to reach you, and I'll follow up whenever works for you.</p>
+      </div>
+
+      <div class="lf-panel reveal">
+        <form id="lead-form" novalidate>
+
+          <!-- Honeypot — hidden from humans, filled only by bots -->
+          <input
+            type="text"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"
+          />
+
+          <div class="lf-field">
+            <label for="lead-name">Your name <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="lead-name"
+              name="name"
+              required
+              autocomplete="name"
+              placeholder="First name or full name"
+            />
+          </div>
+
+          <div class="lf-field">
+            <label id="contact-type-label">Best way to reach you <span aria-hidden="true">*</span></label>
+            <div class="lf-radio-row" role="group" aria-labelledby="contact-type-label">
+              <label>
+                <input type="radio" name="contactType" value="email" checked />
+                Email
+              </label>
+              <label>
+                <input type="radio" name="contactType" value="phone" />
+                Phone / text
+              </label>
+            </div>
+          </div>
+
+          <div class="lf-field">
+            <label for="lead-contact">Your email or phone <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="lead-contact"
+              name="contact"
+              required
+              autocomplete="email"
+              placeholder="you@email.com or (555) 123-4567"
+            />
+          </div>
+
+          <div class="lf-field">
+            <label for="lead-when">When works best? <span class="lf-opt">(optional)</span></label>
+            <select id="lead-when" name="when">
+              <option value="">No preference &mdash; any time</option>
+              <option value="weekday morning">Weekday morning</option>
+              <option value="weekday afternoon">Weekday afternoon</option>
+              <option value="weekday evening">Weekday evening</option>
+              <option value="weekend">Weekend</option>
+            </select>
+          </div>
+
+          <div class="lf-field" style="margin-bottom:var(--space-5)">
+            <label for="lead-note">Anything you&rsquo;d like me to know? <span class="lf-opt">(optional)</span></label>
+            <textarea
+              id="lead-note"
+              name="note"
+              placeholder="e.g. best day to call, what you&rsquo;re looking for, etc."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-grad" style="padding:13px 28px;width:100%">Send &rarr;</button>
+
+          <div
+            id="lead-form-status"
+            class="lead-status"
+            aria-live="polite"
+            aria-atomic="true"
+            role="status"
+          ></div>
+
+        </form>
+      </div>
+    </div>
+  </section>
 
   <!-- ============================================================
        5. How to prepare (from prep)
@@ -247,5 +362,6 @@
 <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script type="module" src="/assets/app.js"></script>
+<script type="module" src="/assets/lead-ui.js"></script>
 </body>
 </html>
