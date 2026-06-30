@@ -1,5 +1,6 @@
 // api/leads.js — key-gated lead list (GET only; Luke's private view of all captured leads)
 export default async function handler(req, res) {
+  if (req.method !== "GET") return res.status(405).json({ ok:false, error:"method" });
   const key = (req.query && req.query.key) || "";
   const expected = process.env.LEADS_KEY;
   if (!expected || key !== expected) {

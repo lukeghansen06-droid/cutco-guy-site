@@ -17,11 +17,12 @@ export default async function handler(req, res) {
   const send = async (lead) => {
     const key = process.env.RESEND_API_KEY;
     if (!key) { console.log("LEAD (no email configured):", lead); return; }
-    await fetch("https://api.resend.com/emails", { method:"POST",
+    const r = await fetch("https://api.resend.com/emails", { method:"POST",
       headers:{ "Authorization":`Bearer ${key}`, "Content-Type":"application/json" },
       body: JSON.stringify({ from:"leads@cutcowithluke.com", to:"lukeghansen06@gmail.com",
         subject:`New lead: ${lead.name}`,
         text:`${lead.name}\n${lead.contactType}: ${lead.contact}\nWhen: ${lead.when}\nNote: ${lead.note}` }) });
+    if (!r.ok) throw new Error("resend " + r.status);
   };
   const out = await handleLead({ method:req.method, body:req.body }, kv, send);
   res.status(out.status).json(out.json);

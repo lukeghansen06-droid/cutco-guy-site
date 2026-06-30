@@ -18,4 +18,5 @@ test("honeypot lead rejected, not stored/sent", async () => {
     body:{name:"X",contact:"p@x.com",contactType:"email",when:"x",website:"bot"}},
     kv, async ()=>{ sent=true; });
   expect(out.status).toBe(400); expect(sent).toBe(false);
+  expect((kv._m.get("leads:v1") || []).length).toBe(0);
 });
