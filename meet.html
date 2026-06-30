@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Meet Luke Hansen &mdash; Your Cutco Guy on the North Shore | CutcoWithLuke</title>
+<meta name="description" content="Chicago-born, North Shore-raised, DePauw D3 soccer player. Meet Luke Hansen &mdash; the real story behind your Cutco guy: his background, family, values, and why he does this the right way." />
+<link rel="canonical" href="https://cutcowithluke.com/meet" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#070b14" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="CutcoWithLuke" />
+<link rel="apple-touch-icon" href="/favicon.png" />
+<meta property="og:title" content="Meet Luke Hansen &mdash; CutcoWithLuke" />
+<meta property="og:description" content="Chicago-born, North Shore-raised, DePauw D3 soccer player. Meet the real Luke &mdash; family, values, and why he does this the right way." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://cutcowithluke.com/meet" />
+<meta property="og:image" content="https://cutcowithluke.com/og-image.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="CutcoWithLuke" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Meet Luke Hansen &mdash; CutcoWithLuke" />
+<meta name="twitter:description" content="Chicago-born, North Shore-raised, DePauw D3 soccer player. Meet the real Luke." />
+<meta name="twitter:image" content="https://cutcowithluke.com/og-image.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/assets/styles.css" />
+<style>
+  /* ---- Meet Luke page styles ---- */
+
+  /* Eyebrow label */
+  .eyebrow {
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: var(--space-3);
+  }
+
+  /* Sub-heading / intro paragraph */
+  .sub {
+    color: var(--mut);
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  /* CTA button row */
+  .cta-row {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--space-5);
+  }
+
+  /* Pills / tags */
+  .pill {
+    display: inline-block;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: .35em .85em;
+    border-radius: 99px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--mut);
+  }
+  .pill-gold {
+    color: #fde68a;
+    border-color: rgba(251,191,36,.35);
+    background: rgba(251,191,36,.08);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+
+  /* Card icon */
+  .ico {
+    font-size: 2rem;
+    margin-bottom: var(--space-3);
+    display: block;
+  }
+
+  /* Grid utilities */
+  .grid { display: grid; gap: var(--space-3); }
+  @media (min-width: 640px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Feature box */
+  .feature {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    background: radial-gradient(120% 140% at 0% 0%, #11203a, #0b1626 55%, #070b14);
+  }
+
+  /* Decorative orb */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* Hero banner image */
+  .hero-banner {
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: 0 32px 64px -24px rgba(0,0,0,.7);
+    max-width: 900px;
+    margin-inline: auto;
+  }
+  .hero-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Story section — portrait + text */
+  .story-grid {
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  @media (min-width: 760px) {
+    .story-grid { grid-template-columns: 200px 1fr; }
+  }
+
+  /* Portrait frame */
+  .portrait {
+    position: relative;
+    width: 190px;
+    height: 230px;
+    border-radius: 22px;
+    margin-inline: auto;
+    overflow: hidden;
+    background: radial-gradient(120% 140% at 0% 0%, #11203a, #0b1626);
+    border: 1px solid var(--line);
+    box-shadow: 0 20px 44px -16px rgba(0,0,0,.6);
+    flex-shrink: 0;
+  }
+  .portrait img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 55% 12%;
+    display: block;
+  }
+  .portrait .tag {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: .5em .75em;
+    font-size: .7rem;
+    font-weight: 800;
+    color: #fde68a;
+    background: linear-gradient(transparent, rgba(7,11,20,.9));
+    text-align: center;
+  }
+
+  /* Photo gallery grid */
+  .gallery {
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  @media (min-width: 760px) {
+    .gallery { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .shot {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: radial-gradient(120% 140% at 0% 0%, #11203a, #0b1626);
+    display: grid;
+    place-items: center;
+    transition: transform .25s, border-color .25s;
+  }
+  .shot:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: rgba(34,211,238,.3);
+  }
+  .shot .ph {
+    font-size: 46px;
+    opacity: .6;
+    position: absolute;
+  }
+  .shot img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .shot .cap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: .75em 1em;
+    font-size: .78rem;
+    font-weight: 700;
+    color: #e8eef7;
+    background: linear-gradient(transparent, rgba(7,11,20,.85));
+  }
+
+  /* Family layout */
+  .famwrap {
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  @media (min-width: 820px) {
+    .famwrap { grid-template-columns: 1.1fr .9fr; }
+  }
+  .famphoto {
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 50px -20px rgba(0,0,0,.65);
+    transition: transform .25s;
+  }
+  .famphoto:hover { transform: translateY(-4px); }
+  .famphoto img { display: block; width: 100%; height: auto; }
+  .famphoto .cap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1em;
+    font-size: .8rem;
+    font-weight: 700;
+    background: linear-gradient(transparent, rgba(7,11,20,.88));
+  }
+
+  /* Person cards */
+  .people { display: grid; gap: var(--space-3); }
+  .person {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 1rem;
+    transition: transform .2s, border-color .2s;
+  }
+  .person:hover { transform: translateX(4px); border-color: rgba(34,211,238,.3); }
+  .person .pic {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 1.4rem;
+    background: radial-gradient(120% 140% at 0% 0%, #11203a, #0b1626);
+    border: 1px solid var(--line);
+  }
+  .person .role {
+    display: block;
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: .3em;
+  }
+  .person h4 { margin: 0 0 .25em; font-size: .95rem; }
+  .person p  { margin: 0; color: var(--mut); font-size: .82rem; line-height: 1.5; }
+
+  /* Family mini gallery */
+  .famgallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+    margin-top: .75rem;
+  }
+  .famgallery img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    display: block;
+    transition: transform .25s;
+  }
+  .famgallery img:hover { transform: scale(1.02); }
+
+  /* Shimmer quote (philosophy) */
+  .quote-shimmer {
+    background: linear-gradient(120deg, #e8eef7 28%, #fde68a 50%, #67e8f9 72%, #e8eef7 90%);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gshift 7s linear infinite;
+    font-style: italic;
+  }
+  @keyframes gshift { to { background-position: 220% center; } }
+
+  /* Principle card border glow */
+  .principle { position: relative; }
+  .principle::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(251,191,36,.5), rgba(34,211,238,0) 60%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .principle:hover::before { opacity: 1; }
+
+  /* Float animation for orbs */
+  @keyframes flo { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .float { animation: flo 6s ease-in-out infinite; }
+
+  /* Reveal / stagger (hooks for app.js) */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .55s var(--ease), transform .55s var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+  .stagger.in > * { animation: rise .5s var(--ease) both; }
+  .stagger.in > *:nth-child(2) { animation-delay: .08s; }
+  .stagger.in > *:nth-child(3) { animation-delay: .16s; }
+  @keyframes rise { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .stagger.in > *, .quote-shimmer, .float { animation: none; transition: none; opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="btn btn-ghost" style="position:absolute;left:-9999px;top:0;z-index:200;padding:.6em 1em" href="#main-content">Skip to main content</a>
+
+<!-- ============================================================
+     CANONICAL HEADER — edit components/header.html, paste here
+     ============================================================ -->
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__logo">CutcoWithLuke</a>
+
+    <nav class="site-header__nav" data-menu id="site-nav" aria-label="Primary navigation">
+      <a data-nav="home"    href="/"        >Home</a>
+      <a data-nav="book"    href="/book"    >Book</a>
+      <a data-nav="find"    href="/find"    >Find Your Cutco</a>
+      <a data-nav="meet"    href="/meet"    aria-current="page">Meet Luke</a>
+      <a data-nav="reviews" href="/reviews" >Reviews</a>
+      <a data-nav="faq"     href="/faq"     >FAQ</a>
+    </nav>
+
+    <a href="/book" class="btn btn-primary">Book a Demo</a>
+
+    <button
+      class="btn btn-ghost"
+      data-burger
+      aria-expanded="false"
+      aria-controls="site-nav"
+      aria-label="Open navigation menu"
+    >&#9776;</button>
+  </div>
+</header>
+
+<a class="book-bar" href="/book">Book a Demo &rarr;</a>
+
+<main id="main-content">
+
+  <!-- ============================================================
+       1. Hero
+       ============================================================ -->
+  <section class="section" id="meet-hero" style="text-align:center;padding-bottom:0">
+    <div class="container">
+      <div class="eyebrow">Meet Luke</div>
+      <h1 style="margin-top:.5rem;margin-bottom:1rem">Chicago born,<br>North Shore grown.</h1>
+      <p class="sub" style="margin-inline:auto;margin-bottom:2rem">
+        Rising sophomore at DePauw University, D3 soccer player, and your Cutco guy on the North Shore.
+        Here&rsquo;s the real story.
+      </p>
+      <div class="hero-banner">
+        <img
+          src="/luke-hero.webp"
+          alt="Luke Hansen, Cutco Key Salesman 2026, on the North Shore of Chicago"
+          width="900"
+          height="506"
+          loading="eager"
+          decoding="sync"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       2. Story — Chicago / North Shore / DePauw
+       ============================================================ -->
+  <section class="section" id="story">
+    <div class="container">
+      <div class="feature reveal">
+        <div class="story-grid">
+
+          <div class="portrait">
+            <img
+              src="/luke-headshot.jpg"
+              alt="Luke Hansen, Cutco Key Salesman 2026, professional portrait"
+              width="190"
+              height="230"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="tag">🏆 Key Salesman 2026</span>
+          </div>
+
+          <div>
+            <div class="eyebrow">The story</div>
+            <h2 style="margin-bottom:1rem">Gold Coast kid. Winnetka high school. Now DePauw.</h2>
+            <p>I spent my childhood in the <strong>Gold Coast</strong>, then moved up to <strong>Winnetka</strong>
+            about five years ago, where I finished high school at <strong>North Shore Country Day</strong>.
+            Now I&rsquo;m a rising sophomore at <strong>DePauw University</strong> in Greencastle, Indiana,
+            playing soccer for the Tigers. Go Tigers.</p>
+
+            <p>I&rsquo;m also <strong>Social Chair of Phi Gamma Delta</strong> &mdash; which has taught me a lot
+            about how to read a room, make people feel included, and keep the energy right. I even DJ a lot
+            of our socials, which is honestly the same skill: read the room, keep everyone comfortable.
+            That mindset carries into everything I do.</p>
+
+            <p>Outside of school and soccer, I volunteer with <strong>Connections for the Homeless</strong> in
+            Evanston and spend time at local animal shelters. Looking out for people runs in my family.</p>
+
+            <p>The common thread: <em>pay attention, be patient, and treat people like they matter.</em>
+            That&rsquo;s how I approach Cutco. I work out of the <strong>Northbrook office</strong> under
+            <strong>Danny Lewis</strong> &mdash; one of the best in this business &mdash; and reaching
+            <strong>Key Salesman in 2026</strong> means I know the products well enough to point you to
+            exactly the right pieces, nothing extra. You&rsquo;re not a lead to me. You&rsquo;re someone
+            I want to help make a smart decision and look after for years.</p>
+
+            <div class="tags">
+              <span class="pill">⚽ DePauw soccer</span>
+              <span class="pill">🏫 North Shore Country Day</span>
+              <span class="pill">📍 Gold Coast &rarr; Winnetka</span>
+              <span class="pill">❤️ Connections for the Homeless</span>
+              <span class="pill pill-gold">🏆 2026 Key Salesman</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. Photo gallery
+       ============================================================ -->
+  <section class="section" id="photos">
+    <div class="container">
+      <h2 class="reveal" style="text-align:center">A little more of me</h2>
+      <p class="sub reveal" style="text-align:center;margin-inline:auto;margin-bottom:2rem">
+        On the field, out in the world, and right here on the North Shore.
+      </p>
+      <div class="gallery stagger reveal">
+        <div class="shot">
+          <span class="ph" aria-hidden="true">🐯</span>
+          <img
+            src="/luke-1.webp"
+            alt="Luke with the DePauw Tiger mascot on campus"
+            width="600"
+            height="750"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="cap">Go Tigers &mdash; DePauw</span>
+        </div>
+        <div class="shot">
+          <span class="ph" aria-hidden="true">📷</span>
+          <img
+            src="/luke-2.webp"
+            alt="Luke photographing wildlife on safari in Tanzania"
+            width="600"
+            height="750"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="cap">A sunrise I won&rsquo;t forget</span>
+        </div>
+        <div class="shot">
+          <span class="ph" aria-hidden="true">🏡</span>
+          <img
+            src="/luke-3.webp"
+            alt="Luke at home on the North Shore with his cat Willow"
+            width="600"
+            height="750"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="cap">Home on the North Shore</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. Family
+       ============================================================ -->
+  <section class="section" id="family">
+    <div class="container">
+      <h2 class="reveal" style="text-align:center">Meet the Hansens</h2>
+      <p class="sub reveal" style="text-align:center;margin-inline:auto;margin-bottom:2rem">
+        The people who shaped how I treat folks &mdash; show up, do it right, and take care of each other.
+      </p>
+      <div class="famwrap reveal">
+
+        <div class="famphoto">
+          <img
+            src="/family.jpg"
+            alt="Luke with his mom Dr. Nora Hansen and sister Maggie"
+            width="600"
+            height="450"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="cap">Me, Mom &amp; Maggie</span>
+        </div>
+
+        <div>
+          <div class="people">
+            <div class="person">
+              <div class="pic" aria-hidden="true">👩‍⚕️</div>
+              <div>
+                <span class="role">Mom</span>
+                <h4>Dr. Nora Hansen</h4>
+                <p>One of the kindest and most driven people I know. Her approach to people is something I try to carry into everything I do.</p>
+              </div>
+            </div>
+            <div class="person">
+              <div class="pic" aria-hidden="true">🌟</div>
+              <div>
+                <span class="role">Sister</span>
+                <h4>Maggie</h4>
+                <p>The most fun person in our house, hands down. She&rsquo;s at North Shore Country Day and lives for theatre.</p>
+              </div>
+            </div>
+            <div class="person">
+              <div class="pic" aria-hidden="true">🐾</div>
+              <div>
+                <span class="role">And the four-legged crew</span>
+                <h4>Willow, Roxie &amp; Rosie</h4>
+                <p>One majestic cat and two very good dogs &mdash; you&rsquo;ll meet them just below.</p>
+              </div>
+            </div>
+          </div>
+          <div class="famgallery">
+            <img
+              src="/family-2.jpg"
+              alt="The Hansen family gathered around the table"
+              width="400"
+              height="267"
+              loading="lazy"
+              decoding="async"
+            />
+            <img
+              src="/family-mom-willow.jpg"
+              alt="Dr. Nora Hansen with Willow the Maine Coon cat"
+              width="400"
+              height="267"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. The four-legged crew
+       ============================================================ -->
+  <section class="section" id="crew">
+    <div class="container">
+      <h2 class="reveal" style="text-align:center">The four-legged crew</h2>
+      <p class="sub reveal" style="text-align:center;margin-inline:auto;margin-bottom:2rem">
+        The Hansen house runs on a lot of love (and a lot of fur).
+      </p>
+      <div class="gallery stagger reveal">
+        <div class="shot">
+          <span class="ph" aria-hidden="true">🐱</span>
+          <img
+            src="/willow.webp"
+            alt="Willow the Maine Coon cat"
+            width="600"
+            height="750"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="cap">Willow &middot; our Maine Coon</span>
+        </div>
+        <div class="shot">
+          <span class="ph" aria-hidden="true">🐺</span>
+          <img
+            src="/roxie.webp"
+            alt="Roxie the Pomsky dog"
+            width="600"
+            height="750"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="cap">Roxie &middot; the Pomsky</span>
+        </div>
+        <div class="shot">
+          <span class="ph" aria-hidden="true">🐶</span>
+          <img
+            src="/rosie.webp"
+            alt="Rosie the Cavapoo dog"
+            width="600"
+            height="750"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="cap">Rosie &middot; the Cavapoo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       6. Off the clock
+       ============================================================ -->
+  <section class="section" id="life">
+    <div class="container">
+      <h2 class="reveal" style="text-align:center">Off the clock</h2>
+      <p class="sub reveal" style="text-align:center;margin-inline:auto;margin-bottom:2rem">
+        When I&rsquo;m not talking cutlery, here&rsquo;s where you&rsquo;ll find me.
+      </p>
+      <div class="grid grid-3 stagger reveal">
+        <div class="card">
+          <span class="ico" aria-hidden="true">🏋️</span>
+          <h3>In the gym</h3>
+          <p>Lifting is my reset button &mdash; a little discipline every day keeps everything else pointed the right way.</p>
+        </div>
+        <div class="card">
+          <span class="ico" aria-hidden="true">🌊</span>
+          <h3>By the lake</h3>
+          <p>When I need to clear my head, I&rsquo;ll sit by the water and watch the waves until it gets too chilly to stay.</p>
+        </div>
+        <div class="card">
+          <span class="ico" aria-hidden="true">🎧</span>
+          <h3>Headphones in</h3>
+          <p>Music is always on &mdash; walking to a demo, after practice, or whenever I need to get in the zone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       7. Philosophy
+       ============================================================ -->
+  <section class="section" id="philosophy">
+    <div class="container">
+      <div class="feature reveal" style="text-align:center">
+        <span class="orb float" style="background:#fbbf24;width:220px;height:220px;top:-80px;left:50%;margin-left:-110px;opacity:.10" aria-hidden="true"></span>
+        <div class="eyebrow" style="position:relative">The philosophy</div>
+        <h2
+          class="quote-shimmer"
+          style="position:relative;margin-top:.75rem;font-size:clamp(1.3rem,3.4vw,2rem);line-height:1.3;max-width:760px;margin-inline:auto"
+        >&ldquo;It&rsquo;s not about the knife. It&rsquo;s about the life you build with it.&rdquo;</h2>
+        <p style="position:relative;color:var(--mut);max-width:640px;margin:1rem auto 0;line-height:1.75">
+          Most things are built to be replaced. Cutco is built to be <em>kept</em> &mdash; sharpened, used daily,
+          and handed down. So I don&rsquo;t try to sell you the most; I help you find the few pieces you&rsquo;ll
+          actually reach for every day, for the rest of your life.
+        </p>
+      </div>
+      <div class="grid grid-3 stagger reveal" style="margin-top:1.25rem">
+        <div class="card principle">
+          <span class="ico" aria-hidden="true">💎</span>
+          <h3>Value over price</h3>
+          <p>The true cost of anything is how often you replace it. Buy once, use it for decades &mdash; the math quietly takes care of itself.</p>
+        </div>
+        <div class="card principle">
+          <span class="ico" aria-hidden="true">🤝</span>
+          <h3>People over transactions</h3>
+          <p>A sale ends; a relationship doesn&rsquo;t. I&rsquo;d rather earn someone for life than close them today.</p>
+        </div>
+        <div class="card principle">
+          <span class="ico" aria-hidden="true">♾️</span>
+          <h3>Built to outlast trends</h3>
+          <p>Gadgets come and go. A great blade, cared for, just keeps going &mdash; and becomes the thing your kids quietly fight over one day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       8. Book a Demo CTA
+       ============================================================ -->
+  <section class="section" id="cta" style="text-align:center">
+    <div class="container">
+      <h2 class="reveal">Ready to meet in person?</h2>
+      <p class="sub reveal" style="margin-inline:auto;margin-bottom:0">
+        One demo, zero pressure. In person on the North Shore or over video &mdash; pick whatever works for you.
+      </p>
+      <div class="cta-row reveal">
+        <a class="btn btn-grad" style="padding:.85em 1.75em" href="/book">Book a Demo &rarr;</a>
+        <a class="btn btn-ghost" style="padding:.85em 1.75em" href="sms:+13126594280">Text me</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     CANONICAL FOOTER — edit components/footer.html, paste here
+     ============================================================ -->
+<footer class="site-footer">
+  <div class="container">
+    <p>
+      <strong>Luke Hansen</strong> &mdash; Your Cutco Guy<br>
+      Serving Winnetka, Glencoe, Northbrook &amp; the North Shore of Chicago
+    </p>
+    <p>
+      <a href="mailto:lukeghansen06@gmail.com">lukeghansen06@gmail.com</a>
+    </p>
+    <nav aria-label="Footer navigation">
+      <a href="/work">Work With Me</a> &middot;
+      <a href="/book">Book a Demo</a> &middot;
+      <a href="/faq">FAQ</a>
+    </nav>
+    <p style="margin-top:1em; font-size:.8em; color:var(--mut)">
+      &copy; <span id="footer-year"></span> CutcoWithLuke &mdash;
+      <a href="/privacy">Privacy</a> &middot;
+      Products sold through Vector Marketing.
+    </p>
+  </div>
+</footer>
+
+<script defer src="/_vercel/insights/script.js"></script>
+<script type="module" src="/assets/app.js"></script>
+</body>
+</html>
