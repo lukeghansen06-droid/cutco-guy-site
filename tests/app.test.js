@@ -6,5 +6,7 @@ test("maps paths to nav keys", () => {
   expect(activeNav("/book")).toBe("book");
   expect(activeNav("/find")).toBe("find");
   expect(activeNav("/reviews")).toBe("reviews");
+  expect(activeNav("/meet")).toBe("meet");
+  expect(activeNav("/faq")).toBe("faq");
   expect(activeNav("/unknown")).toBe("");
 });

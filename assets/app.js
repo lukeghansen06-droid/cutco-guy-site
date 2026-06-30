@@ -8,8 +8,13 @@ export function activeNav(pathname) {
 if (typeof document !== "undefined") {
   document.addEventListener("DOMContentLoaded", () => {
     const key = activeNav(location.pathname);
-    document.querySelectorAll("[data-nav]").forEach(a =>
-      a.toggleAttribute("aria-current", a.dataset.nav === key));
+    document.querySelectorAll("[data-nav]").forEach(a => {
+      a.dataset.nav === key
+        ? a.setAttribute("aria-current", "page")
+        : a.removeAttribute("aria-current");
+    });
+    const y = document.getElementById("footer-year");
+    if (y) y.textContent = new Date().getFullYear();
     const burger = document.querySelector("[data-burger]");
     const menu = document.querySelector("[data-menu]");
     if (burger && menu) burger.addEventListener("click", () => {
