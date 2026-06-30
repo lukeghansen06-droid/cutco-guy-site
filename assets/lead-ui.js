@@ -60,6 +60,27 @@ function wireLeadForm() {
 
   const submitBtn = form.querySelector('[type="submit"]');
 
+  // Dynamic input type/inputmode/autocomplete keyed to contactType radio
+  const contactInput = form.querySelector('#lead-contact');
+  const contactRadios = form.querySelectorAll('input[name="contactType"]');
+
+  function syncContactType() {
+    const checked = form.querySelector('input[name="contactType"]:checked');
+    if (!contactInput || !checked) return;
+    if (checked.value === 'phone') {
+      contactInput.type = 'tel';
+      contactInput.inputMode = 'tel';
+      contactInput.autocomplete = 'tel';
+    } else {
+      contactInput.type = 'email';
+      contactInput.inputMode = 'email';
+      contactInput.autocomplete = 'email';
+    }
+  }
+
+  contactRadios.forEach(r => r.addEventListener('change', syncContactType));
+  syncContactType(); // run on init to match default checked radio
+
   form.addEventListener('submit', async e => {
     e.preventDefault();
 

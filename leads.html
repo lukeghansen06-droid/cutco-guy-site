@@ -236,7 +236,8 @@
   // -------------------------------------------------------------------------
   function renderLead(lead) {
     const isReferral = String(lead.note || '').startsWith('REFERRAL:');
-    const typeClass  = esc(lead.contactType || '').toLowerCase();
+    const rawType    = String(lead.contactType || '').toLowerCase();
+    const typeClass  = ['email', 'phone'].includes(rawType) ? rawType : '';
 
     // Escape ALL user-supplied fields
     const safeName    = esc(lead.name);
