@@ -1,0 +1,307 @@
+/* ============================================================
+   cutco-guy-site · shared design system
+   assets/styles.css
+   All pages link this file. Do not add page-specific rules here.
+   ============================================================ */
+
+/* --- 0. Fonts (non-blocking via font-display:swap) -------- */
+/* Pages should also add <link rel="preconnect" href="https://fonts.googleapis.com">
+   and <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   in <head> before this stylesheet for fastest load. */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap');
+
+/* --- 1. Design Tokens ------------------------------------- */
+:root {
+  /* Palette — dark premium brand theme */
+  --bg:      #070b14;
+  --panel:   #0b1626;
+  --panel-2: #11203a;
+  --line:    #1b2c48;
+  --ink:     #e8eef7;
+  --mut:     #a3b4ca;
+  --cyan:    #22d3ee;
+  --blue:    #3b82f6;
+  --teal:    #5eead4;
+  --gold:    #fbbf24;
+
+  /* Type scale */
+  --fs-sm:   .875rem;
+  --fs-base: 1rem;
+  --fs-lg:   clamp(1.05rem, 1rem + .4vw, 1.2rem);
+  --fs-h3:   clamp(1.25rem, 1.05rem + 1vw, 1.6rem);
+  --fs-h2:   clamp(1.6rem, 1.2rem + 2vw, 2.4rem);
+  --fs-h1:   clamp(2.2rem, 1.6rem + 3.4vw, 3.6rem);
+
+  /* Spacing scale */
+  --space-1: .5rem;
+  --space-2: .75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --space-6: 3rem;
+  --space-7: 4rem;
+  --space-8: 6rem;
+
+  /* Layout */
+  --pad-section: clamp(3rem, 6vw, 6rem);
+  --measure:     68ch;
+
+  /* Component */
+  --radius: 14px;
+  --dur:    .25s;
+  --ease:   cubic-bezier(.2,.7,.2,1);
+}
+
+/* --- 2. Base Layer ---------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+               Helvetica, Arial, sans-serif;
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  max-width: var(--measure);
+  margin-block: 0 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Sora", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-block: 0 .5em;
+  color: var(--ink);
+}
+
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* --- 3. Layout Utilities ---------------------------------- */
+
+.container {
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+.section {
+  padding-block: var(--pad-section);
+}
+
+/* --- 4. Buttons ------------------------------------------- */
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  padding: .7em 1.4em;
+  border: 0;
+  border-radius: var(--radius);
+  font-size: var(--fs-base);
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease),
+              filter var(--dur) var(--ease);
+}
+
+.btn:hover  { filter: brightness(1.08); }
+.btn:active { transform: scale(.95); }
+
+/* Shine-sweep reveal on hover */
+.btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 55%;
+  height: 100%;
+  transform: skewX(-20deg);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+  transition: left .6s ease;
+  pointer-events: none;
+}
+.btn:hover::after { left: 150%; }
+
+/* Primary — cyan→blue gradient */
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  background-size: 180% 180%;
+  box-shadow: 0 12px 30px -10px rgba(34,211,238,.55);
+}
+.btn-primary:hover {
+  box-shadow: 0 16px 38px -10px rgba(34,211,238,.75);
+}
+
+/* Ghost — outline only */
+.btn-ghost {
+  color: var(--ink);
+  border: 1px solid var(--line);
+  background: transparent;
+}
+.btn-ghost:hover {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.2);
+}
+
+/* --- 5. Card ---------------------------------------------- */
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-5);
+}
+
+/* --- 6. Site Header --------------------------------------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(7,11,20,.78);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header__inner {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-header__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: "Sora", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--ink);
+}
+
+.site-header__logo img {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+.site-header__nav {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  font-size: var(--fs-sm);
+  color: var(--mut);
+}
+
+.site-header__nav a:hover { color: #fff; }
+
+@media (max-width: 760px) {
+  .site-header__nav a:not(.btn) { display: none; }
+}
+
+/* --- 7. Site Footer --------------------------------------- */
+
+.site-footer {
+  padding-block: var(--space-6);
+  text-align: center;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--mut);
+  font-size: var(--fs-sm);
+  line-height: 1.8;
+}
+
+.site-footer a:hover { color: var(--ink); }
+
+/* --- 8. Trust Bar ----------------------------------------- */
+
+.trust-bar {
+  overflow: hidden;
+  white-space: nowrap;
+  background: var(--panel);
+  border-block: 1px solid var(--line);
+  padding-block: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--mut);
+  user-select: none;
+}
+
+.trust-bar__track {
+  display: inline-block;
+  animation: trustmarquee 28s linear infinite;
+}
+
+@keyframes trustmarquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* --- 9. Book Bar (sticky mobile CTA) ---------------------- */
+
+.book-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(7,11,20,.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+}
+
+@media (min-width: 761px) {
+  .book-bar { display: none; }
+}
+
+/* --- 10. Focus Visible ------------------------------------ */
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* --- 11. Reduced Motion ----------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
