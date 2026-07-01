@@ -847,7 +847,7 @@ h1,h2,h3 { letter-spacing:-.01em; }
   --fs-h2:clamp(2.05rem,1.5rem + 2.7vw,3.2rem);
   --fs-h1:clamp(2.8rem,2rem + 4.8vw,4.7rem);
 }
-body{font-family:var(--font-body);letter-spacing:-.005em}
+body{font-family:var(--font-body);letter-spacing:-.005em;background:radial-gradient(1200px 640px at 50% -8%, #0e1d36 0%, rgba(14,29,54,0) 58%), var(--bg);background-attachment:fixed}
 h1,h2{font-family:var(--font-display);font-weight:600;letter-spacing:-.02em;line-height:1.05}
 h3,h4{font-family:var(--font-ui);font-weight:700;letter-spacing:-.01em;line-height:1.2}
 .lead,.hero-lead{font-size:var(--fs-lg);color:var(--mut)}
@@ -864,9 +864,9 @@ h3,h4{font-family:var(--font-ui);font-weight:700;letter-spacing:-.01em;line-heig
 }
 @keyframes sheen{to{background-position:240% center}}
 
-/* Scroll reveal — rise + blur-in (smoother) */
-.reveal{opacity:0;transform:translateY(22px);filter:blur(6px);transition:opacity .8s var(--ease),transform .8s var(--ease),filter .8s var(--ease)}
-.reveal.in{opacity:1;transform:none;filter:none}
+/* Scroll reveal — clean fade + rise (no blur = smoother on mobile) */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.reveal.in{opacity:1;transform:none}
 
 /* Orchestrated hero load sequence */
 .hero-section .hero-eyebrow,.hero-section .hero-h1,.hero-section .hero-lead,.hero-section .hero-banner,.hero-section .hero-cta-row{animation:heroIn .9s var(--ease) both}
@@ -874,7 +874,7 @@ h3,h4{font-family:var(--font-ui);font-weight:700;letter-spacing:-.01em;line-heig
 .hero-section .hero-lead{animation-delay:.16s}
 .hero-section .hero-banner{animation-delay:.24s}
 .hero-section .hero-cta-row{animation-delay:.34s}
-@keyframes heroIn{from{opacity:0;transform:translateY(26px);filter:blur(9px)}to{opacity:1;transform:none;filter:none}}
+@keyframes heroIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 
 /* Cards — gradient hairline + soft lift */
 .card,.path-card{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012))}
@@ -900,3 +900,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   .reveal{opacity:1;transform:none;filter:none;transition:none}
   .hero-section .hero-eyebrow,.hero-section .hero-h1,.hero-section .hero-lead,.hero-section .hero-banner,.hero-section .hero-cta-row{animation:none;opacity:1;transform:none;filter:none}
 }
+
+/* ===== Section 17 — "Before we meet" prep list (was unstyled) ===== */
+.prep{display:grid;gap:12px;max-width:760px;margin:var(--space-4) auto 0}
+.prep .q{display:flex;gap:14px;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012));border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-align:left}
+.prep .q .n{flex:0 0 auto;width:30px;height:30px;display:grid;place-items:center;border-radius:9px;font-weight:800;font-size:.95rem;color:#04121a}
+.prep .q .t{color:var(--ink);line-height:1.5}

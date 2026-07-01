@@ -95,4 +95,18 @@ if (typeof document !== "undefined") {
       } catch (_) {}
     }, { passive: true });
   });
+
+  // --- Service worker: register the fresh (network-first) SW, replace any stale
+  //     one, and reload once when the new version takes control. ---
+  if ("serviceWorker" in navigator) {
+    addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").then((reg) => { reg.update(); }).catch(() => {});
+      let reloaded = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (reloaded) return;
+        reloaded = true;
+        location.reload();
+      });
+    });
+  }
 }

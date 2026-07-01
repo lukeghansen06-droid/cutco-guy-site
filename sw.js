@@ -5,7 +5,7 @@
  * API: never cached.
  * Bump CACHE when you want every old cache wiped on the next visit.
  */
-const CACHE = 'cutco-v3';
+const CACHE = 'cutco-v4';
 const PRECACHE = ['/', '/index.html', '/favicon.png', '/manifest.json'];
 
 self.addEventListener('install', (e) => {
@@ -19,6 +19,9 @@ self.addEventListener('activate', (e) => {
     caches.keys()
       .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
+      // Force any open tab still showing an old cached page to reload fresh.
+      .then(() => self.clients.matchAll({ type: 'window' }))
+      .then((clients) => clients.forEach((c) => { try { c.navigate(c.url); } catch (e) {} }))
   );
 });
 
