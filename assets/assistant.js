@@ -38,6 +38,7 @@ const CUTCO_SPECIALS = 'https://www.cutco.com/promotions/sale';
 // Analytics — same {t:'ev', l} shape as app.js / recommender-ui.js
 // ---------------------------------------------------------------------------
 function track(label) {
+  if (typeof window !== 'undefined' && window.__cutcoNoTrack) return; // Owner No-Track Mode
   try {
     const b = JSON.stringify({ t: 'ev', l: label });
     if (navigator.sendBeacon) navigator.sendBeacon('/api/track', new Blob([b], { type: 'application/json' }));

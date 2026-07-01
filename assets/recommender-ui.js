@@ -218,7 +218,7 @@ function renderQuiz() {
     if (input.type !== 'radio') return;
     if (!window.__quizStarted) {
       window.__quizStarted = true;
-      try { navigator.sendBeacon && navigator.sendBeacon('/api/track', new Blob([JSON.stringify({ t: 'ev', l: 'find_quiz_start' })], { type: 'application/json' })); } catch (e) {}
+      if (!window.__cutcoNoTrack) { try { navigator.sendBeacon && navigator.sendBeacon('/api/track', new Blob([JSON.stringify({ t: 'ev', l: 'find_quiz_start' })], { type: 'application/json' })); } catch (e) {} }
     }
     const { name, value } = input;
     const q = QUESTIONS.find(q => q.key === name);
@@ -321,6 +321,7 @@ function prefersReducedMotion() {
 
 /** Fire a lightweight analytics view-event (not a click) exactly like completion. */
 function trackEvent(label) {
+  if (typeof window !== 'undefined' && window.__cutcoNoTrack) return; // Owner No-Track Mode
   try {
     const b = JSON.stringify({ t: 'ev', l: label });
     if (navigator.sendBeacon) navigator.sendBeacon('/api/track', new Blob([b], { type: 'application/json' }));

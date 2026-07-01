@@ -36,6 +36,14 @@ export default async function handler(req, res) {
       if (TYPES.indexOf(t) < 0) return res.status(200).json({ ok: true }); // ignore unknown
       const l = clean(body.l, 120);
 
+      // Owner No-Track: never log events from admin/stats/local/keyed contexts.
+      const ref = String(req.headers['referer'] || req.headers['referrer'] || '');
+      const skip = isAdmin
+        || /[?&](key|token|admin)=/i.test(ref)
+        || /\/(stats|leads|moderate|admin|ops)(\.html)?(\/|\?|#|$)/i.test(ref)
+        || /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:|\/)/i.test(ref);
+      if (skip) return res.status(200).json({ ok: true, skipped: true });
+
       let all = (await kv.get(KEY)) || [];
       all.push({ t, l, ts: Date.now() });
       if (all.length > MAX) all = all.slice(all.length - MAX);

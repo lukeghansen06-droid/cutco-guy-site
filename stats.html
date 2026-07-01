@@ -249,6 +249,18 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="card" id="notrackCard" style="animation-delay:.5s">
+      <h2><span class="em">&#128683;</span> Owner No-Track</h2>
+      <p id="notrackState" class="muted" style="margin:6px 0 14px;line-height:1.5"></p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" id="notrackExclude" type="button">Exclude this device from stats</button>
+        <button class="btn ghost" id="notrackEnable" type="button">Re-enable tracking on this device</button>
+      </div>
+      <p class="muted" style="margin:12px 0 0;font-size:12px">Excluding a device keeps your own visits out of the custom stats on every page. Localhost and this dashboard are always excluded automatically.</p>
+    </div>
+  </div>
+
   <footer>
     <span id="genline"></span><br/>
     Privacy-light &mdash; no names, emails or IPs stored. Names of people who booked live in Calendly &amp; your inbox.<br/>
@@ -453,5 +465,28 @@
   window.va = window.va || function () { (window.vai = window.vai || []).push(arguments); };
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+  /* Owner No-Track card — self-contained (device-local flag; never shows the key). */
+  (function () {
+    var FLAG = 'cutco_owner_no_track';
+    var card = document.getElementById('notrackCard');
+    if (!card) return;
+    var stateEl = document.getElementById('notrackState');
+    function isLocal() { var h = location.hostname; return h === 'localhost' || h === '127.0.0.1' || h === '::1'; }
+    function excluded() { try { return localStorage.getItem(FLAG) === '1'; } catch (e) { return false; } }
+    function render() {
+      var msg, color;
+      if (isLocal()) { msg = 'Localhost is automatically excluded.'; color = 'var(--cyan,#22e3ff)'; }
+      else if (excluded()) { msg = '✓ This device is excluded from custom stats.'; color = '#34d399'; }
+      else { msg = 'This device may count toward stats.'; color = '#fbbf24'; }
+      if (stateEl) { stateEl.textContent = msg; stateEl.style.color = color; }
+    }
+    var ex = document.getElementById('notrackExclude');
+    if (ex) ex.onclick = function () { try { localStorage.setItem(FLAG, '1'); } catch (e) {} render(); };
+    var en = document.getElementById('notrackEnable');
+    if (en) en.onclick = function () { try { localStorage.removeItem(FLAG); } catch (e) {} render(); };
+    render();
+  })();
+</script>
 </body>
 </html>

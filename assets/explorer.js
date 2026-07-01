@@ -5,6 +5,7 @@
  */
 (function(){
   function track(t,l){
+    if(window.__cutcoNoTrack) return; // Owner No-Track Mode
     try{
       var data=JSON.stringify({t:t,l:(l||'').toString().slice(0,120)});
       if(navigator.sendBeacon){ navigator.sendBeacon('/api/track', new Blob([data],{type:'application/json'})); }

@@ -10,6 +10,46 @@ if (typeof document !== "undefined") {
   // Mark JS as available as early as possible (used by CSS reveal fallback).
   document.documentElement.classList.add("js");
 
+  // --- Owner No-Track Mode -------------------------------------------------
+  // Keeps owner/admin/local devices out of the custom /api/track analytics.
+  // Opt-in with ?notrack=1 or ?ownerNoTrack=1 (persisted to localStorage), or
+  // automatically on localhost + admin routes (/stats,/leads,/moderate,/admin,/ops)
+  // or any URL carrying key=. Sensitive query params are stripped from the URL.
+  (function () {
+    var FLAG = "cutco_owner_no_track";
+    try {
+      var url = new URL(location.href);
+      var qp = url.searchParams;
+      if (qp.get("notrack") === "1" || qp.get("ownerNoTrack") === "1") {
+        try { localStorage.setItem(FLAG, "1"); } catch (e) {}
+      }
+      var dirty = false;
+      ["key", "token", "admin", "notrack", "ownerNoTrack"].forEach(function (p) {
+        if (qp.has(p)) { qp.delete(p); dirty = true; }
+      });
+      if (dirty && history.replaceState) {
+        history.replaceState(null, "", url.pathname + (qp.toString() ? "?" + qp.toString() : "") + url.hash);
+      }
+    } catch (e) {}
+
+    function computeNoTrack() {
+      try { if (localStorage.getItem(FLAG) === "1") return true; } catch (e) {}
+      var h = location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h === "::1" || h === "") return true;
+      if (/^\/(stats|leads|moderate|admin|ops)(\/|$)/i.test(location.pathname)) return true;
+      if (/[?&]key=/i.test(location.search)) return true;
+      return false;
+    }
+    window.__cutcoNoTrack = computeNoTrack();
+    // Tiny API used by the /stats Owner No-Track card.
+    window.CutcoOwnerTrack = {
+      isExcluded: function () { try { return localStorage.getItem(FLAG) === "1"; } catch (e) { return false; } },
+      isLocal: function () { var h = location.hostname; return h === "localhost" || h === "127.0.0.1" || h === "::1"; },
+      exclude: function () { try { localStorage.setItem(FLAG, "1"); } catch (e) {} window.__cutcoNoTrack = true; },
+      enable: function () { try { localStorage.removeItem(FLAG); } catch (e) {} window.__cutcoNoTrack = computeNoTrack(); },
+    };
+  })();
+
   document.addEventListener("DOMContentLoaded", () => {
     // --- Active nav highlight ---
     const key = activeNav(location.pathname);
@@ -83,6 +123,7 @@ if (typeof document !== "undefined") {
 
     // --- Lightweight event tracking: any [data-ev] click pings /api/track ---
     document.addEventListener("click", (e) => {
+      if (window.__cutcoNoTrack) return; // Owner No-Track Mode
       const el = e.target.closest && e.target.closest("[data-ev]");
       if (!el) return;
       try {
