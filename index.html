@@ -198,6 +198,41 @@
         var(--bg);
     }
   </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://cutcowithluke.com/#business",
+  "name": "CutcoWithLuke — Luke Hansen",
+  "description": "Independent Cutco representative offering in-person and video demos, gifts, owner service, and free sharpening on the North Shore of Chicago and at DePauw.",
+  "url": "https://cutcowithluke.com",
+  "telephone": "+1-312-659-4280",
+  "email": "Lukehansen01@gmail.com",
+  "image": "https://cutcowithluke.com/og-image.jpg",
+  "priceRange": "$$",
+  "areaServed": [
+    { "@type": "City", "name": "Winnetka" },
+    { "@type": "City", "name": "Glencoe" },
+    { "@type": "City", "name": "Northbrook" },
+    { "@type": "City", "name": "Evanston" },
+    { "@type": "AdministrativeArea", "name": "North Shore, Chicago" }
+  ],
+  "founder": { "@type": "Person", "name": "Luke Hansen" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Luke Hansen",
+  "jobTitle": "Independent Cutco Representative",
+  "worksFor": { "@type": "Organization", "name": "Cutco / Vector Marketing" },
+  "url": "https://cutcowithluke.com/meet",
+  "image": "https://cutcowithluke.com/luke-headshot.jpg",
+  "address": { "@type": "PostalAddress", "addressLocality": "Winnetka", "addressRegion": "IL", "addressCountry": "US" },
+  "areaServed": "North Shore of Chicago and the DePauw University area"
+}
+</script>
 </head>
 <body>
 
@@ -242,15 +277,12 @@
       <p class="hero-eyebrow">Winnetka &middot; North Shore Chicago &middot; DePauw University</p>
 
       <h1 id="hero-heading" class="hero-h1">
-        Your whole kitchen,<br>
-        <span class="hero-gradient">and a guy who&rsquo;s got you.</span>
+        Cutco that actually<br>
+        <span class="hero-gradient">fits your kitchen.</span>
       </h1>
 
       <p class="hero-lead">
-        Hi, I&rsquo;m Luke &mdash; and I&rsquo;d genuinely love to help. Cutco isn&rsquo;t just
-        knives; it&rsquo;s kitchen cutlery built to last a lifetime &mdash; knives, shears, gadgets,
-        utensils, full sets and gifts. I&rsquo;ll help you find exactly what fits <em>your</em>
-        kitchen, with zero pressure and a guarantee that never runs out.
+        I help people on the North Shore and at DePauw find the right knives, shears, gifts, and kitchen pieces &mdash; without guessing, overbuying, or sitting through a pushy pitch. You cook the way you cook; I&rsquo;ll help you get exactly the pieces you&rsquo;ll actually reach for.
       </p>
 
       <figure class="hero-banner">
@@ -265,8 +297,8 @@
       </figure>
 
       <div class="hero-cta-row">
-        <a href="/book" class="btn btn-primary hero-cta-primary">Book a Demo</a>
-        <a href="/find" class="btn btn-ghost hero-cta-secondary">Find Your Cutco &rarr;</a>
+        <a href="/book" class="btn btn-primary hero-cta-primary" data-ev="hero_book_click">Book a Demo</a>
+        <a href="/find" class="btn btn-ghost hero-cta-secondary" data-ev="hero_find_click">Find My Cutco &rarr;</a>
       </div>
 
     </div>
@@ -277,8 +309,8 @@
        ============================================================ -->
   <div class="trust-bar" role="region" aria-label="Trust signals">
     <div class="trust-bar__track" aria-hidden="true">
-      <span>&infin;&nbsp;Forever Guarantee &ensp;&middot;&ensp; Free Sharpening for Life &ensp;&middot;&ensp; &#127482;&#127480;&nbsp;American-made since 1949 &ensp;&middot;&ensp; Zero pressure, always &ensp;&middot;&ensp; 15-day money-back guarantee &ensp;&middot;&ensp; Serving the North Shore &amp; DePauw &ensp;&middot;&ensp; In person or over video &ensp;&middot;&ensp; &nbsp;</span>
-      <span>&infin;&nbsp;Forever Guarantee &ensp;&middot;&ensp; Free Sharpening for Life &ensp;&middot;&ensp; &#127482;&#127480;&nbsp;American-made since 1949 &ensp;&middot;&ensp; Zero pressure, always &ensp;&middot;&ensp; 15-day money-back guarantee &ensp;&middot;&ensp; Serving the North Shore &amp; DePauw &ensp;&middot;&ensp; In person or over video &ensp;&middot;&ensp; &nbsp;</span>
+      <span>&infin;&nbsp;Forever Guarantee &ensp;&middot;&ensp; Free Sharpening for Life &ensp;&middot;&ensp; &#127482;&#127480;&nbsp;American-made since 1949 &ensp;&middot;&ensp; Only the pieces you&rsquo;ll actually use &ensp;&middot;&ensp; 15-day money-back guarantee &ensp;&middot;&ensp; Serving the North Shore &amp; DePauw &ensp;&middot;&ensp; In person or over video &ensp;&middot;&ensp; &nbsp;</span>
+      <span>&infin;&nbsp;Forever Guarantee &ensp;&middot;&ensp; Free Sharpening for Life &ensp;&middot;&ensp; &#127482;&#127480;&nbsp;American-made since 1949 &ensp;&middot;&ensp; Only the pieces you&rsquo;ll actually use &ensp;&middot;&ensp; 15-day money-back guarantee &ensp;&middot;&ensp; Serving the North Shore &amp; DePauw &ensp;&middot;&ensp; In person or over video &ensp;&middot;&ensp; &nbsp;</span>
     </div>
   </div>
 
@@ -295,41 +327,78 @@
 
       <div class="path-grid" role="list">
 
-        <a href="/book" class="card path-card" role="listitem">
-          <span class="path-icon" aria-hidden="true">&#128197;</span>
-          <h3 class="path-title">Book a demo</h3>
-          <p class="path-desc">See the knives in action, ask anything, zero pressure. In person or over video &mdash; whatever&rsquo;s comfy.</p>
-          <span class="path-cta">Book now &rarr;</span>
+        <a href="/book" class="card path-card" role="listitem" data-ev="path_see_knives">
+          <h3 class="path-title">I want to see the knives</h3>
+          <p class="path-desc">Watch the pieces in action, ask anything, and see what actually feels useful.</p>
+          <span class="path-cta">Book a demo &rarr;</span>
         </a>
 
-        <a href="/find" class="card path-card" role="listitem">
-          <span class="path-icon" aria-hidden="true">&#128302;</span>
-          <h3 class="path-title">Find the right Cutco</h3>
-          <p class="path-desc">Answer a few quick questions and I&rsquo;ll point you to exactly what fits your kitchen and budget.</p>
-          <span class="path-cta">Start the quiz &rarr;</span>
+        <a href="/find" class="card path-card" role="listitem" data-ev="path_help_choosing">
+          <h3 class="path-title">I need help choosing</h3>
+          <p class="path-desc">A few questions and I&rsquo;ll point you to the right starting point &mdash; without overbuying.</p>
+          <span class="path-cta">Find my Cutco &rarr;</span>
         </a>
 
-        <a href="/meet" class="card path-card" role="listitem">
-          <span class="path-icon" aria-hidden="true">&#128075;</span>
-          <h3 class="path-title">Get to know Luke</h3>
-          <p class="path-desc">North Shore kid, D3 soccer player at DePauw. Find out who you&rsquo;re actually talking to.</p>
-          <span class="path-cta">Meet me &rarr;</span>
+        <a href="/gift" class="card path-card" role="listitem" data-ev="path_gift">
+          <h3 class="path-title">I&rsquo;m buying a gift</h3>
+          <p class="path-desc">Weddings, grads, housewarmings, parents, hosts, and the hard-to-shop-for.</p>
+          <span class="path-cta">Get gift ideas &rarr;</span>
         </a>
 
-        <a href="/reviews" class="card path-card" role="listitem">
-          <span class="path-icon" aria-hidden="true">&#11088;</span>
-          <h3 class="path-title">See reviews</h3>
-          <p class="path-desc">Hear from people I&rsquo;ve already worked with on the North Shore and at DePauw.</p>
-          <span class="path-cta">Read reviews &rarr;</span>
+        <a href="/owners" class="card path-card" role="listitem" data-ev="path_owner">
+          <h3 class="path-title">I already own Cutco</h3>
+          <p class="path-desc">Sharpening, service, missing pieces, owner specials, and gift ideas.</p>
+          <span class="path-cta">Owner help &rarr;</span>
         </a>
 
-        <a href="/faq" class="card path-card" role="listitem">
-          <span class="path-icon" aria-hidden="true">&#128172;</span>
-          <h3 class="path-title">Questions?</h3>
-          <p class="path-desc">Is this pushy? Do I have to buy? What is the Forever Guarantee? Straight answers, no runaround.</p>
+        <a href="/referred" class="card path-card" role="listitem" data-ev="path_referred">
+          <h3 class="path-title">Someone referred me</h3>
+          <p class="path-desc">Here&rsquo;s what to expect, and why the demo is genuinely simple.</p>
+          <span class="path-cta">What happens &rarr;</span>
+        </a>
+
+        <a href="/faq" class="card path-card" role="listitem" data-ev="path_skeptical">
+          <h3 class="path-title">I&rsquo;m skeptical</h3>
+          <p class="path-desc">Pricing, Vector, pressure, the guarantee &mdash; calm, straight answers.</p>
           <span class="path-cta">See the FAQ &rarr;</span>
         </a>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3b. WHY MEET LUKE vs BUYING ONLINE
+       ============================================================ -->
+  <section class="section" aria-labelledby="why-heading">
+    <div class="container" style="max-width:920px">
+      <p class="section-eyebrow" style="justify-content:center">Why meet me</p>
+      <h2 id="why-heading" style="text-align:center">Why meet me instead of buying cold online?</h2>
+      <p style="text-align:center;color:var(--mut);max-width:60ch;margin:0 auto var(--space-6)">
+        Buying online makes you guess. I help you narrow it down, see what the pieces actually do, and skip what you&rsquo;ll never use.
+      </p>
+      <div class="path-grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))">
+        <div class="card">
+          <h3 class="path-title" style="color:var(--mut)">Buying cold online</h3>
+          <ul style="color:var(--mut);line-height:1.9;margin:.5em 0 0;padding-left:1.15em">
+            <li>You guess what you need.</li>
+            <li>You compare too many pieces.</li>
+            <li>You overbuy &mdash; or miss the essentials.</li>
+            <li>You handle sharpening and service alone.</li>
+          </ul>
+        </div>
+        <div class="card" style="border-color:rgba(34,211,238,.4)">
+          <h3 class="path-title">Meeting with Luke</h3>
+          <ul style="color:var(--ink);line-height:1.9;margin:.5em 0 0;padding-left:1.15em">
+            <li>I ask how you actually cook.</li>
+            <li>I narrow it to a few right pieces.</li>
+            <li>I show you what they really do.</li>
+            <li>You get a local person for gifts, sharpening &amp; service.</li>
+          </ul>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:var(--space-5)">
+        <a href="/book" class="btn btn-primary" data-ev="book_full_click">Book a Demo</a>
       </div>
     </div>
   </section>
