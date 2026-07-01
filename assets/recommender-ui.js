@@ -268,46 +268,55 @@ function showResult() {
   };
   const result = recommend(a);
 
+  // Live prices + add-to-list come from the explorer (window.CutcoData) when present.
+  const data = (typeof window !== 'undefined') ? window.CutcoData : null;
+  const priceOf = (n) => (data && data.price) ? data.price(n) : '';
+
+  const picks = result.ranked.map((p, i) => {
+    const price = priceOf(p.name);
+    return `
+      <li class="rec-pick">
+        <span class="rec-rank" aria-hidden="true">${i + 1}</span>
+        <img class="rec-pic" src="/assets/products/${p.sku}.jpg" alt="${esc(p.name)}"
+             loading="lazy" decoding="async" onerror="this.style.visibility='hidden'">
+        <div class="rec-info">
+          <div class="rec-name">${esc(p.name)}${price ? ` <span class="rec-price">${esc(price)}</span>` : ''}</div>
+          <p class="rec-why">${esc(p.why)}</p>
+          <button type="button" class="rec-add" data-add="${esc(p.name)}" data-ev="quiz_add_to_list">+ Add to my list</button>
+        </div>
+      </li>`;
+  }).join('');
+
+  const smsBody = encodeURIComponent(
+    `Hi Luke! My Cutco Finder result: "${result.label}". Top picks: ` +
+    result.ranked.map((p, i) => `${i + 1}) ${p.name}`).join(', ') + `. Can we go over these?`
+  );
+
   resultEl.innerHTML = `
-    <div class="card" style="
-      max-width: 600px;
-      margin: 0 auto;
-      text-align: center;
-      padding: clamp(24px,4vw,36px);
-      border: 1.5px solid var(--cyan);
-      background: rgba(34,211,238,.04);
-    ">
-      <div style="
-        color: var(--cyan);
-        font-size: var(--fs-sm);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: .08em;
-        margin-bottom: 8px;
-      ">My pick for you</div>
-
-      <h3 style="margin: 0 0 10px; color: var(--ink)">${esc(result.title)}</h3>
-
-      <p style="color:var(--mut);line-height:1.65;margin:0 0 20px;max-width:none">
-        ${esc(result.why)}
-      </p>
-
-      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
-        <a class="btn btn-primary" style="padding:13px 26px" href="/book">
-          Book a demo &rarr;
-        </a>
-        <a class="btn btn-ghost" style="padding:12px 22px"
-           href="https://www.cutco.com/products/"
-           target="_blank" rel="noopener">
-          Browse pieces &rarr;
-        </a>
+    <div class="rec-result-card">
+      <div class="rec-fit-eyebrow">Your Kitchen Fit</div>
+      <h3 class="rec-fit-label">${esc(result.label)}</h3>
+      <p class="rec-fit-sub">Here&rsquo;s what I&rsquo;d start with &mdash; ranked. Add what you like to your list, then send it to me.</p>
+      <ol class="rec-picks">${picks}</ol>
+      <div class="rec-actions">
+        <a class="btn btn-primary" href="sms:+13126594280?&body=${smsBody}" data-ev="quiz_send_to_luke">Send This to Luke</a>
+        <a class="btn btn-ghost" href="/book" data-ev="book_full_click">Book with these notes</a>
+        <a class="btn btn-ghost" href="https://www.cutco.com/products/" target="_blank" rel="noopener">See live prices</a>
       </div>
-
-      <p style="color:var(--mut);font-size:var(--fs-sm);margin-top:14px;max-width:none">
-        Not quite right? Change any answer above to update.
-      </p>
+      <p class="rec-note">Prices are set by Cutco (as of June 2026) &mdash; always confirm current pricing on cutco.com. Not quite right? Change any answer above.</p>
     </div>
   `;
+
+  resultEl.querySelectorAll('[data-add]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const name = btn.getAttribute('data-add');
+      let ok = false;
+      if (data && data.add) { ok = data.add(name); }
+      btn.textContent = ok ? '✓ Added to list' : (data && data.add ? '✓ Already on your list' : '✓ Noted for Luke');
+      btn.disabled = true;
+      btn.classList.add('added');
+    });
+  });
 
   // Scroll the result into view smoothly so the user notices it
   resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
