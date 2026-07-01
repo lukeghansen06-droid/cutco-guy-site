@@ -224,7 +224,7 @@
     }
     function render(){
       grid.innerHTML='';
-      if(!curTab && !curQ){ countEl.textContent=''; grid.innerHTML='<div class="exp-empty">👋 Pick a category from the menu, tap a quick-pick, or search above — the whole 79-piece lineup is in here. Or ask the assistant up top.</div>'; return; }
+      if(!curTab && !curQ){ countEl.textContent=''; grid.innerHTML='<div class="exp-empty">👋 Pick a category from the menu, tap a quick-pick, or search above — the whole 89-piece lineup is in here. Or ask the assistant up top.</div>'; return; }
       var items=P.filter(matches);
       if(!items.length){ countEl.textContent=''; grid.innerHTML='<div class="exp-empty">Hmm, no match for that — try a simpler word like “knife”, “gift”, “fish”, or “cookware”. Or just <a href="sms:+13126594280" style="color:#7dd3fc">text me</a> what you’re after and I’ll find it.</div>'; return; }
       if(!shown) shown=STEP;
@@ -307,6 +307,8 @@
         }
       }catch(e){}
     })();
+    // Show the full catalog on first load (not an empty grid)
+    curTab='all'; if(selectEl){ selectEl.value='all'; } shown=STEP;
     render(); updateCart();
     // expose a small API for the AI assistant
     window.CutcoData={ P:P, has:inList, price:function(n){ return PRICES[n]||''; }, add:function(n){ if(!inList(n)){ list.push(n); save(); updateCart(); if(navigator.vibrate)navigator.vibrate(12); toast('✓ Added & saved to your list'); track('add',n); return true; } return false; }, open:openDrawer };
