@@ -907,22 +907,199 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .prep .q .n{flex:0 0 auto;width:30px;height:30px;display:grid;place-items:center;border-radius:9px;font-weight:800;font-size:.95rem;color:#04121a}
 .prep .q .t{color:var(--ink);line-height:1.5}
 
-/* ===== Section 18 — Find quiz result (ranked picks with photos) ===== */
-.rec-result-card{max-width:640px;margin:0 auto;padding:clamp(22px,4vw,34px);border-radius:20px;border:1px solid rgba(34,211,238,.35);background:linear-gradient(180deg,rgba(34,211,238,.06),rgba(255,255,255,.015));box-shadow:0 30px 80px -40px rgba(34,211,238,.5)}
-.rec-fit-eyebrow{text-align:center;font-family:var(--font-ui,"Sora");font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;color:var(--gold)}
-.rec-fit-label{text-align:center;font-family:var(--font-display,serif);font-size:clamp(1.6rem,1.2rem + 2vw,2.2rem);margin:.15em 0 .1em}
-.rec-fit-sub{text-align:center;color:var(--mut);max-width:44ch;margin:0 auto var(--space-4)}
-.rec-picks{list-style:none;margin:0;padding:0;display:grid;gap:12px}
-.rec-pick{display:grid;grid-template-columns:auto 68px 1fr;gap:14px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);text-align:left}
-.rec-rank{width:26px;height:26px;display:grid;place-items:center;border-radius:8px;font-weight:800;color:#04121a;background:linear-gradient(135deg,var(--cyan),var(--blue))}
-.rec-pic{width:68px;height:68px;object-fit:contain;background:#fff;border-radius:10px;padding:4px}
-.rec-info{min-width:0}
-.rec-name{font-weight:700;color:var(--ink);line-height:1.25}
-.rec-price{color:#86efc4;font-weight:700;font-size:.95em;margin-left:4px}
-.rec-why{color:var(--mut);font-size:.9rem;line-height:1.45;margin:3px 0 8px}
-.rec-add{font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;border:1px solid rgba(34,211,238,.5);background:rgba(34,211,238,.1);color:#7de7f5;border-radius:9px;padding:7px 12px}
-.rec-add:hover{background:rgba(34,211,238,.18)}
-.rec-add.added{border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.12);color:#a7f3d0;cursor:default}
-.rec-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:var(--space-4)}
-.rec-note{text-align:center;color:var(--mut);font-size:.8rem;margin-top:12px}
-@media (max-width:520px){.rec-pick{grid-template-columns:auto 54px 1fr;gap:10px}.rec-pic{width:54px;height:54px}}
+/* ===== Section 18 — Find quiz result (premium ranked recommendation) ===== */
+@property --rb { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes rbspin { to { --rb: 360deg; } }
+@keyframes rec-glow-pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(236,200,133,0) } 45%{ box-shadow:0 0 42px -6px rgba(236,200,133,.55) } }
+@keyframes rec-confetti-fall {
+  0%   { transform: translateY(-10px) translateX(0) rotate(0); opacity: 0; }
+  12%  { opacity: 1; }
+  100% { transform: translateY(230px) translateX(var(--dx,0)) rotate(var(--rot,180deg)); opacity: 0; }
+}
+
+/* Result container: solid dark panel with a SUBTLE animated rainbow RIM only.
+   Gradient-border trick — dark padding-box painted over a rainbow border-box —
+   so the rainbow lives only in the 2px border band and text always sits on dark. */
+.rec-result-card{
+  position:relative; max-width:660px; margin:0 auto;
+  padding:clamp(20px,3.5vw,32px);
+  border:2px solid transparent; border-radius:24px;
+  background:
+    linear-gradient(180deg,#0c1a30,#0a1424) padding-box,
+    conic-gradient(from var(--rb), #22d3ee,#6366f1,#a855f7,#ec4899,#f59e0b,#34d399,#22d3ee) border-box;
+  box-shadow:0 40px 100px -55px rgba(0,0,0,.85);
+}
+@supports (background: conic-gradient(from 0deg, red, blue)){
+  .rec-result-card{ animation: rbspin 20s linear infinite; }
+  .rec-result-card::after{                 /* restrained outside glow */
+    content:""; position:absolute; inset:-16px; border-radius:inherit; z-index:-1; pointer-events:none;
+    background: conic-gradient(from var(--rb), #22d3ee,#6366f1,#a855f7,#ec4899,#f59e0b,#34d399,#22d3ee);
+    filter:blur(30px); opacity:.12; animation: rbspin 20s linear infinite;
+  }
+}
+
+.rec-head{ text-align:center; margin-bottom:clamp(16px,3vw,22px); }
+.rec-fit-eyebrow{ font-family:var(--font-ui,"Sora"); font-weight:800; letter-spacing:.2em; text-transform:uppercase; font-size:.8rem; color:var(--gold); }
+.rec-fit-label{ font-family:var(--font-display,serif); font-size:clamp(2rem,1.4rem + 3vw,2.9rem); line-height:1.05; margin:.12em 0 .18em; }
+.rec-fit-diagnosis{ color:var(--ink); font-size:var(--fs-lg); line-height:1.5; max-width:40ch; margin:0 auto .45em; }
+.rec-based{ color:var(--mut); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; margin:0; opacity:.85; }
+
+/* #1 hero pick — slightly larger rainbow rim marks it as the emphasized card */
+.ranked-pick-card.is-top-pick{
+  display:block; position:relative; border:3px solid transparent; border-radius:20px;
+  padding:clamp(16px,3vw,22px); margin-bottom:16px;
+  background:
+    linear-gradient(180deg,#12233f,#0b1526) padding-box,
+    conic-gradient(from var(--rb), #22d3ee,#6366f1,#a855f7,#ec4899,#f59e0b,#34d399,#22d3ee) border-box;
+}
+@supports (background: conic-gradient(from 0deg, red, blue)){
+  .ranked-pick-card.is-top-pick{ animation: rbspin 24s linear infinite; }
+}
+.rpc-badge{ display:inline-block; font-family:var(--font-ui,"Sora"); font-weight:800; font-size:.74rem; letter-spacing:.08em; text-transform:uppercase; color:var(--mut); background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:99px; padding:5px 12px; margin-bottom:12px; }
+.rpc-badge.is-strong{ color:#04121a; background:linear-gradient(135deg,var(--gold),#f6dfae); border-color:transparent; }
+.rpc-top{ display:flex; gap:16px; align-items:center; }
+.rpc-photo{ width:104px; height:104px; flex:0 0 auto; object-fit:contain; background:#fff; border-radius:14px; padding:6px; }
+.rpc-headline{ min-width:0; }
+.rpc-kicker{ font-family:var(--font-ui,"Sora"); font-weight:700; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); }
+.rpc-name{ font-family:var(--font-display,serif); font-size:clamp(1.35rem,1rem + 1.8vw,1.8rem); line-height:1.15; margin:2px 0 5px; color:var(--ink); }
+.rpc-uses{ font-size:.98rem; color:var(--ink); line-height:1.5; margin:14px 0 4px; }
+.rpc-uses span{ color:var(--gold); font-weight:700; }
+.rpc-why{ font-size:.98rem; color:var(--mut); line-height:1.6; margin:8px 0 14px; }
+.rpc-why strong{ color:var(--ink); }
+.rpc-actions{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.rpc-add{ font-size:.95rem; padding:10px 16px; }
+.rec-ask{ font:inherit; font-weight:700; font-size:.92rem; color:var(--cyan); text-decoration:none; padding:9px 6px; min-height:40px; display:inline-flex; align-items:center; }
+.rec-ask:hover{ color:#7de7f5; text-decoration:underline; }
+
+/* Supporting picks (#2, #3) — plain dark cards */
+.rec-support-label{ text-align:center; font-family:var(--font-ui,"Sora"); font-weight:700; font-size:.76rem; letter-spacing:.12em; text-transform:uppercase; color:var(--mut); margin:6px 0 10px; }
+.rec-picks{ list-style:none; margin:0; padding:0; display:grid; gap:12px; }
+.ranked-pick-card{ display:grid; grid-template-columns:auto 64px 1fr; gap:14px; align-items:center; padding:12px 14px; border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,.02); text-align:left; }
+.rec-rank{ width:28px; height:28px; display:grid; place-items:center; border-radius:8px; font-weight:800; font-size:.95rem; color:#04121a; background:linear-gradient(135deg,var(--cyan),var(--blue)); }
+.rec-pic{ width:64px; height:64px; object-fit:contain; background:#fff; border-radius:10px; padding:4px; }
+.rec-info{ min-width:0; }
+.rec-name{ font-weight:700; font-size:1.02rem; color:var(--ink); line-height:1.25; }
+.rec-why{ color:var(--mut); font-size:.9rem; line-height:1.5; margin:3px 0 8px; }
+.rec-add{ font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; border:1px solid rgba(34,211,238,.5); background:rgba(34,211,238,.1); color:#7de7f5; border-radius:10px; padding:8px 14px; min-height:40px; }
+.rec-add:hover{ background:rgba(34,211,238,.18); }
+.rec-add.added{ border-color:rgba(52,211,153,.5); background:rgba(52,211,153,.12); color:#a7f3d0; cursor:default; }
+.rec-actions{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:clamp(16px,3vw,22px); }
+.rec-note{ text-align:center; color:var(--mut); font-size:.82rem; line-height:1.5; margin-top:14px; }
+
+/* Confetti — pointer-events:none + clipped so it can never block a button */
+.rec-confetti{ position:absolute; inset:0 0 auto 0; height:62%; overflow:hidden; border-radius:22px 22px 0 0; pointer-events:none; z-index:4; }
+.rec-confetti i{ position:absolute; top:-10px; left:var(--x,50%); width:8px; height:11px; opacity:0; will-change:transform,opacity; animation:rec-confetti-fall 1200ms var(--delay,0ms) cubic-bezier(.25,.75,.35,1) forwards; }
+
+@media (max-width:520px){
+  .rec-result-card{ padding:18px 14px; }
+  .rpc-top{ gap:12px; }
+  .rpc-photo{ width:84px; height:84px; }
+  .ranked-pick-card{ grid-template-columns:auto 52px 1fr; gap:10px; }
+  .rec-pic{ width:52px; height:52px; }
+  .rec-actions .btn{ width:100%; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .rec-result-card, .rec-result-card::after, .ranked-pick-card.is-top-pick{ animation:none; }
+  .animated-gradient-text{ animation:none; }
+  .rec-confetti{ display:none; }
+  .rec-celebrate-glow{ animation:rec-glow-pulse 1400ms ease-out 1; }
+}
+
+/* ===== Section 20 — price status microcopy (honest pricing) ===== */
+.psnap{font-size:.72rem;color:var(--mut);margin-top:2px;line-height:1.35}
+.pask{font-size:.85rem;color:var(--mut);font-weight:600;margin:2px 0}
+.pofficial{display:inline-block;font-size:.78rem;font-weight:700;color:var(--cyan);margin-top:4px}
+.pofficial:hover{color:#7de7f5}
+.ranked-pick-card:not(.is-top-pick) .psnap,.ranked-pick-card:not(.is-top-pick) .pask{font-size:.7rem}
+.ranked-pick-card .pprice{font-weight:800;color:#86efc4}
+.is-top-pick .pprice{font-size:1.15rem}
+.ct-note{font-size:.78rem;color:var(--mut);line-height:1.45;margin-top:6px}
+.ct-easy{font-size:.78rem;color:var(--mut);margin-top:4px}
+
+/* ===== Section 21 — premium heading kit + Book page demo cards ===== */
+
+/* Reusable, opt-in premium heading classes (do NOT restyle the whole site) */
+.eyebrow-premium{ font-family:var(--font-ui,"Sora"); font-weight:800; letter-spacing:.2em; text-transform:uppercase; font-size:.78rem; color:var(--gold); display:inline-block; }
+.section-heading-premium{ font-family:var(--font-display,serif); font-size:var(--fs-h2); line-height:1.06; margin:.1em 0 .3em; }
+@keyframes gradient-slide{ 0%,100%{ background-position:0% center } 50%{ background-position:100% center } }
+.animated-gradient-text{
+  background:linear-gradient(100deg,#eaf4ff 0%,var(--cyan) 30%,var(--gold) 55%,#eaf4ff 80%);
+  background-size:220% auto; -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent;
+  animation:gradient-slide 8s ease-in-out infinite;
+}
+.heading-underline-glow{ position:relative; display:inline-block; }
+.heading-underline-glow::after{
+  content:""; position:absolute; left:8%; right:8%; bottom:-.32em; height:2px; border-radius:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--cyan),transparent);
+  box-shadow:0 0 14px -2px var(--gold);
+}
+.premium-cta-row{ gap:12px; margin-top:clamp(18px,3.5vw,26px); }
+
+/* Book page — premium demo cards (Full Experience primary, Quick 20 secondary) */
+.demo-grid{ display:grid; grid-template-columns:1.12fr 1fr; gap:clamp(16px,3vw,26px); align-items:stretch; }
+.premium-demo-card{ position:relative; display:flex; flex-direction:column; background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.008)); border:1px solid var(--line); border-radius:20px; padding:clamp(22px,4vw,32px); }
+.premium-demo-card .demo-len{ font-family:var(--font-ui,"Sora"); font-weight:800; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color:var(--mut); }
+.premium-demo-card h2{ font-family:var(--font-display,serif); font-size:clamp(1.5rem,1.1rem + 1.8vw,2rem); line-height:1.1; margin:.15em 0 .2em; }
+.demo-badge{ display:inline-block; align-self:flex-start; font-family:var(--font-ui,"Sora"); font-weight:700; font-size:.74rem; letter-spacing:.04em; color:var(--mut); background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:99px; padding:5px 12px; margin-bottom:14px; }
+.premium-demo-card p{ color:var(--mut); line-height:1.65; font-size:var(--fs-base); margin:0 0 16px; }
+.demo-includes{ list-style:none; margin:0 0 20px; padding:0; display:grid; gap:9px; }
+.demo-includes li{ position:relative; padding-left:26px; color:var(--ink); line-height:1.5; font-size:.98rem; }
+.demo-includes li::before{ content:"✓"; position:absolute; left:0; top:0; color:var(--cyan); font-weight:800; }
+.premium-demo-card .btn{ margin-top:auto; width:100%; }
+.demo-card-primary{ border-color:rgba(236,200,133,.5); background:linear-gradient(180deg,rgba(236,200,133,.09),rgba(236,200,133,.02)); box-shadow:var(--glow-gold); }
+.demo-card-primary .demo-badge{ color:#04121a; background:linear-gradient(135deg,var(--gold),#f6dfae); border-color:transparent; font-weight:800; }
+.demo-card-primary .demo-len,.demo-card-primary h2{ color:var(--ink); }
+.demo-card-primary .demo-includes li::before{ color:var(--gold); }
+
+/* "Why book" comparison */
+.vs{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(14px,3vw,22px); }
+.vs .col{ border:1px solid var(--line); border-radius:18px; padding:clamp(18px,3vw,26px); background:rgba(255,255,255,.015); }
+.vs .col.me{ border-color:rgba(34,211,238,.4); background:linear-gradient(180deg,rgba(34,211,238,.06),transparent); }
+.vs .col h3{ font-size:1.15rem; margin:0 0 14px; }
+.vs .col ul{ list-style:none; margin:0; padding:0; display:grid; gap:11px; }
+.vs .col li{ display:flex; gap:10px; align-items:flex-start; color:var(--ink); line-height:1.5; font-size:.98rem; }
+.vs .yes{ color:#34d399; font-weight:800; flex:0 0 auto; }
+.vs .no{ color:#ff6b86; font-weight:800; flex:0 0 auto; }
+
+@media (max-width:720px){
+  .demo-grid{ grid-template-columns:1fr; }
+  .vs{ grid-template-columns:1fr; }
+}
+
+/* ===== Section 22 — AI sidekick premium polish + reply CTAs/chips ===== */
+.asst-box{ max-width:620px; margin:0 auto; background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.008)); border:1px solid var(--line); border-radius:20px; box-shadow:0 30px 80px -55px rgba(0,0,0,.8); }
+.asst-log{ max-height:400px; }
+.asst-msg{ font-size:.98rem; line-height:1.6; max-width:88%; }
+.asst-msg--bot{ background:linear-gradient(180deg,#12203a,#0e1a30); border-color:var(--line); }
+
+/* Action CTAs under a bot reply */
+.asst-ctas{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.asst-cta{ display:inline-flex; align-items:center; min-height:38px; padding:8px 14px; font-size:.86rem; font-weight:700; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--ink) !important; text-decoration:none !important; cursor:pointer; transition:border-color var(--dur) var(--ease), background var(--dur) var(--ease); font-family:inherit; }
+.asst-cta:hover,.asst-cta:focus-visible{ border-color:var(--cyan); background:rgba(34,211,238,.08); }
+.asst-cta--primary{ color:#04121a !important; background:linear-gradient(135deg,var(--gold),#f6dfae); border-color:transparent; }
+.asst-cta--primary:hover{ filter:brightness(1.04); }
+
+/* Follow-up quick chips under a bot reply */
+.asst-followups{ display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; }
+.asst-chip--sm{ min-height:34px; padding:6px 12px; font-size:12px; border-radius:999px; }
+
+@media (max-width:480px){
+  .asst-cta{ width:100%; justify-content:center; }
+  .asst-chip--sm{ width:auto; }
+}
+
+/* Finder progress + reset control */
+.rec-quiz-head{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.rec-progress{ flex:1; height:7px; border-radius:99px; background:rgba(255,255,255,.08); overflow:hidden; }
+.rec-progress-fill{ display:block; height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,var(--cyan),var(--gold)); transition:width .3s var(--ease); }
+.rec-progress-txt{ font-size:.78rem; color:var(--mut); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.rec-reset{ font:inherit; font-size:.82rem; font-weight:700; color:var(--mut); background:transparent; border:1px solid var(--line); border-radius:99px; padding:6px 14px; min-height:36px; cursor:pointer; white-space:nowrap; transition:border-color var(--dur) var(--ease), color var(--dur) var(--ease); }
+.rec-reset:hover,.rec-reset:focus-visible{ border-color:var(--cyan); color:var(--ink); }
+@media (prefers-reduced-motion: reduce){ .rec-progress-fill{ transition:none; } }
+
+/* /find — premium hero trust strip + finder panel (concierge feel) */
+.find-trust{ color:var(--mut); font-size:.86rem; letter-spacing:.01em; margin:18px 0 0; line-height:1.6; }
+.finder-panel{ max-width:680px; margin:0 auto; background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.008)); border:1px solid var(--line); border-radius:22px; padding:clamp(18px,3.5vw,30px); box-shadow:0 30px 80px -55px rgba(0,0,0,.8); }
+@media (max-width:520px){ .finder-panel{ padding:16px 12px; } }

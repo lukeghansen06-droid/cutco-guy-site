@@ -4,7 +4,30 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "bun test"
+    "test": "bun test",
+    "preflight": "node scripts/preflight.mjs",
+    "audit:cutco": "node scripts/audit-cutco-products.mjs",
+    "audit:links": "node scripts/audit-links.mjs",
+    "audit:seo": "node scripts/audit-seo.mjs",
+    "audit:events": "node scripts/audit-events.mjs",
+    "audit:copy": "node scripts/audit-copy-guard.mjs",
+    "check:cache": "node scripts/check-cache-bump.mjs",
+    "audit:api": "node scripts/audit-api-health.mjs",
+    "report:sales": "node scripts/sales-opportunity-report.mjs",
+    "digest:admin": "node scripts/admin-digest.mjs",
+    "audit:all": "npm run audit:cutco && npm run audit:links && npm run audit:seo && npm run audit:events && npm run audit:copy && npm run check:cache && npm run audit:api",
+    "apply:approved": "node scripts/apply-approved-product-updates.mjs",
+    "jobs:list": "node scripts/run-job.mjs --list",
+    "jobs:safe": "node scripts/run-job.mjs --all-safe",
+    "jobs:daily": "node scripts/run-job.mjs --daily",
+    "jobs:weekly": "node scripts/run-job.mjs --weekly",
+    "ops:list": "node scripts/run-job.mjs --list",
+    "ops:safe": "node scripts/run-job.mjs --all-safe",
+    "ops:daily": "node scripts/run-job.mjs --daily",
+    "ops:weekly": "node scripts/run-job.mjs --weekly",
+    "ops:preflight": "node scripts/run-job.mjs full-preflight",
+    "ops:price-review": "node scripts/run-job.mjs draft-july-price-review",
+    "ops:admin-digest": "node scripts/run-job.mjs admin-digest"
   },
   "dependencies": {
     "@vercel/kv": "^1.0.1"

@@ -1,0 +1,79 @@
+name: "Site Health Audit — Report Only"
+
+# Report-only. This workflow NEVER commits, pushes, deploys, edits prices, or
+# overwrites content. `permissions: contents: read` makes writing to the repo
+# impossible. It runs the test suite + every report-only audit and uploads the
+# generated reports as build artifacts. No secrets are used or required.
+
+on:
+  schedule:
+    - cron: "0 13 * * *"   # daily ~08:00 America/Chicago (13:00 UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    name: Run report-only audits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (read-only)
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # Only dependency is @vercel/kv (declared in package.json). No secrets.
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run tests
+        run: bun test
+
+      # Report-only audits. continue-on-error so a hard-fail (e.g. a broken link)
+      # still lets the reports upload — the artifacts are the point.
+      - name: Product / price audit
+        run: npm run audit:cutco
+        continue-on-error: true
+      - name: Link / route audit
+        run: npm run audit:links
+        continue-on-error: true
+      - name: SEO / local audit
+        run: npm run audit:seo
+        continue-on-error: true
+      - name: Event-coverage audit
+        run: npm run audit:events
+        continue-on-error: true
+      - name: Copy / trust guard
+        run: npm run audit:copy
+        continue-on-error: true
+      - name: Cache-bump check
+        run: npm run check:cache
+        continue-on-error: true
+      - name: API health
+        run: npm run audit:api
+        continue-on-error: true
+      - name: Sales-opportunity report
+        run: npm run report:sales
+        continue-on-error: true
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-health-reports
+          path: |
+            reports/automation/*.md
+            reports/automation/*.json
+            reports/cutco-audit/latest-report.md
+            reports/cutco-audit/latest-report.json
+          if-no-files-found: warn
+          retention-days: 30

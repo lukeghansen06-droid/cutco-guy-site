@@ -199,20 +199,18 @@
         : '<div class="pic"><svg viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[p.ic]||ICONS.knife)+'</svg></div>';
       var pr=PRICES[p.n], pp=parsePrice(pr);
       var val=VALUES[p.n];
-      var valHtml=(val && pp)?('<div class="pvalue">💎 '+esc(money(val))+' value when bought separately</div>'):'';
-      var priceHtml='';
-      if(pr){
-        var priceTxt=pp?(money(pp.num)+(pp.from?'+':'')):pr;
-        var saveTxt=(val && pp)?(' <span class="psave">you save '+esc(money(val-pp.num))+'</span>'):'';
-        priceHtml='<div class="pprice">'+esc(priceTxt)+saveTxt+'</div>';
-      }
-      var easyHtml=(pp && showEasy(p,pp.num))?('<div class="peasy">💳 Interest-free <strong>EasyPay</strong> — split into monthly payments</div>'):'';
+      var valHtml='';
+      var priceTxt=pr?(pp?(money(pp.num)+(pp.from?'+':'')):pr):null;
+      var priceHtml=(window.PriceStatus
+        ? window.PriceStatus.priceBlock(p.n, priceTxt)
+        : (priceTxt?('<div class="pprice">'+esc(priceTxt)+'</div><div class="psnap">June 2026 snapshot — confirm current price</div>'):'<div class="pask">Ask Luke to confirm price</div>'));
+      var easyHtml=(pp && showEasy(p,pp.num))?('<div class="peasy">Interest-free EasyPay available — ask Luke</div>'):'';
       var badge=BEST[p.n]?'<span class="ptag">★ Bestseller</span>':'';
       var setbadge=isSet?'<span class="settag">✦ Bundle</span>':'';
       card.innerHTML=badge+setbadge+pic+
         '<h4>'+esc(p.n)+'</h4>'+valHtml+priceHtml+easyHtml+'<p class="pdesc">'+esc(p.d)+'</p>'+
-        '<div class="pacts"><button type="button" class="addbtn'+(added?' added':'')+'">'+(added?'✓ On your list':'♡ Add to list')+'</button>'+
-        '<a class="viewbtn" href="'+p.u+'" target="_blank" rel="noopener">View ↗</a></div>';
+        '<div class="pacts"><button type="button" class="addbtn'+(added?' added':'')+'" data-ev="explorer_add_to_list">'+(added?'✓ On your list':'♡ Add to list')+'</button>'+
+        '<a class="viewbtn" href="'+p.u+'" target="_blank" rel="noopener" data-ev="official_cutco_link_click">View ↗</a></div>';
       var btn=card.querySelector('.addbtn');
       btn.addEventListener('click',function(){
         if(inList(p.n)){ list.splice(list.indexOf(p.n),1); btn.classList.remove('added'); btn.textContent='♡ Add to list'; }
@@ -266,13 +264,20 @@
       if(!list.length){ cBody.innerHTML='<div class="drawer-empty">Your list is empty.<br>Tap “♡ Add to list” on any piece you’re curious about — it saves automatically, then you can send it straight to me. 🙂</div>'; cFoot.innerHTML=''; return; }
       cBody.innerHTML='<div class="saved-note">💾 Saved on this device — it’ll still be here when you come back.</div>'+list.map(function(n){ return '<div class="witem"><span class="wn">'+esc(n)+(PRICES[n]?(' <span class="wp">'+esc(PRICES[n])+'</span>'):'')+'</span><button type="button" class="wrm" data-n="'+esc(n)+'" aria-label="Remove">×</button></div>'; }).join('');
       Array.prototype.forEach.call(cBody.querySelectorAll('.wrm'),function(x){ x.addEventListener('click',function(){ var n=x.getAttribute('data-n'); var i=list.indexOf(n); if(i>-1){ list.splice(i,1); save(); updateCart(); } }); });
-      var total=0, anyFrom=false, priced=0, save=0;
-      list.forEach(function(n){ var pp=parsePrice(PRICES[n]); if(pp){ total+=pp.num; priced++; if(pp.from) anyFrom=true; var v=VALUES[n]; if(v) save+=(v-pp.num); } });
-      var totalHtml = priced ? ('<div class="cart-total"><div class="ct-row"><span>Estimated total</span><strong>'+money(total)+(anyFrom?'+':'')+'</strong></div>'+(save>0?'<div class="ct-save">💎 You save '+money(save)+' vs. buying the pieces separately</div>':'')+'<div class="ct-easy">💳 Interest-free EasyPay available — split it into monthly payments (ask Luke)</div>'+(priced<list.length?'<div class="ct-note">A couple items are priced by size — we’ll confirm the exact total together.</div>':'')+'</div>') : '';
-      var raw='Hi Luke! Here’s my Cutco wish list from your site:\n\n'+list.map(function(n,i){return (i+1)+'. '+n+(PRICES[n]?(' — '+PRICES[n]):'');}).join('\n')+(priced?('\n\nEstimated total: '+money(total)+(anyFrom?'+':'')+(save>0?('  (saves '+money(save)+' vs. separately)'):'')):'')+'\n\nCan we go over these? I’d love the full demo — and tell me about interest-free EasyPay.';
+      var total=0, anyFrom=false, priced=0;
+      list.forEach(function(n){ var pp=parsePrice(PRICES[n]); if(pp){ total+=pp.num; priced++; if(pp.from) anyFrom=true; } });
+      var allVerified = list.length>0 && priced===list.length;
+      var totalHtml = allVerified
+        ? ('<div class="cart-total"><div class="ct-row"><span>Listed snapshot total</span><strong>'+money(total)+(anyFrom?'+':'')+'</strong></div>'+
+           '<div class="ct-note">June 2026 snapshot — before tax, shipping, personalization, and current specials. Confirm current pricing with Luke or Cutco.</div>'+
+           '<div class="ct-easy">Interest-free EasyPay can split it into monthly payments — ask Luke.</div></div>')
+        : ('<div class="cart-total"><div class="ct-row"><span>Some prices need confirmation.</span></div>'+
+           '<div class="ct-note">A few items don’t have a listed price yet — text me and I’ll confirm current pricing.</div></div>');
+      var fit=''; try{ var qf=JSON.parse(localStorage.getItem('cutcoFit')||'null'); if(qf&&qf.label) fit='Kitchen Fit: '+qf.label+(qf.answers?(' ('+qf.answers+')'):'')+'\n\n'; }catch(e){}
+      var raw='Hi Luke! Here’s my Cutco wish list from your site:\n\n'+fit+list.map(function(n,i){ var sku=IMG[n]||''; var pr=PRICES[n]; return (i+1)+'. '+n+(sku?(' ['+sku+']'):'')+(pr?(' — '+pr+' (June 2026 snapshot)'):' — price to confirm'); }).join('\n')+(allVerified?('\n\nListed snapshot total: '+money(total)+(anyFrom?'+':'')+' (before tax/shipping — please confirm current pricing)'):'\n\nSome prices need confirming — can you check?')+'\n\nCan we go over these? I’d love the full demo.';
       var body=encodeURIComponent(raw);
       cFoot.innerHTML=totalHtml+
-        '<a class="btn btn-grad" id="textListBtn" style="padding:13px" href="sms:+13126594280?&body='+body+'">💬 Text my list to Luke</a>'+
+        '<a class="btn btn-grad" id="textListBtn" style="padding:13px" data-ev="my_list_text_luke" href="sms:+13126594280?&body='+body+'">Text my list to Luke</a>'+
         '<a class="btn btn-ghost" style="padding:13px" href="mailto:Lukehansen01@gmail.com?subject='+encodeURIComponent('My Cutco wish list')+'&body='+body+'">✉️ Email it instead</a>'+
         (navigator.share?'<button type="button" class="btn btn-ghost" id="shareListBtn" style="padding:13px">📤 Share my list</button>':'')+
         '<a class="btn btn-ghost" style="padding:13px" href="https://calendly.com/lukehansen01/30min" target="_blank" rel="noopener">📅 Book the full hour to see them</a>'+
@@ -280,7 +285,7 @@
       var tb=document.getElementById('textListBtn'); if(tb) tb.addEventListener('click',function(){ confetti(); track('send','list of '+list.length); });
       var sb=document.getElementById('shareListBtn'); if(sb) sb.addEventListener('click',function(){ if(navigator.share){ navigator.share({title:'My Cutco list',text:raw,url:listLink()}).then(function(){confetti();}).catch(function(){}); } });
       var cb=document.getElementById('copyListBtn'); if(cb) cb.addEventListener('click',function(){ var link=listLink(); if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(link).then(function(){ cb.textContent='✓ Copied!'; setTimeout(function(){cb.textContent='🔗 Copy link';},1800); },function(){ window.prompt('Copy your list link:',link); }); } else { window.prompt('Copy your list link:',link); } });
-      var clb=document.getElementById('clearListBtn'); if(clb) clb.addEventListener('click',function(){ if(window.confirm('Clear your whole list?')){ list.length=0; save(); updateCart(); } });
+      var clb=document.getElementById('clearListBtn'); if(clb) clb.addEventListener('click',function(){ if(window.confirm('Clear your whole list?')){ list.length=0; save(); updateCart(); track('ev','my_list_clear'); } });
     }
     function openDrawer(){ drawer.classList.add('open'); renderDrawer(); }
     function closeDrawer(){ drawer.classList.remove('open'); }

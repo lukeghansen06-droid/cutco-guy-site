@@ -1,0 +1,16 @@
+{
+  "_comment": "Copy to approved-updates.json and fill in ONLY prices Luke personally verified on cutco.com. sku must match assets/explorer.js IMG. newPriceCents is the full retail price in cents (e.g. $197.00 -> 19700). The apply script is dry-run unless you pass --apply, and it backs up explorer.js first. It never fetches or guesses prices.",
+  "approvedAt": "2026-07-01",
+  "approvedBy": "Luke",
+  "updates": [
+    {
+      "id": "example-do-not-apply",
+      "sku": "1725C",
+      "productName": "9-1/4\" French Chef",
+      "newPriceCents": 20000,
+      "priceVerifiedLabel": "July 2026 manual verification",
+      "officialUrl": "https://www.cutco.com/shop/chef-knives",
+      "approved": false
+    }
+  ]
+}

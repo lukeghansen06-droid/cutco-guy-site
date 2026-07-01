@@ -116,9 +116,17 @@ function esc(str) {
 function renderQuiz() {
   if (!mount) return;
 
+  const answeredCount = Object.values(answers).filter(v => v !== null).length;
   let html = `
     <form id="rec-form" novalidate aria-label="Product recommender quiz"
           style="max-width:600px;margin:0 auto">
+      <div class="rec-quiz-head">
+        <div class="rec-progress" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="${answeredCount}" aria-label="Questions answered">
+          <span class="rec-progress-fill" id="rec-progress-fill" style="width:${(answeredCount / 5 * 100).toFixed(0)}%"></span>
+        </div>
+        <span class="rec-progress-txt" id="rec-progress-txt">${answeredCount} of 5</span>
+        <button type="button" class="rec-reset" id="rec-reset-top">Start over</button>
+      </div>
   `;
 
   QUESTIONS.forEach(q => {
@@ -208,14 +216,23 @@ function renderQuiz() {
   form.addEventListener('change', e => {
     const input = e.target;
     if (input.type !== 'radio') return;
+    if (!window.__quizStarted) {
+      window.__quizStarted = true;
+      try { navigator.sendBeacon && navigator.sendBeacon('/api/track', new Blob([JSON.stringify({ t: 'ev', l: 'find_quiz_start' })], { type: 'application/json' })); } catch (e) {}
+    }
     const { name, value } = input;
     const q = QUESTIONS.find(q => q.key === name);
     // Convert to boolean for boolKey questions, otherwise keep string
     answers[name] = q && q.boolKey ? value === 'true' : value;
     refreshLabelStyles(form, name, value);
+    updateProgress();
     // Auto-show result as soon as all questions are answered
     if (allAnswered()) showResult();
   });
+
+  // Start-over control in the quiz header
+  const resetBtn = mount.querySelector('#rec-reset-top');
+  if (resetBtn) resetBtn.addEventListener('click', resetQuiz);
 
   // Submit also triggers result (handles keyboard Enter on focused radio)
   form.addEventListener('submit', e => {
@@ -251,6 +268,101 @@ function refreshLabelStyles(form, name, selectedValue) {
   });
 }
 
+/** Update the progress bar + "X of 5" after each selection. */
+function updateProgress() {
+  if (!mount) return;
+  const count = Object.values(answers).filter(v => v !== null).length;
+  const fill = mount.querySelector('#rec-progress-fill');
+  const txt  = mount.querySelector('#rec-progress-txt');
+  const bar  = mount.querySelector('.rec-progress');
+  if (fill) fill.style.width = (count / 5 * 100).toFixed(0) + '%';
+  if (txt)  txt.textContent = count + ' of 5';
+  if (bar)  bar.setAttribute('aria-valuenow', String(count));
+}
+
+/**
+ * Reset the finder: clear answers + Kitchen Fit state + celebration guards,
+ * re-render the fresh quiz, and focus the first question. Never touches My List.
+ */
+function resetQuiz() {
+  answers = { cook: null, household: null, purpose: null, budget: null, owns: null };
+  try { localStorage.removeItem('cutcoFit'); } catch (e) {}
+  window.__quizStarted = false;
+  window.__perfectSeen = false;
+  hasCelebrated = false;
+  trackEvent('find_quiz_reset');
+  renderQuiz();                      // rebuilds the form + clears the visible result
+  if (mount) {
+    mount.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const first = mount.querySelector('#rec-form input[type="radio"]');
+    if (first) first.focus({ preventScroll: true });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Result helpers
+// ---------------------------------------------------------------------------
+// One-sentence diagnosis keyed off the result lane (from recommender.js).
+const DIAGNOSIS = {
+  simple:     'Simple meals, no clutter — you want one knife that just works.',
+  starter:    'A smart, no-overbuy starting point you can build on over time.',
+  everyday:   'You cook often — you want daily-driver knives that keep up.',
+  full:       'You’re outfitting a real kitchen and want it done right.',
+  college:    'A compact, guaranteed-for-life setup for a smaller kitchen.',
+  freshstart: 'A clean, capable starting point for a new place.',
+  gift:       'A genuinely useful gift that feels premium and lasts.',
+  owner:      'You already own Cutco — let’s fill the gap, not repeat it.',
+};
+
+function prefersReducedMotion() {
+  try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  catch (e) { return false; }
+}
+
+/** Fire a lightweight analytics view-event (not a click) exactly like completion. */
+function trackEvent(label) {
+  try {
+    const b = JSON.stringify({ t: 'ev', l: label });
+    if (navigator.sendBeacon) navigator.sendBeacon('/api/track', new Blob([b], { type: 'application/json' }));
+    else fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: b, keepalive: true }).catch(() => {});
+  } catch (e) {}
+}
+
+let hasCelebrated = false;
+/**
+ * Tasteful, one-shot celebration when the result first appears.
+ * Full motion: a short burst of small gold/cyan/rainbow particles over the
+ * result header (pointer-events:none, auto-removed). Reduced motion: a single
+ * subtle glow pulse on the card instead — no particles, nothing to clean up.
+ */
+function celebrate(card) {
+  if (hasCelebrated || !card) return;
+  hasCelebrated = true;
+
+  if (prefersReducedMotion()) {
+    card.classList.add('rec-celebrate-glow');
+    setTimeout(() => card.classList.remove('rec-celebrate-glow'), 1600);
+    return;
+  }
+
+  const layer = document.createElement('div');
+  layer.className = 'rec-confetti';
+  layer.setAttribute('aria-hidden', 'true');
+  const colors = ['#ecc885', '#22d3ee', '#a855f7', '#ec4899', '#34d399'];
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('i');
+    p.style.background = colors[i % colors.length];
+    p.style.setProperty('--x', (Math.random() * 100).toFixed(2) + '%');
+    p.style.setProperty('--dx', ((Math.random() * 2 - 1) * 46).toFixed(0) + 'px');
+    p.style.setProperty('--delay', (Math.random() * 180).toFixed(0) + 'ms');
+    p.style.setProperty('--rot', (Math.random() * 360).toFixed(0) + 'deg');
+    if (i % 3 === 0) p.style.borderRadius = '50%';
+    layer.appendChild(p);
+  }
+  card.appendChild(layer);
+  setTimeout(() => layer.remove(), 1500);
+}
+
 // ---------------------------------------------------------------------------
 // Result display
 // ---------------------------------------------------------------------------
@@ -267,45 +379,92 @@ function showResult() {
     owns:      answers.owns === true || answers.owns === 'true',
   };
   const result = recommend(a);
+  const top = result.ranked[0];
+  const support = result.ranked.slice(1);
 
-  // Live prices + add-to-list come from the explorer (window.CutcoData) when present.
+  // Snapshot prices + add-to-list come from the explorer (window.CutcoData) when present.
   const data = (typeof window !== 'undefined') ? window.CutcoData : null;
   const priceOf = (n) => (data && data.price) ? data.price(n) : '';
+  const priceBlock = (name) => window.PriceStatus
+    ? window.PriceStatus.priceBlock(name, priceOf(name))
+    : (priceOf(name) ? `<div class="pprice">${esc(priceOf(name))}</div><div class="psnap">June 2026 snapshot — confirm current price</div>` : '<div class="pask">Ask Luke to confirm price</div>');
 
-  const picks = result.ranked.map((p, i) => {
-    const price = priceOf(p.name);
-    return `
-      <li class="rec-pick">
-        <span class="rec-rank" aria-hidden="true">${i + 1}</span>
+  const badgeStar = result.badge.strong ? '★ ' : '';
+  const diagnosis = DIAGNOSIS[result.lane] || 'Here’s the setup that best fits your answers.';
+
+  const supportHtml = support.map((p, i) => `
+      <li class="ranked-pick-card">
+        <span class="rec-rank" aria-hidden="true">${i + 2}</span>
         <img class="rec-pic" src="/assets/products/${p.sku}.jpg" alt="${esc(p.name)}"
              loading="lazy" decoding="async" onerror="this.style.visibility='hidden'">
         <div class="rec-info">
-          <div class="rec-name">${esc(p.name)}${price ? ` <span class="rec-price">${esc(price)}</span>` : ''}</div>
+          <div class="rec-name">${esc(p.name)}</div>
+          ${priceBlock(p.name)}
           <p class="rec-why">${esc(p.why)}</p>
-          <button type="button" class="rec-add" data-add="${esc(p.name)}" data-ev="quiz_add_to_list">+ Add to my list</button>
+          <button type="button" class="rec-add" data-add="${esc(p.name)}" data-ev="quiz_add_product_to_list">+ Add</button>
         </div>
-      </li>`;
-  }).join('');
+      </li>`).join('');
 
-  const smsBody = encodeURIComponent(
+  const smsSend = encodeURIComponent(
     `Hi Luke! My Cutco Finder result: "${result.label}". Top picks: ` +
     result.ranked.map((p, i) => `${i + 1}) ${p.name}`).join(', ') + `. Can we go over these?`
   );
+  const smsBook = encodeURIComponent(
+    `Hey Luke, I got "${result.label}". My top picks were ` +
+    result.ranked.map((p, i) => `${i + 1}) ${p.name}`).join(', ') + `. Can we book a demo around this?`
+  );
+  const smsAsk = encodeURIComponent(`Hi Luke! Quick question about the ${top.name} — can you tell me more and confirm the current price?`);
 
   resultEl.innerHTML = `
     <div class="rec-result-card">
-      <div class="rec-fit-eyebrow">Your Kitchen Fit</div>
-      <h3 class="rec-fit-label">${esc(result.label)}</h3>
-      <p class="rec-fit-sub">Here&rsquo;s what I&rsquo;d start with &mdash; ranked. Add what you like to your list, then send it to me.</p>
-      <ol class="rec-picks">${picks}</ol>
-      <div class="rec-actions">
-        <a class="btn btn-primary" href="sms:+13126594280?&body=${smsBody}" data-ev="quiz_send_to_luke">Send This to Luke</a>
-        <a class="btn btn-ghost" href="/book" data-ev="book_full_click">Book with these notes</a>
-        <a class="btn btn-ghost" href="https://www.cutco.com/products/" target="_blank" rel="noopener">See live prices</a>
+      <div class="rec-head">
+        <div class="rec-fit-eyebrow eyebrow-premium">Your Kitchen Fit</div>
+        <h3 class="rec-fit-label animated-gradient-text">${esc(result.label)}</h3>
+        <p class="rec-fit-diagnosis">${esc(diagnosis)}</p>
+        <p class="rec-based">Based on your answers</p>
       </div>
-      <p class="rec-note">Prices are set by Cutco (as of June 2026) &mdash; always confirm current pricing on cutco.com. Not quite right? Change any answer above.</p>
+
+      <div class="ranked-pick-card is-top-pick">
+        <div class="rpc-badge${result.badge.strong ? ' is-strong' : ''}">${badgeStar}${esc(result.badge.label)}</div>
+        <div class="rpc-top">
+          <img class="rpc-photo" src="/assets/products/${top.sku}.jpg" alt="${esc(top.name)}"
+               loading="lazy" decoding="async" onerror="this.style.visibility='hidden'">
+          <div class="rpc-headline">
+            <div class="rpc-kicker">Your #1 pick</div>
+            <div class="rpc-name">${esc(top.name)}</div>
+            ${priceBlock(top.name)}
+          </div>
+        </div>
+        ${result.uses ? `<p class="rpc-uses"><span>Main uses:</span> ${esc(result.uses)}</p>` : ''}
+        <p class="rpc-why"><strong>Why this fits:</strong> ${esc(result.detail)}</p>
+        <div class="rpc-actions">
+          <button type="button" class="rec-add rpc-add" data-add="${esc(top.name)}" data-ev="quiz_add_product_to_list">+ Add to My List</button>
+          <a class="rec-ask" href="sms:+13126594280?&body=${smsAsk}" data-ev="price_check_text_luke">Ask Luke about this</a>
+        </div>
+      </div>
+
+      ${support.length ? `<p class="rec-support-label">Great pairings for this setup</p><ol class="rec-picks">${supportHtml}</ol>` : ''}
+
+      <div class="rec-actions premium-cta-row">
+        <a class="btn btn-primary" href="sms:+13126594280?&body=${smsSend}" data-ev="find_quiz_send_to_luke">Send This to Luke</a>
+        <a class="btn btn-grad" href="sms:+13126594280?&body=${smsBook}" data-ev="book_with_result_click">Book With This Result</a>
+        <a class="btn btn-ghost" href="#expGrid" data-ev="keep_browsing_products">Keep Browsing Products</a>
+        <button type="button" class="btn btn-ghost rec-result-reset">Start Over</button>
+      </div>
+      <p class="rec-note">Prices are a June 2026 snapshot set by Cutco &mdash; confirm current pricing on cutco.com. Not quite right? Change any answer above.</p>
     </div>
   `;
+
+  // Save the Kitchen Fit result so the My List SMS can include it; track completion.
+  try {
+    const compact = ['cook:' + a.cook, 'household:' + a.household, 'purpose:' + a.purpose, 'budget:' + a.budget, 'owns:' + a.owns].join(', ');
+    localStorage.setItem('cutcoFit', JSON.stringify({ label: result.label, answers: compact }));
+  } catch (e) {}
+  trackEvent('find_quiz_complete');
+  if (result.badge.strong && !window.__perfectSeen) {
+    window.__perfectSeen = true;
+    trackEvent('perfect_match_seen');
+  }
 
   resultEl.querySelectorAll('[data-add]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -318,7 +477,11 @@ function showResult() {
     });
   });
 
-  // Scroll the result into view smoothly so the user notices it
+  const rstBtn = resultEl.querySelector('.rec-result-reset');
+  if (rstBtn) rstBtn.addEventListener('click', resetQuiz);
+
+  // Celebrate once, then bring the result into view.
+  celebrate(resultEl.querySelector('.rec-result-card'));
   resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 

@@ -1,0 +1,58 @@
+name: "Ops Agent — Safe Reports Only"
+
+# Report-only. Runs ONLY safe_report + draft_only jobs (nothing that can touch the
+# public site). `permissions: contents: read` makes writing to the repo impossible.
+# No secrets, no private KV access, no admin jobs, no commit/push/deploy.
+
+on:
+  schedule:
+    - cron: "0 13 * * *"   # daily ~08:00 America/Chicago (13:00 UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  ops-safe:
+    name: Run safe Ops Agent jobs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (read-only)
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # Only dependency is @vercel/kv (declared in package.json). No secrets used.
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run tests
+        run: bun test
+
+      # Safe jobs only: safe_report + draft_only. Never admin_only, never mutations.
+      - name: Run safe + draft Ops Agent jobs
+        run: node scripts/run-job.mjs --all-safe
+        continue-on-error: true
+
+      - name: Upload Ops Agent reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ops-agent-reports
+          path: |
+            ops/reports/*.md
+            ops/approvals/*.md
+            reports/automation/*.md
+            reports/automation/*.json
+            reports/cutco-audit/latest-report.md
+            reports/cutco-audit/latest-report.json
+          if-no-files-found: warn
+          retention-days: 30

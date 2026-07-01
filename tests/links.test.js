@@ -1,7 +1,9 @@
 // tests/links.test.js
 import { test, expect } from "bun:test";
 import { readFileSync, existsSync } from "fs";
-const pages = ["index","book","find","meet","reviews","faq","work","privacy"];
+const pages = ["index","book","find","meet","reviews","faq","work","privacy",
+  "gift","owners","referred","card","thanks",
+  "north-shore-cutco","winnetka-cutco","glencoe-cutco","northbrook-cutco","evanston-cutco","depauw-cutco"];
 test("all internal links resolve to a page file", () => {
   const valid = new Set([...pages, ""]); // "" = "/"
   for (const pg of pages) {

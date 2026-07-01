@@ -6,7 +6,7 @@
  *
  * recommend() now returns a memorable "Kitchen Fit" label plus a ranked list of
  * REAL Cutco products. Names match the explorer dataset exactly, so the quiz UI
- * can pull live prices from window.CutcoData and add picks to the same wish list.
+ * can pull snapshot prices from window.CutcoData and add picks to the same wish list.
  * Product photos come from /assets/products/<sku>.jpg (downloaded locally).
  */
 
@@ -40,6 +40,103 @@ const CAT = {
   hunting:    { name: 'Hunting Knife',                               sku: '1769C' },
 };
 const P = (key, why) => ({ name: CAT[key].name, sku: CAT[key].sku, why });
+
+// Short "main uses" line, shown on the #1 pick. Keys match CAT names exactly.
+const USES = {
+  '7-5/8" Petite Chef':               'Everyday chopping, slicing, and prep — a smaller chef’s knife that never feels intimidating.',
+  'Trimmer (Utility Knife)':          'Trimming, peeling, sandwiches, small cuts — the little knife you reach for constantly.',
+  '7" Santoku':                       'Slicing, dicing, and chopping veggies and proteins — a true do-everything daily knife.',
+  '9-1/4" French Chef':               'Big chopping jobs and batch prep — the classic workhorse of a busy kitchen.',
+  '2-3/4" Paring Knife':              'Peeling, coring, garnishes, and in-hand detail work.',
+  'Super Shears':                     'Herbs, poultry, packaging, kitchen odd-jobs — and they take apart for easy cleaning.',
+  'Spatula Spreader':                 'Spreading, small serving, and soft foods.',
+  '9-3/4" Slicer (Bread Knife)':      'Crusty bread, bagels, and ripe tomatoes — clean slices without squishing.',
+  'Carving Set':                      'Roasts, turkey, and holiday meals — confident, even serving slices.',
+  'Cook’s Combo (Petite Chef + Trimmer)': 'The two everyday knives that handle most of your prep, together.',
+  'Homemaker +8 Set with Block':      'A complete everyday kitchen — the core knives plus a block, ready to go.',
+  'Studio Set with Block':            'A compact set with a block — a clean, capable starting kitchen.',
+  'Essentials Set with Block':        'The essential knives with a block — a solid all-around setup.',
+  'Ultimate Set with Block':          'The full lineup with a block — nothing left to add.',
+  'Wine & Cheese Set':                'Cheese boards, entertaining, and host gifts.',
+  '4-Pc. Steak Knife Set':            'Steak nights and dinner guests — clean, sharp cuts at the table.',
+  'Hunting Knife':                    'Field and outdoor tasks.',
+};
+
+/**
+ * The single "lane" a person falls into, derived from their answers.
+ * Every downstream label/badge/explanation keys off this so they never drift.
+ * @returns {'owner'|'gift'|'college'|'freshstart'|'simple'|'full'|'everyday'|'starter'}
+ */
+function laneOf(a) {
+  if (a.owns) return 'owner';
+  if (a.purpose === 'gift') return 'gift';
+  if (a.purpose === 'newhome' && a.household === '1') return 'college';
+  if (a.purpose === 'newhome') return 'freshstart';
+  if (a.cook === 'barely') return 'simple';
+  if (a.budget === 'best' && (a.household === '5+' || a.cook === 'lots')) return 'full';
+  if (a.cook === 'lots' || a.household === '5+') return 'everyday';
+  return 'starter';
+}
+
+const LANE_LABELS = {
+  owner:      'The Owner Upgrade',
+  gift:       'The Gift Buyer',
+  college:    'The College Apartment Setup',
+  freshstart: 'The Fresh-Start Kitchen',
+  simple:     'The Simple Setup',
+  full:       'The Full Setup',
+  everyday:   'The Everyday Cook',
+  starter:    'The Starter Setup',
+};
+
+/**
+ * Honest badge for the #1 pick. "Perfect Match" is reserved for answers that
+ * point cleanly to one lane — everything else gets a truthful, softer label.
+ * @returns {{ label: string, strong: boolean }}
+ */
+function badgeFor(a) {
+  const lane = laneOf(a);
+  if (lane === 'gift')    return { label: 'Best Gift Fit',        strong: false };
+  if (lane === 'owner')   return { label: 'Best Owner Add-On',    strong: false };
+  if (lane === 'college') return { label: 'Best Compact Pick',    strong: false };
+  if (lane === 'full')    return { label: 'Best Full Setup Anchor', strong: false };
+  // Judged lanes: only call it a Perfect Match when the signals genuinely line up.
+  const perfect =
+    (lane === 'simple'     && a.budget === 'starter') ||
+    (lane === 'everyday'   && a.cook   === 'lots')    ||
+    (lane === 'freshstart' && a.budget === 'starter');
+  if (perfect) return { label: 'Perfect Match', strong: true };
+  if (lane === 'simple' || lane === 'starter' || lane === 'freshstart')
+    return { label: 'Best Starting Point', strong: false };
+  return { label: 'Best Fit Based on Your Answers', strong: false };
+}
+
+/**
+ * A personal, practical explanation for the #1 pick — grounded in the answers,
+ * never overclaiming. #2 and #3 keep their short one-line `why` from rankFor().
+ */
+function detailWhy(a) {
+  switch (laneOf(a)) {
+    case 'simple':
+      return 'You told me you keep meals simple, so you don’t need a wall of knives. This is one piece you’ll actually reach for — everyday chopping and slicing without a big, intimidating blade — and it fixes the real annoyance: a dull knife that makes basic prep a chore.';
+    case 'starter':
+      return 'You want a smart place to start without overbuying. This is the one knife that does most of the work, so you get real capability now and can add pieces later. It’s the piece you’ll pick up almost every time you’re in the kitchen.';
+    case 'everyday':
+      return 'You cook a lot, so your knife gets used hard and often. This is the one you’ll reach for daily — fast, balanced, and sharp for life — built to be the anchor of a kitchen that actually cooks.';
+    case 'full':
+      return 'You’re setting up a full kitchen and want it done right. This anchors the whole lineup, so every common task is covered without piecing it together over the years. One decision and the kitchen is set — backed by the Forever Guarantee.';
+    case 'college':
+      return 'You’re outfitting a smaller space, so this focuses on the pieces you’ll use most without the clutter. It covers everyday prep in a compact setup that fits an apartment kitchen — and it’s guaranteed for life, so it moves with you.';
+    case 'freshstart':
+      return 'You’re stocking a new place, so this gives you a clean, capable starting point instead of a random mix. It handles the everyday cooking you’ll do most, and you can build around it as the kitchen comes together.';
+    case 'gift':
+      return 'You’re buying for someone else, so this is an easy win — genuinely useful, feels premium to give, and it’s backed by the Forever Guarantee. It’s the kind of gift people actually keep and remember.';
+    case 'owner':
+      return 'Since you already own Cutco, this fills the gap most owners are missing instead of repeating what you have. It pairs with your current pieces and covers a job your set probably doesn’t yet.';
+    default:
+      return 'A practical, do-everything starting point chosen from your answers — useful from day one and easy to build on later.';
+  }
+}
 
 function rankFor(a) {
   if (a.owns) return [
@@ -92,17 +189,17 @@ function rankFor(a) {
 }
 
 function labelFor(a) {
-  if (a.owns) return 'The Owner Upgrade';
-  if (a.purpose === 'gift') return 'The Gift Buyer';
-  if (a.purpose === 'newhome') return 'The Fresh-Start Kitchen';
-  if (a.cook === 'barely') return 'The Simple Setup';
-  if (a.budget === 'best' && (a.household === '5+' || a.cook === 'lots')) return 'The Full Setup';
-  if (a.cook === 'lots' || a.household === '5+') return 'The Everyday Cook';
-  return 'The Starter Setup';
+  return LANE_LABELS[laneOf(a)];
 }
 
 /**
- * recommend(a) -> { id, title, tier, label, why, ranked: [{name, sku, why}] }
+ * recommend(a) -> {
+ *   id, title, tier, label, lane, why,
+ *   badge: { label, strong },   // honest #1 badge
+ *   detail,                     // personal "why this fits" for the #1 pick
+ *   uses,                       // main-uses line for the #1 pick
+ *   ranked: [{ name, sku, why }]
+ * }
  * @param {object} a
  * @param {'lots'|'some'|'barely'} a.cook
  * @param {'1'|'2-4'|'5+'} a.household
@@ -120,5 +217,17 @@ export function recommend(a) {
   else                                                                 id = a.budget === "starter" ? "petite-chef" : "santoku-duo";
 
   const ranked = rankFor(a);
-  return { id, title: PIECES[id].title, tier: PIECES[id].tier, label: labelFor(a), why: ranked[0].why, ranked };
+  const top = ranked[0];
+  return {
+    id,
+    title: PIECES[id].title,
+    tier: PIECES[id].tier,
+    label: labelFor(a),
+    lane: laneOf(a),
+    badge: badgeFor(a),
+    detail: detailWhy(a),
+    uses: (top && USES[top.name]) || '',
+    why: top.why,
+    ranked,
+  };
 }

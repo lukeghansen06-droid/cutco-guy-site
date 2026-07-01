@@ -1,0 +1,9 @@
+[
+  {
+    "_comment": "COPY FIXES. Copy this to ops/approvals/approved-copy-fixes.json and set approved:true only for exact text swaps Luke has approved. `find` must be a UNIQUE string in the file. Allowed files: *.html, assets/*.css, assets/*.js (never api/, sw.js, config, or secrets). Applier is dry-run unless --apply; backs up each file. Never invents copy; refuses disallowed wording (e.g. 'live price').",
+    "file": "example.html",
+    "find": "OLD exact text that appears once",
+    "replace": "NEW approved text",
+    "approved": false
+  }
+]

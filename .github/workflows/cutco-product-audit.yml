@@ -1,0 +1,40 @@
+name: "Cutco Product Audit — Report Only"
+
+# Report-only. This workflow NEVER commits, pushes, deploys, edits prices, or
+# overwrites images. `permissions: contents: read` makes writing to the repo
+# impossible. It just runs the audit and uploads the report as an artifact.
+
+on:
+  schedule:
+    - cron: "0 13 * * *"   # daily ~08:00 America/Chicago (13:00 UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Audit product catalog (report only)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (read-only)
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # The audit script uses only Node built-ins + global fetch — no deps to install.
+      - name: Run product audit (report only, never mutates)
+        run: node scripts/audit-cutco-products.mjs --online
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: cutco-audit-report
+          path: |
+            reports/cutco-audit/latest-report.md
+            reports/cutco-audit/latest-report.json
+          if-no-files-found: error
+          retention-days: 30
