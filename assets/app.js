@@ -5,6 +5,24 @@ export function activeNav(pathname) {
   return map[p] || "";
 }
 
+// --- Owner No-Track predicates (pure — unit-testable) --------------------
+// Single source of truth for who is excluded. env = { flag, sessionFlag,
+// hostname, pathname, search, doNotTrack }.
+export function noTrackFrom(env) {
+  env = env || {};
+  if (env.flag === "1" || env.sessionFlag === "1") return true;
+  if (["localhost", "127.0.0.1", "::1", ""].includes(env.hostname)) return true;
+  if (/^\/(stats|leads|moderate|admin|ops)(\/|$)/i.test(env.pathname || "")) return true;
+  if (/[?&]key=/i.test(env.search || "")) return true;
+  return false;
+}
+/** Vercel Web Analytics may load only when NOT no-track AND Do-Not-Track is off. */
+export function analyticsAllowedFrom(env) {
+  env = env || {};
+  const dnt = env.doNotTrack === "1" || env.doNotTrack === "yes";
+  return !noTrackFrom(env) && !dnt;
+}
+
 // Browser-only enhancements run when there's a document:
 if (typeof document !== "undefined") {
   // Mark JS as available as early as possible (used by CSS reveal fallback).
@@ -17,6 +35,7 @@ if (typeof document !== "undefined") {
   // or any URL carrying key=. Sensitive query params are stripped from the URL.
   (function () {
     var FLAG = "cutco_owner_no_track";
+    var origSearch = location.search; // capture BEFORE we strip sensitive params
     try {
       var url = new URL(location.href);
       var qp = url.searchParams;
@@ -32,21 +51,37 @@ if (typeof document !== "undefined") {
       }
     } catch (e) {}
 
-    function computeNoTrack() {
-      try { if (localStorage.getItem(FLAG) === "1") return true; } catch (e) {}
-      var h = location.hostname;
-      if (h === "localhost" || h === "127.0.0.1" || h === "::1" || h === "") return true;
-      if (/^\/(stats|leads|moderate|admin|ops)(\/|$)/i.test(location.pathname)) return true;
-      if (/[?&]key=/i.test(location.search)) return true;
-      return false;
+    function currentEnv() {
+      var flag = "", sflag = "";
+      try { flag = localStorage.getItem(FLAG) || ""; } catch (e) {}
+      try { sflag = sessionStorage.getItem(FLAG) || ""; } catch (e) {}
+      var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack || "";
+      return { flag: flag, sessionFlag: sflag, hostname: location.hostname, pathname: location.pathname, search: origSearch, doNotTrack: dnt };
     }
-    window.__cutcoNoTrack = computeNoTrack();
+
+    window.__cutcoNoTrack = noTrackFrom(currentEnv());
+
+    // Vercel Web Analytics: inject ONLY when tracking is allowed (no-track off + DNT off).
+    // Replaces the hardcoded <script> tags that used to live in each page's HTML.
+    function loadVercelAnalyticsIfAllowed() {
+      try {
+        if (!analyticsAllowedFrom(currentEnv())) return;
+        if (document.querySelector('script[src="/_vercel/insights/script.js"]')) return; // no duplicate
+        window.va = window.va || function () { (window.vai = window.vai || []).push(arguments); };
+        var s = document.createElement("script");
+        s.defer = true; s.src = "/_vercel/insights/script.js";
+        (document.head || document.documentElement).appendChild(s);
+      } catch (e) {}
+    }
+    loadVercelAnalyticsIfAllowed();
+
     // Tiny API used by the /stats Owner No-Track card.
     window.CutcoOwnerTrack = {
       isExcluded: function () { try { return localStorage.getItem(FLAG) === "1"; } catch (e) { return false; } },
       isLocal: function () { var h = location.hostname; return h === "localhost" || h === "127.0.0.1" || h === "::1"; },
-      exclude: function () { try { localStorage.setItem(FLAG, "1"); } catch (e) {} window.__cutcoNoTrack = true; },
-      enable: function () { try { localStorage.removeItem(FLAG); } catch (e) {} window.__cutcoNoTrack = computeNoTrack(); },
+      analyticsAllowed: function () { return analyticsAllowedFrom(currentEnv()); },
+      exclude: function () { try { localStorage.setItem(FLAG, "1"); } catch (e) {} window.__cutcoNoTrack = noTrackFrom(currentEnv()); },
+      enable: function () { try { localStorage.removeItem(FLAG); } catch (e) {} window.__cutcoNoTrack = noTrackFrom(currentEnv()); },
     };
   })();
 

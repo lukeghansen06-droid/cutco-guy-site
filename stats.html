@@ -252,7 +252,8 @@
   <div class="row">
     <div class="card" id="notrackCard" style="animation-delay:.5s">
       <h2><span class="em">&#128683;</span> Owner No-Track</h2>
-      <p id="notrackState" class="muted" style="margin:6px 0 14px;line-height:1.5"></p>
+      <p id="notrackState" class="muted" style="margin:6px 0 3px;line-height:1.5"></p>
+      <p id="notrackVercel" class="muted" style="margin:0 0 14px;line-height:1.5;font-size:13px"></p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <button class="btn" id="notrackExclude" type="button">Exclude this device from stats</button>
         <button class="btn ghost" id="notrackEnable" type="button">Re-enable tracking on this device</button>
@@ -461,10 +462,7 @@
   });
 })();
 </script>
-<script>
-  window.va = window.va || function () { (window.vai = window.vai || []).push(arguments); };
-</script>
-<script defer src="/_vercel/insights/script.js"></script>
+<!-- Vercel Web Analytics is intentionally NOT loaded on the private dashboard. -->
 <script>
   /* Owner No-Track card — self-contained (device-local flag; never shows the key). */
   (function () {
@@ -472,14 +470,21 @@
     var card = document.getElementById('notrackCard');
     if (!card) return;
     var stateEl = document.getElementById('notrackState');
+    var vercelEl = document.getElementById('notrackVercel');
     function isLocal() { var h = location.hostname; return h === 'localhost' || h === '127.0.0.1' || h === '::1'; }
     function excluded() { try { return localStorage.getItem(FLAG) === '1'; } catch (e) { return false; } }
     function render() {
-      var msg, color;
-      if (isLocal()) { msg = 'Localhost is automatically excluded.'; color = 'var(--cyan,#22e3ff)'; }
-      else if (excluded()) { msg = '✓ This device is excluded from custom stats.'; color = '#34d399'; }
-      else { msg = 'This device may count toward stats.'; color = '#fbbf24'; }
+      var msg, color, off = isLocal() || excluded();
+      if (isLocal()) { msg = 'Custom stats: localhost is automatically excluded.'; color = 'var(--cyan,#22e3ff)'; }
+      else if (excluded()) { msg = '✓ Custom stats: this device is excluded.'; color = '#34d399'; }
+      else { msg = 'Custom stats: this device may count toward stats.'; color = '#fbbf24'; }
       if (stateEl) { stateEl.textContent = msg; stateEl.style.color = color; }
+      if (vercelEl) {
+        vercelEl.textContent = off
+          ? '✓ Vercel Web Analytics: also blocked by the site script when no-track is active.'
+          : 'Vercel Web Analytics: loads on public pages from this device.';
+        vercelEl.style.color = off ? '#34d399' : '#fbbf24';
+      }
     }
     var ex = document.getElementById('notrackExclude');
     if (ex) ex.onclick = function () { try { localStorage.setItem(FLAG, '1'); } catch (e) {} render(); };
