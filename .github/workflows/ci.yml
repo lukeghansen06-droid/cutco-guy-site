@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 13 * * 1" # Mondays ~8am Central (13:00 UTC) — weekly health run
+
+jobs:
+  test-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install || echo "no lockfile / no deps to install"
+
+      - name: Run tests
+        run: bun test
+
+      - name: Catalog integrity (products ↔ SKUs ↔ images in sync)
+        run: node .github/scripts/catalog-check.mjs

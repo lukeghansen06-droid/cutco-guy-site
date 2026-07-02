@@ -43,7 +43,7 @@
       <a data-nav="book"    href="/book"    >Book</a>
       <a data-nav="find"    href="/find"    >Find Your Cutco</a>
       <a data-nav="meet"    href="/meet"    >Meet Luke</a>
-      <a data-nav="reviews" href="/reviews" >Reviews</a>
+      <!-- P0-4: reviews nav hidden until 3+ real reviews exist. Restore: <a data-nav="reviews" href="/reviews">Reviews</a> -->
       <a data-nav="faq"     href="/faq"     >FAQ</a>
     </nav>
 
@@ -206,15 +206,15 @@
         <!-- Calendly inline widget -->
         <div
           class="calendly-inline-widget"
-          data-url="https://calendly.com/lukehansen01/30min"
+          data-url="https://calendly.com/lukehansen01/30min?duration=60"
           style="min-width:280px;width:100%;height:660px;border-radius:16px;overflow:hidden"
           aria-label="Pick a date and time to book your demo"
         ></div>
 
         <!-- Fallback booking buttons (progressive enhancement — work without Calendly JS) -->
         <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center">
-          <a class="btn btn-grad" style="padding:14px 26px" href="https://calendly.com/lukehansen01/30min" target="_blank" rel="noopener" data-ev="book_full_click">Book the Full Hour →</a>
-          <a class="btn btn-ghost" style="padding:12px 22px" href="https://calendly.com/lukehansen01/30min" target="_blank" rel="noopener" data-ev="book_quick_click">Book the Quick 20</a>
+          <a class="btn btn-grad" style="padding:14px 26px" href="https://calendly.com/lukehansen01/30min?duration=60" target="_blank" rel="noopener" data-ev="book_full_click">Book the Full Hour →</a>
+          <a class="btn btn-ghost" style="padding:12px 22px" href="https://calendly.com/lukehansen01/30min?duration=20" target="_blank" rel="noopener" data-ev="book_quick_click">Book the Quick 20</a>
         </div>
         <p style="margin-top:10px;text-align:center;font-size:0.85rem;color:var(--mut)">
           Widget not loading?

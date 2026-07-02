@@ -145,7 +145,7 @@
     };
     function imgUrl(name){ var c=IMG[name]; return c?(IB+c+IS):''; }
     // current Cutco prices (USD) — kept fresh by a scheduled refresh
-    var PRICE_UPDATED='June 29, 2026';
+    var PRICE_UPDATED='July 1, 2026';
     var PRICES={
       '9-1/4" French Chef':'$200','7-5/8" Petite Chef':'$183','7" Santoku':'$184','5" Petite Santoku':'$164','Santoku-Style Trimmer':'$104','Trimmer (Utility Knife)':'$98','4" Vegetable Knife':'$153','6" Vegetable Knife':'$174','7-1/2" Vegetable Knife':'$201','2-3/4" Paring Knife':'$85','4" Paring Knife':'$91','Gourmet Paring Knife':'$85','Bird’s Beak Paring Knife':'$91','9" Carver':'$149','6-3/4" Petite Carver':'$142','9-3/4" Slicer (Bread Knife)':'$150','Petite Slicer (Bread Knife)':'$146','Cleaver':'$275','Butcher Knife':'$169','Boning Knife':'$132','Salmon Knife':'$162','Hardy Slicer':'$191','Gourmet Prep Knife':'$191','Cheese Knife':'$98','Traditional Cheese Knife':'$118','Spatula Spreader':'$97',
       'Super Shears':'$149','Vegetable Peeler':'$57','Ice Cream Scoop':'$61','Pizza Cutter':'$73','Can Opener':'$73','Wine Opener':'$67','Knife Sharpener':'$68','Mix-Stir':'$66','Slotted Turner':'$66','Serving Spoons & Ladle':'from $66','Potato Masher':'$81','Carving / Turning Fork':'from $75','Cutting Boards':'from $35','Kitchen Tool Sets (5–6 pc)':'from $354','Slice n’ Serve / Turn n’ Serve':'from $76','Gourmet Fry Pans (8/10/12")':'from $267','Sauce Pans (1/2/3 Qt)':'from $359','11-1/2" Skillet & Cover':'$600','Dutch Oven (4 / 6.3 Qt)':'from $430','10 Qt. Stock Pot':'$792','Wok & Cover':'$800','Steamer / Double Boiler Inserts':'from $222','Cookware Sets (Aspiring→Complete)':'from $1,617','Stainless Place Settings':'from $156','60-Pc. Flatware Set in Chest':'$1,881','Serving & Hostess Sets':'from $181','Individual Flatware':'from $39',
@@ -281,7 +281,7 @@
         '<a class="btn btn-grad" id="textListBtn" style="padding:13px" data-ev="my_list_text_luke" href="sms:+13126594280?&body='+body+'">Text my list to Luke</a>'+
         '<a class="btn btn-ghost" style="padding:13px" href="mailto:Lukehansen01@gmail.com?subject='+encodeURIComponent('My Cutco wish list')+'&body='+body+'">✉️ Email it instead</a>'+
         (navigator.share?'<button type="button" class="btn btn-ghost" id="shareListBtn" style="padding:13px">📤 Share my list</button>':'')+
-        '<a class="btn btn-ghost" style="padding:13px" href="https://calendly.com/lukehansen01/30min" target="_blank" rel="noopener">📅 Book the full hour to see them</a>'+
+        '<a class="btn btn-ghost" style="padding:13px" href="https://calendly.com/lukehansen01/30min?duration=60" target="_blank" rel="noopener">📅 Book the full hour to see them</a>'+
         '<div class="drawer-mini"><button type="button" class="mini-btn" id="copyListBtn">🔗 Copy link</button><button type="button" class="mini-btn danger" id="clearListBtn">🗑 Clear</button></div>';
       var tb=document.getElementById('textListBtn'); if(tb) tb.addEventListener('click',function(){ confetti(); track('send','list of '+list.length); });
       var sb=document.getElementById('shareListBtn'); if(sb) sb.addEventListener('click',function(){ if(navigator.share){ navigator.share({title:'My Cutco list',text:raw,url:listLink()}).then(function(){confetti();}).catch(function(){}); } });
