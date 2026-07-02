@@ -83,13 +83,27 @@ const QUESTIONS = [
       { value: 'true',  label: 'Yes — looking to add on' },
     ],
   },
+  {
+    // SPIN "Problem" question — sharpens the result copy in recommender.js
+    key: 'problem',
+    legend: 'What’s most annoying in your kitchen right now?',
+    options: [
+      { value: 'dull',    label: 'Dull knives make prep a chore' },
+      { value: 'prep',    label: 'Prep just takes too long' },
+      { value: 'hardveg', label: 'Hard veggies & crusty bread fight back' },
+      { value: 'meat',    label: 'Meat never slices clean' },
+      { value: 'unsure',  label: 'Honestly — not knowing what to get' },
+      { value: 'none',    label: 'Nothing specific, just exploring' },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
 // State
 // ---------------------------------------------------------------------------
 /** @type {Record<string, string|boolean|null>} */
-let answers = { cook: null, household: null, purpose: null, budget: null, owns: null };
+let answers = { cook: null, household: null, purpose: null, budget: null, owns: null, problem: null };
+const TOTAL_QS = QUESTIONS.length;
 
 /** @type {HTMLElement|null} */
 let mount = null;
@@ -121,10 +135,10 @@ function renderQuiz() {
     <form id="rec-form" novalidate aria-label="Product recommender quiz"
           style="max-width:600px;margin:0 auto">
       <div class="rec-quiz-head">
-        <div class="rec-progress" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="${answeredCount}" aria-label="Questions answered">
-          <span class="rec-progress-fill" id="rec-progress-fill" style="width:${(answeredCount / 5 * 100).toFixed(0)}%"></span>
+        <div class="rec-progress" role="progressbar" aria-valuemin="0" aria-valuemax="${TOTAL_QS}" aria-valuenow="${answeredCount}" aria-label="Questions answered">
+          <span class="rec-progress-fill" id="rec-progress-fill" style="width:${(answeredCount / TOTAL_QS * 100).toFixed(0)}%"></span>
         </div>
-        <span class="rec-progress-txt" id="rec-progress-txt">${answeredCount} of 5</span>
+        <span class="rec-progress-txt" id="rec-progress-txt">${answeredCount} of ${TOTAL_QS}</span>
         <button type="button" class="rec-reset" id="rec-reset-top">Start over</button>
       </div>
   `;
@@ -196,7 +210,7 @@ function renderQuiz() {
           style="padding:13px 30px;font-size:var(--fs-base)"
         >See my pick &rarr;</button>
         <p style="color:var(--mut);font-size:var(--fs-sm);margin-top:10px;max-width:none">
-          Answer all five questions above, then hit &ldquo;See my pick.&rdquo;
+          Answer the questions above, then hit &ldquo;See my pick.&rdquo;
         </p>
       </div>
     </form>
@@ -268,15 +282,15 @@ function refreshLabelStyles(form, name, selectedValue) {
   });
 }
 
-/** Update the progress bar + "X of 5" after each selection. */
+/** Update the progress bar + "X of N" after each selection. */
 function updateProgress() {
   if (!mount) return;
   const count = Object.values(answers).filter(v => v !== null).length;
   const fill = mount.querySelector('#rec-progress-fill');
   const txt  = mount.querySelector('#rec-progress-txt');
   const bar  = mount.querySelector('.rec-progress');
-  if (fill) fill.style.width = (count / 5 * 100).toFixed(0) + '%';
-  if (txt)  txt.textContent = count + ' of 5';
+  if (fill) fill.style.width = (count / TOTAL_QS * 100).toFixed(0) + '%';
+  if (txt)  txt.textContent = count + ' of ' + TOTAL_QS;
   if (bar)  bar.setAttribute('aria-valuenow', String(count));
 }
 
@@ -285,7 +299,7 @@ function updateProgress() {
  * re-render the fresh quiz, and focus the first question. Never touches My List.
  */
 function resetQuiz() {
-  answers = { cook: null, household: null, purpose: null, budget: null, owns: null };
+  answers = { cook: null, household: null, purpose: null, budget: null, owns: null, problem: null };
   try { localStorage.removeItem('cutcoFit'); } catch (e) {}
   window.__quizStarted = false;
   window.__perfectSeen = false;
@@ -378,6 +392,7 @@ function showResult() {
     budget:    answers.budget,
     // owns may already be boolean (from chip) or 'true'/'false' string (from radio)
     owns:      answers.owns === true || answers.owns === 'true',
+    problem:   answers.problem || 'none',
   };
   const result = recommend(a);
   const top = result.ranked[0];
@@ -438,6 +453,11 @@ function showResult() {
         </div>
         ${result.uses ? `<p class="rpc-uses"><span>Main uses:</span> ${esc(result.uses)}</p>` : ''}
         <p class="rpc-why"><strong>Why this fits:</strong> ${esc(result.detail)}</p>
+        <div class="rec-straight" style="border-top:1px dashed var(--line);margin-top:12px;padding-top:12px">
+          <p class="rpc-uses" style="margin:0 0 6px"><span>Why not bigger:</span> ${esc(result.whyNotBigger || '')}</p>
+          <p class="rpc-uses" style="margin:0 0 6px"><span>Why not smaller:</span> ${esc(result.whyNotSmaller || '')}</p>
+          <p class="rpc-uses" style="margin:0"><span>Who should skip this:</span> ${esc(result.skipIf || '')}</p>
+        </div>
         <div class="rpc-actions">
           <button type="button" class="rec-add rpc-add" data-add="${esc(top.name)}" data-ev="quiz_add_product_to_list">+ Add to My List</button>
           <a class="rec-ask" href="sms:+13126594280?&body=${smsAsk}" data-ev="price_check_text_luke">Ask Luke about this</a>
@@ -446,6 +466,7 @@ function showResult() {
 
       ${support.length ? `<p class="rec-support-label">Great pairings for this setup</p><ol class="rec-picks">${supportHtml}</ol>` : ''}
 
+      <p style="text-align:center;color:var(--ink);font-weight:600;margin:var(--space-4) 0 0">${esc(result.nextStep || '')}</p>
       <div class="rec-actions premium-cta-row">
         <a class="btn btn-primary" href="sms:+13126594280?&body=${smsSend}" data-ev="find_quiz_send_to_luke">Send This to Luke</a>
         <a class="btn btn-grad" href="sms:+13126594280?&body=${smsBook}" data-ev="book_with_result_click">Book With This Result</a>
@@ -458,7 +479,7 @@ function showResult() {
 
   // Save the Kitchen Fit result so the My List SMS can include it; track completion.
   try {
-    const compact = ['cook:' + a.cook, 'household:' + a.household, 'purpose:' + a.purpose, 'budget:' + a.budget, 'owns:' + a.owns].join(', ');
+    const compact = ['cook:' + a.cook, 'household:' + a.household, 'purpose:' + a.purpose, 'budget:' + a.budget, 'owns:' + a.owns, 'problem:' + a.problem].join(', ');
     localStorage.setItem('cutcoFit', JSON.stringify({ label: result.label, answers: compact }));
   } catch (e) {}
   trackEvent('find_quiz_complete');

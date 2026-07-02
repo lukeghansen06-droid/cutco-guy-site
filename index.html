@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CutcoWithLuke &mdash; Luke Hansen, Your Cutco Guy on the North Shore</title>
-  <meta name="description" content="Luke Hansen &mdash; your Cutco guy on the North Shore of Chicago and DePauw. No-pressure demos, the right kitchen cutlery for your life, backed by Cutco&rsquo;s Forever Guarantee." />
+  <meta name="description" content="Luke Hansen &mdash; your Cutco guy on the North Shore of Chicago and DePauw. Demos that narrow your options instead of overwhelming you, backed by Cutco&rsquo;s Forever Guarantee." />
   <link rel="canonical" href="https://cutcowithluke.com/" />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="manifest" href="/manifest.json" />
@@ -14,7 +14,7 @@
   <meta name="apple-mobile-web-app-title" content="CutcoWithLuke" />
   <link rel="apple-touch-icon" href="/favicon.png" />
   <meta property="og:title" content="CutcoWithLuke &mdash; Luke Hansen, Your Cutco Guy on the North Shore" />
-  <meta property="og:description" content="Kitchen cutlery for life, backed by Cutco's Forever Guarantee. One friendly guy, one demo, zero pressure &mdash; Winnetka, the North Shore &amp; the DePauw area." />
+  <meta property="og:description" content="Kitchen cutlery for life, backed by Cutco's Forever Guarantee. One local guy, one useful demo, you decide &mdash; Winnetka, the North Shore &amp; the DePauw area." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://cutcowithluke.com/" />
   <meta property="og:image" content="https://cutcowithluke.com/og-image.jpg" />
@@ -24,7 +24,7 @@
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="CutcoWithLuke &mdash; Luke Hansen, Your Cutco Guy" />
-  <meta name="twitter:description" content="Kitchen cutlery for life, backed by Cutco's Forever Guarantee. Zero pressure, North Shore Chicago &amp; the DePauw area." />
+  <meta name="twitter:description" content="Kitchen cutlery for life, backed by Cutco's Forever Guarantee. North Shore Chicago &amp; the DePauw area." />
   <meta name="twitter:image" content="https://cutcowithluke.com/og-image.jpg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -201,13 +201,23 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://cutcowithluke.com/#website",
+  "name": "CutcoWithLuke",
+  "url": "https://cutcowithluke.com",
+  "publisher": { "@type": "Person", "name": "Luke Hansen" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "@id": "https://cutcowithluke.com/#business",
   "name": "CutcoWithLuke — Luke Hansen",
   "description": "Independent Cutco representative offering in-person and video demos, gifts, owner service, and free sharpening on the North Shore of Chicago and at DePauw.",
   "url": "https://cutcowithluke.com",
   "telephone": "+1-312-659-4280",
-  "email": "Lukehansen01@gmail.com",
+  "email": "lukehansen01@gmail.com",
   "image": "https://cutcowithluke.com/og-image.jpg",
   "priceRange": "$$",
   "areaServed": [
@@ -297,8 +307,8 @@
       </figure>
 
       <div class="hero-cta-row">
-        <a href="/book" class="btn btn-primary hero-cta-primary" data-ev="hero_book_click">Book a Demo</a>
-        <a href="/find" class="btn btn-ghost hero-cta-secondary" data-ev="hero_find_click">Find My Cutco &rarr;</a>
+        <a href="/book" class="btn btn-primary hero-cta-primary" data-ev="hero_book_click" data-utm="hero">Book a Demo</a>
+        <a href="sms:+13126594280?&body=Hi%20Luke!%20Found%20your%20site%20%E2%80%94%20quick%20question%3A%20" class="btn btn-ghost hero-cta-secondary" data-ev="text_luke_click">Text Luke</a>
       </div>
 
     </div>
@@ -320,44 +330,80 @@
   <section class="section" aria-labelledby="paths-heading">
     <div class="container">
 
-      <h2 id="paths-heading" style="text-align:center; margin-bottom:.35em">What brings you here?</h2>
-      <p style="text-align:center; color:var(--mut); margin-bottom:var(--space-6); margin-inline:auto; max-width:50ch">
-        Pick what fits &mdash; I&rsquo;ll get you exactly where you need to go.
+      <h2 id="paths-heading" style="text-align:center; margin-bottom:.35em">Start with your situation &mdash; not the catalog.</h2>
+      <p style="text-align:center; color:var(--mut); margin-bottom:var(--space-6); margin-inline:auto; max-width:52ch">
+        Pick the one that sounds like you and I&rsquo;ll point you to the right next step, so you don&rsquo;t have to guess.
       </p>
 
       <div class="path-grid" role="list">
 
-        <a href="/book" class="card path-card" role="listitem" data-ev="path_see_knives">
+        <a href="/book" class="card path-card" role="listitem" data-ev="path_see_knives" data-path="see_knives">
           <h3 class="path-title">I want to see the knives</h3>
           <p class="path-desc">Watch the pieces in action, ask anything, and see what actually feels useful.</p>
           <span class="path-cta">Book a demo &rarr;</span>
         </a>
 
-        <a href="/find" class="card path-card" role="listitem" data-ev="path_help_choosing">
-          <h3 class="path-title">I need help choosing</h3>
-          <p class="path-desc">A few questions and I&rsquo;ll point you to the right starting point &mdash; without overbuying.</p>
+        <a href="/find" class="card path-card" role="listitem" data-ev="path_new_to_cutco" data-path="new_to_cutco">
+          <h3 class="path-title">I&rsquo;m new to Cutco</h3>
+          <p class="path-desc">Five quick questions and I&rsquo;ll point you to the right starting point &mdash; without overbuying.</p>
           <span class="path-cta">Find my Cutco &rarr;</span>
         </a>
 
-        <a href="/gift" class="card path-card" role="listitem" data-ev="path_gift">
+        <a href="/find#recommender" class="card path-card" role="listitem" data-ev="path_best_pieces" data-path="best_pieces">
+          <h3 class="path-title">I want the best 1&ndash;3 pieces</h3>
+          <p class="path-desc">Not a set &mdash; just the few pieces you&rsquo;ll actually reach for every day.</p>
+          <span class="path-cta">Rank my picks &rarr;</span>
+        </a>
+
+        <a href="/gift" class="card path-card" role="listitem" data-ev="path_gift" data-path="gift">
           <h3 class="path-title">I&rsquo;m buying a gift</h3>
           <p class="path-desc">Weddings, grads, housewarmings, parents, hosts, and the hard-to-shop-for.</p>
           <span class="path-cta">Get gift ideas &rarr;</span>
         </a>
 
-        <a href="/owners" class="card path-card" role="listitem" data-ev="path_owner">
+        <a href="/owners" class="card path-card" role="listitem" data-ev="path_owner" data-path="owner">
           <h3 class="path-title">I already own Cutco</h3>
-          <p class="path-desc">Sharpening, service, missing pieces, owner specials, and gift ideas.</p>
+          <p class="path-desc">Figure out what you have, what needs service, and what gap actually matters.</p>
           <span class="path-cta">Owner help &rarr;</span>
         </a>
 
-        <a href="/referred" class="card path-card" role="listitem" data-ev="path_referred">
+        <a href="/owners#service" class="card path-card" role="listitem" data-ev="path_sharpening" data-path="sharpening">
+          <h3 class="path-title">I need sharpening or service</h3>
+          <p class="path-desc">Free sharpening for life is real &mdash; here&rsquo;s how to actually use it.</p>
+          <span class="path-cta">Get service help &rarr;</span>
+        </a>
+
+        <a href="/find#recommender" class="card path-card" role="listitem" data-ev="path_new_home" data-path="new_home">
+          <h3 class="path-title">I&rsquo;m moving / setting up a place</h3>
+          <p class="path-desc">New apartment or new home &mdash; a clean starting kitchen without the clutter.</p>
+          <span class="path-cta">Build my starting point &rarr;</span>
+        </a>
+
+        <a href="/book" class="card path-card" role="listitem" data-ev="path_north_shore" data-path="north_shore">
+          <h3 class="path-title">North Shore household</h3>
+          <p class="path-desc">Winnetka, Glencoe, Northbrook, Evanston &mdash; I can come to you when I&rsquo;m home.</p>
+          <span class="path-cta">Set up an in-person look &rarr;</span>
+        </a>
+
+        <a href="/depauw-cutco" class="card path-card" role="listitem" data-ev="path_depauw" data-path="depauw">
+          <h3 class="path-title">DePauw connection</h3>
+          <p class="path-desc">Student, parent, or Greencastle local &mdash; video demos during the school year.</p>
+          <span class="path-cta">The DePauw page &rarr;</span>
+        </a>
+
+        <a href="/referred" class="card path-card" role="listitem" data-ev="path_referred" data-path="referred">
           <h3 class="path-title">Someone referred me</h3>
           <p class="path-desc">Here&rsquo;s what to expect, and why the demo is genuinely simple.</p>
           <span class="path-cta">What happens &rarr;</span>
         </a>
 
-        <a href="/faq" class="card path-card" role="listitem" data-ev="path_skeptical">
+        <a href="/find#explore" class="card path-card" role="listitem" data-ev="path_comparing" data-path="comparing">
+          <h3 class="path-title">Just comparing for now</h3>
+          <p class="path-desc">Browse all the pieces with photos and June-2026 snapshot prices. No account, no popups.</p>
+          <span class="path-cta">Open the catalog &rarr;</span>
+        </a>
+
+        <a href="/faq" class="card path-card" role="listitem" data-ev="path_skeptical" data-path="skeptical">
           <h3 class="path-title">I&rsquo;m skeptical</h3>
           <p class="path-desc">Pricing, Vector, pressure, the guarantee &mdash; calm, straight answers.</p>
           <span class="path-cta">See the FAQ &rarr;</span>
@@ -408,12 +454,12 @@
        ============================================================ -->
   <section class="section section-alt" aria-labelledby="book-preview-heading">
     <div class="container" style="max-width:680px; text-align:center">
-      <p class="section-eyebrow">One hour. Zero obligation.</p>
+      <p class="section-eyebrow">One demo. Zero obligation.</p>
       <h2 id="book-preview-heading">Grab a demo &mdash; it&rsquo;s the fun part.</h2>
       <p style="color:var(--mut)">
         In person or over video, whichever works for you. You&rsquo;ll see the knives in
-        action, ask everything, and we&rsquo;ll figure out exactly what fits your kitchen.
-        People always say the hour flew by.
+        action, ask everything, and we&rsquo;ll figure out exactly what fits your kitchen &mdash;
+        rope cut and tomatoes included.
       </p>
       <div style="display:flex; gap:var(--space-3); justify-content:center; flex-wrap:wrap; margin-top:var(--space-5)">
         <a href="/book" class="btn btn-primary">Book a Demo &rarr;</a>
@@ -423,10 +469,20 @@
   </section>
 
   <!-- ============================================================
-       5. PRODUCT STARTING-POINT PREVIEW
+       5. INSIGHT + PRODUCT STARTING-POINT PREVIEW
        ============================================================ -->
   <section class="section" aria-labelledby="find-preview-heading">
     <div class="container" style="max-width:680px; text-align:center">
+
+      <div class="insight-card reveal" style="text-align:left;margin-bottom:var(--space-6)">
+        <span class="eyebrow">Worth knowing</span>
+        <p>Most people don&rsquo;t need the biggest set first. They need the right few pieces for how they actually cook &mdash; and that&rsquo;s a five-question conversation, not a catalog problem.</p>
+        <div class="insight-actions">
+          <a href="/find#recommender" class="btn btn-primary" style="padding:11px 20px" data-ev="insight_finder_click">Take the Finder</a>
+          <a href="sms:+13126594280?&body=Hi%20Luke!%20What%20would%20you%20start%20with%20for%20my%20kitchen%3F" class="btn btn-ghost" style="padding:11px 20px" data-ev="text_luke_click">Text Luke instead</a>
+        </div>
+      </div>
+
       <p class="section-eyebrow">Not sure where to start?</p>
       <h2 id="find-preview-heading">Tell me what you cook &mdash; I&rsquo;ll handle the rest.</h2>
       <p style="color:var(--mut)">
@@ -436,6 +492,29 @@
       </p>
       <div style="margin-top:var(--space-5)">
         <a href="/find" class="btn btn-primary">Find Your Cutco &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5b. TRUST LAYER — how I work / what I will never do
+       ============================================================ -->
+  <section class="section section-alt" aria-labelledby="trust-heading">
+    <div class="container" style="max-width:760px">
+      <h2 id="trust-heading" style="text-align:center">How I work</h2>
+      <p style="color:var(--mut);text-align:center;max-width:58ch;margin:0 auto var(--space-5)">
+        I&rsquo;m not trying to make the kitchen decision bigger than it needs to be. My job is
+        to help you see what fits, what doesn&rsquo;t, and what&rsquo;s actually worth considering.
+      </p>
+      <div class="path-grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))">
+        <div class="card">
+          <h3 class="path-title" style="font-size:1.05rem">Pricing, handled honestly</h3>
+          <p class="path-desc">Every price on this site is a June 2026 snapshot, clearly labeled. Current prices are public on cutco.com, and we confirm them together before you decide anything.</p>
+        </div>
+        <div class="card">
+          <h3 class="path-title" style="font-size:1.05rem">What I will never do</h3>
+          <p class="path-desc">Pretend every piece is perfect for everyone &middot; call snapshot pricing &ldquo;live&rdquo; &middot; push you into a bigger choice than makes sense &middot; make you guess your way through the catalog.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -485,7 +564,7 @@
       Serving Winnetka, Glencoe, Northbrook &amp; the North Shore of Chicago
     </p>
     <p>
-      <a href="mailto:Lukehansen01@gmail.com">Lukehansen01@gmail.com</a>
+      <a href="mailto:lukehansen01@gmail.com">lukehansen01@gmail.com</a>
     </p>
     <nav aria-label="Footer navigation">
       <a href="/work">Work With Me</a> &middot;

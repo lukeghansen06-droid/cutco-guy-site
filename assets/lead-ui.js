@@ -111,12 +111,43 @@ function wireLeadForm() {
     if (submitBtn) submitBtn.disabled = false;
 
     if (result.ok) {
-      showStatus(statusRegion, "Got it — I'll reach out to set something up!", 'success');
-      form.reset();
+      showConfirmation(form, name);
     } else {
       showStatus(statusRegion, errMsg(result.error), 'error');
     }
   });
+}
+
+/**
+ * Post-submit confirmation: replaces the lead form with a useful next-step
+ * panel (photo, what happens next, text-me-now) instead of a dead-end line.
+ * Only the visitor's first name is echoed back — via textContent, never HTML.
+ */
+function showConfirmation(form, name) {
+  const first = (name || '').trim().split(/\s+/)[0];
+  const panel = document.createElement('div');
+  panel.style.cssText = 'text-align:center';
+  panel.innerHTML =
+    '<img src="/luke-headshot.jpg" alt="Luke Hansen" width="88" height="88" loading="lazy" ' +
+    'style="border-radius:50%;object-fit:cover;border:2px solid var(--gold);margin-bottom:14px" ' +
+    'onerror="this.remove()">' +
+    '<h3 style="margin:0 0 10px">Got it<span data-lead-first></span> — you\'re on my list.</h3>' +
+    '<ol style="text-align:left;max-width:380px;margin:0 auto 18px;color:var(--mut);line-height:1.7;padding-left:1.2em">' +
+    '<li>I\'ll reach out the way you asked — usually the same day.</li>' +
+    '<li>We find a time that fits (in person or video).</li>' +
+    '<li>You see the pieces and decide what fits. That\'s it.</li>' +
+    '</ol>' +
+    '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">' +
+    '<a class="btn btn-primary" style="padding:12px 22px" href="sms:+13126594280?&body=' +
+    encodeURIComponent('Hi Luke! Just sent my info through the site — figured I\'d text you directly too.') +
+    '" data-ev="text_luke_click">Text me now instead</a>' +
+    '<a class="btn btn-ghost" style="padding:12px 22px" href="#book-now">Or grab a slot yourself</a>' +
+    '</div>';
+  const nameSlot = panel.querySelector('[data-lead-first]');
+  if (nameSlot && first) nameSlot.textContent = ', ' + first;
+  form.replaceWith(panel);
+  panel.setAttribute('role', 'status');
+  panel.setAttribute('aria-live', 'polite');
 }
 
 // ---------------------------------------------------------------------------

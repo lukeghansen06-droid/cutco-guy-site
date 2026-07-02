@@ -39,15 +39,16 @@
     <div class="container" style="max-width:680px">
       <p class="section-eyebrow">After our demo</p>
       <h1>Thanks for meeting with me.</h1>
-      <p style="color:var(--mut);font-size:1.1rem;line-height:1.7">It genuinely means a lot. If you have a minute, here are a few easy next steps.</p>
+      <p style="color:var(--mut);font-size:1.1rem;line-height:1.7">It genuinely means a lot. If you&rsquo;re up for it, two 60-second favors help me more than anything else &mdash; and then a few useful links.</p>
     </div>
   </section>
 
   <section class="section section-alt">
     <div class="container" style="max-width:820px">
       <ul class="path-grid">
-        <li class="card"><div class="path-icon" aria-hidden="true">&#9733;</div><h3 class="path-title">Leave a quick review</h3><p class="path-desc">A few honest words helps the next person know what to expect.</p><a class="path-cta" href="/reviews#leave-review">Leave a review &rarr;</a></li>
-        <li class="card"><div class="path-icon" aria-hidden="true">&hellip;</div><h3 class="path-title">Send an intro</h3><p class="path-desc">Know someone who&rsquo;d enjoy this? Copy a ready-made intro text.</p><button class="path-cta" style="background:none;border:0;cursor:pointer;font:inherit;padding:0" data-copy="Hey, this is Luke Hansen. He helped me with Cutco and was easy to work with. No pressure at all &mdash; just figured I&rsquo;d connect you two in case you ever wanted to see the knives, ask questions, or get gift ideas. His site: cutcowithluke.com">Copy intro text &rarr;</button></li>
+        <li class="card" style="border-color:rgba(236,200,133,.4)"><div class="path-icon" aria-hidden="true">1</div><h3 class="path-title">Favor one: a quick review</h3><p class="path-desc">60 seconds, real words only. It helps the next person know what to expect.</p><a class="path-cta" href="/reviews#leave-review" data-ev="thanks_review_click">Leave a review &rarr;</a></li>
+        <li class="card" style="border-color:rgba(236,200,133,.4)"><div class="path-icon" aria-hidden="true">2</div><h3 class="path-title">Favor two: one intro</h3><p class="path-desc">If one person came to mind during the demo, that&rsquo;s the person. Copy a ready-made text.</p><button class="path-cta" style="background:none;border:0;cursor:pointer;font:inherit;padding:0" data-ev="referral_intro_copied" data-copy="Hey, this is Luke Hansen. He helped me with Cutco and was easy to work with. No pressure at all &mdash; just figured I&rsquo;d connect you two in case you ever wanted to see the knives, ask questions, or get gift ideas. His site: cutcowithluke.com">Copy intro text &rarr;</button></li>
+        <li class="card"><div class="path-icon" aria-hidden="true">&#128241;</div><h3 class="path-title">Send Luke to a friend</h3><p class="path-desc">On your phone? Share the site directly.</p><button class="path-cta" id="shareBtn" style="background:none;border:0;cursor:pointer;font:inherit;padding:0" data-ev="share_click" hidden>Share cutcowithluke.com &rarr;</button><a class="path-cta" id="shareFallback" href="/referred">See the intro toolkit &rarr;</a></li>
         <li class="card"><div class="path-icon" aria-hidden="true">&#9742;</div><h3 class="path-title">Save my contact</h3><p class="path-desc">So I&rsquo;m one tap away for sharpening, gifts, or adding pieces later.</p><a class="path-cta" href="/luke.vcf" download data-ev="save_contact_click">Save contact &rarr;</a></li>
         <li class="card"><div class="path-icon" aria-hidden="true">&infin;</div><h3 class="path-title">Sharpening &amp; service</h3><p class="path-desc">Free sharpening for life. Text me and I&rsquo;ll handle the rest.</p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20question%20about%20sharpening%2Fservice%3A%20" data-ev="owner_service_click">Text Luke &rarr;</a></li>
         <li class="card"><div class="path-icon" aria-hidden="true">&#9657;</div><h3 class="path-title">Browse the lineup</h3><p class="path-desc">See every piece and current price on Cutco&rsquo;s official site.</p><a class="path-cta" href="https://www.cutco.com/products/" target="_blank" rel="noopener">Browse Cutco &rarr;</a></li>
@@ -60,7 +61,7 @@
 <footer class="site-footer">
   <div class="container">
     <p><strong>Luke Hansen</strong> &mdash; Your Cutco Guy<br>Serving Winnetka, Glencoe, Northbrook &amp; the North Shore of Chicago</p>
-    <p><a href="mailto:Lukehansen01@gmail.com">Lukehansen01@gmail.com</a> &middot; <a href="sms:+13126594280">Text 312-659-4280</a> &middot; <a href="/luke.vcf" download>Save my contact</a></p>
+    <p><a href="mailto:lukehansen01@gmail.com">lukehansen01@gmail.com</a> &middot; <a href="sms:+13126594280">Text 312-659-4280</a> &middot; <a href="/luke.vcf" download>Save my contact</a></p>
     <nav aria-label="Footer navigation"><a href="/book">Book a Demo</a> &middot; <a href="/find">Find Your Cutco</a> &middot; <a href="/faq">FAQ</a> &middot; <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">Official Cutco pricing</a></nav>
     <p style="margin-top:1em;font-size:.8em;color:var(--mut)">&copy; <span id="footer-year"></span> CutcoWithLuke &mdash; <a href="/privacy">Privacy</a> &middot; Products sold through Vector Marketing.</p>
   </div>
@@ -68,6 +69,21 @@
 
 <script type="module" src="/assets/app.js"></script>
 <script>
+  // Native share when supported; otherwise the /referred toolkit link stays.
+  (function () {
+    var btn = document.getElementById("shareBtn"), fb = document.getElementById("shareFallback");
+    if (btn && navigator.share) {
+      btn.hidden = false;
+      if (fb) fb.style.display = "none";
+      btn.addEventListener("click", function () {
+        navigator.share({
+          title: "CutcoWithLuke",
+          text: "Luke helps people figure out Cutco without making it complicated.",
+          url: "https://cutcowithluke.com/referred",
+        }).catch(function () {});
+      });
+    }
+  })();
   document.querySelectorAll("[data-copy]").forEach(function (b) {
     b.addEventListener("click", function () {
       var t = b.getAttribute("data-copy");

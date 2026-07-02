@@ -85,6 +85,30 @@ if (typeof document !== "undefined") {
     };
   })();
 
+  // --- First-party attribution (Sales OS) -----------------------------------
+  // Persist ?ref= / ?from= / utm_* for this session so booking clicks and lead
+  // submits can carry where the visitor came from. First-party sessionStorage
+  // only — never user-entered free text, never sent anywhere except our own
+  // /api/track labels and Calendly UTM params.
+  (function () {
+    try {
+      var qp = new URLSearchParams(location.search);
+      var keep = {};
+      ["ref", "from", "utm_source", "utm_medium", "utm_campaign", "utm_content"].forEach(function (k) {
+        var v = qp.get(k);
+        if (v) keep[k] = String(v).slice(0, 60).replace(/[^\w\s.-]/g, "");
+      });
+      if (Object.keys(keep).length) sessionStorage.setItem("cutcoAttrib", JSON.stringify(keep));
+    } catch (e) {}
+  })();
+
+  // Path context: which "start with your situation" lane the visitor picked.
+  // Safe label only (from our own data-path attributes) — no free text.
+  window.CutcoPath = {
+    set: function (p) { try { sessionStorage.setItem("cutcoPath", String(p).slice(0, 40)); } catch (e) {} },
+    get: function () { try { return sessionStorage.getItem("cutcoPath") || ""; } catch (e) { return ""; } },
+  };
+
   document.addEventListener("DOMContentLoaded", () => {
     // --- Active nav highlight ---
     const key = activeNav(location.pathname);
@@ -146,6 +170,8 @@ if (typeof document !== "undefined") {
     }
 
     // --- Sticky mobile bar: upgrade the single "Book" bar into Book + Text Luke ---
+    // Restraint rules: never on admin routes (they don't include .book-bar), hides
+    // while a form or the Calendly embed is on screen so it can't cover inputs.
     const bar = document.querySelector(".book-bar");
     if (bar && !document.querySelector(".mobile-cta")) {
       const wrap = document.createElement("div");
@@ -154,7 +180,56 @@ if (typeof document !== "undefined") {
         '<a class="btn btn-primary" href="/book" data-ev="mobile_sticky_book_click">Book a Demo</a>' +
         '<a class="btn btn-ghost" href="sms:+13126594280" data-ev="text_luke_click">Text Luke</a>';
       bar.replaceWith(wrap);
+
+      const hide = () => wrap.classList.add("mobile-cta--hidden");
+      const show = () => wrap.classList.remove("mobile-cta--hidden");
+      // Hide while typing in any field (keyboards + bar = covered inputs).
+      document.addEventListener("focusin", (e) => {
+        if (e.target.matches && e.target.matches("input, textarea, select")) hide();
+      });
+      document.addEventListener("focusout", () => setTimeout(() => {
+        const a = document.activeElement;
+        if (!a || !a.matches || !a.matches("input, textarea, select")) show();
+      }, 120));
+      // Hide while a form or Calendly embed is in view.
+      const blockers = document.querySelectorAll("form, .calendly-inline-widget");
+      if (blockers.length && "IntersectionObserver" in window) {
+        let visible = 0;
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => { visible += en.isIntersecting ? 1 : -1; });
+          visible = Math.max(0, visible);
+          visible > 0 ? hide() : show();
+        }, { rootMargin: "0px 0px -20% 0px" });
+        blockers.forEach((b) => io.observe(b));
+      }
     }
+
+    // --- Booking attribution: decorate Calendly links with campaign UTMs ---
+    // utm_content comes from data-utm (or falls back to the page name). Never
+    // attaches user-entered text. Calendly accepts + reports these params.
+    try {
+      const page = (location.pathname.replace(/\W+/g, "_").replace(/^_+|_+$/g, "") || "home");
+      document.querySelectorAll('a[href*="calendly.com"]').forEach((a) => {
+        try {
+          const u = new URL(a.href);
+          if (!u.searchParams.get("utm_source")) {
+            u.searchParams.set("utm_source", "cutcowithluke");
+            u.searchParams.set("utm_medium", "website");
+            u.searchParams.set("utm_campaign", "demo");
+            u.searchParams.set("utm_content", a.getAttribute("data-utm") || page);
+            a.href = u.toString();
+          }
+          if (!a.hasAttribute("data-ev")) a.setAttribute("data-ev", "calendly_clicked");
+        } catch (e) {}
+      });
+    } catch (e) {}
+
+    // --- Path context: clicking a "start with your situation" card remembers
+    //     the lane (safe label from our own data-path attribute, no free text).
+    document.addEventListener("click", (e) => {
+      const p = e.target.closest && e.target.closest("[data-path]");
+      if (p) window.CutcoPath.set(p.getAttribute("data-path"));
+    }, { passive: true });
 
     // --- Lightweight event tracking: any [data-ev] click pings /api/track ---
     document.addEventListener("click", (e) => {

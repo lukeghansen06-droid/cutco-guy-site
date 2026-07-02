@@ -43,7 +43,13 @@
       <p style="color:var(--mut);font-size:1.1rem;line-height:1.7">American-made, beautifully boxed, and backed by the Forever Guarantee &mdash; so it gets used for decades, not regifted. Tell me the occasion and I&rsquo;ll suggest the right piece or set for your budget.</p>
       <div class="card-actions" style="margin-top:var(--space-4)">
         <a class="btn btn-primary" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20I%27m%20looking%20for%20a%20Cutco%20gift.%20The%20occasion%20is%3A%20" data-ev="gift_finder_click">Get Gift Ideas From Luke</a>
-        <a class="btn btn-ghost" href="/find">Use the Cutco Finder</a>
+        <a class="btn btn-ghost" href="/find#recommender" data-path="gift">Take the Finder as a gift</a>
+        <a class="btn btn-ghost" href="/book" data-ev="book_quick_click" data-utm="gift">Book gift help</a>
+      </div>
+
+      <div class="insight-card reveal" style="text-align:left;margin-top:var(--space-6)">
+        <span class="eyebrow">The gift rule</span>
+        <p>For gifts, the goal is not the biggest thing. It&rsquo;s something useful, easy to explain, and matched to the person&rsquo;s kitchen &mdash; that&rsquo;s what gets kept, used, and remembered.</p>
       </div>
     </div>
   </section>
@@ -53,16 +59,27 @@
       <h2 style="text-align:center">Pick the occasion</h2>
       <p class="section-eyebrow" style="text-align:center">Tap one and it texts me with a head start</p>
       <ul class="path-grid" style="margin-top:var(--space-4)">
-        <li class="card"><div class="path-icon" aria-hidden="true">&#9825;</div><h3 class="path-title">Wedding / engagement</h3><p class="path-desc">A registry-worthy set they&rsquo;ll use every day.</p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20wedding%2Fengagement%20gift%20idea%3F">Ask Luke &rarr;</a></li>
-        <li class="card"><div class="path-icon" aria-hidden="true">&#8962;</div><h3 class="path-title">Housewarming</h3><p class="path-desc">A new-kitchen starter that makes a real impression.</p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20housewarming%20gift%20idea%3F">Ask Luke &rarr;</a></li>
-        <li class="card"><div class="path-icon" aria-hidden="true">&#127891;</div><h3 class="path-title">Graduation</h3><p class="path-desc">First-apartment essentials that last past college.</p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20graduation%20gift%20idea%3F">Ask Luke &rarr;</a></li>
-        <li class="card"><div class="path-icon" aria-hidden="true">&#9728;</div><h3 class="path-title">Parent</h3><p class="path-desc">Upgrade the knives they&rsquo;ve had for 20 years.</p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20gift%20for%20a%20parent%3F">Ask Luke &rarr;</a></li>
-        <li class="card"><div class="path-icon" aria-hidden="true">&#129472;</div><h3 class="path-title">Host / hostess</h3><p class="path-desc">A cheese knife, shears, or serving set they&rsquo;ll show off.</p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20host%2Fhostess%20gift%20idea%3F">Ask Luke &rarr;</a></li>
-        <li class="card"><div class="path-icon" aria-hidden="true">&#9201;</div><h3 class="path-title">Retirement</h3><p class="path-desc">A lifetime gift for someone with time to cook now.</p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20retirement%20gift%20idea%3F">Ask Luke &rarr;</a></li>
-        <li class="card"><div class="path-icon" aria-hidden="true">&#9789;</div><h3 class="path-title">Birthday</h3><p class="path-desc">One standout piece beats another gadget drawer-filler.</p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20birthday%20gift%20idea%3F">Ask Luke &rarr;</a></li>
-        <li class="card"><div class="path-icon" aria-hidden="true">&#10067;</div><h3 class="path-title">Hard to shop for</h3><p class="path-desc">Practical, premium, and genuinely useful &mdash; the safe win.</p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20gift%20for%20someone%20hard%20to%20shop%20for%3F">Ask Luke &rarr;</a></li>
+        <li class="card"><div class="path-icon" aria-hidden="true">&#9825;</div><h3 class="path-title">Wedding / engagement</h3><p class="path-desc">A registry-worthy set they&rsquo;ll use every day. <em>Avoid guessing their whole kitchen &mdash; a core set beats a random assortment.</em></p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20wedding%2Fengagement%20gift%20idea%3F" data-ev="gift_path_selected">Ask Luke &rarr;</a></li>
+        <li class="card"><div class="path-icon" aria-hidden="true">&#8962;</div><h3 class="path-title">Housewarming / new home</h3><p class="path-desc">A new-kitchen starter that makes a real impression. <em>Avoid single novelty gadgets &mdash; useful daily pieces win.</em></p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20housewarming%20gift%20idea%3F" data-ev="gift_path_selected">Ask Luke &rarr;</a></li>
+        <li class="card"><div class="path-icon" aria-hidden="true">&#127891;</div><h3 class="path-title">Graduation / moving out</h3><p class="path-desc">First-apartment essentials that last past college. <em>Avoid full blocks &mdash; small kitchens need compact.</em></p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20graduation%20gift%20idea%3F" data-ev="gift_path_selected">Ask Luke &rarr;</a></li>
+        <li class="card"><div class="path-icon" aria-hidden="true">&#9728;</div><h3 class="path-title">Parent / family kitchen</h3><p class="path-desc">Upgrade the knives they&rsquo;ve had for 20 years. <em>Avoid duplicating what they use daily &mdash; replace what frustrates them.</em></p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20gift%20for%20a%20parent%3F" data-ev="gift_path_selected">Ask Luke &rarr;</a></li>
+        <li class="card"><div class="path-icon" aria-hidden="true">&#129472;</div><h3 class="path-title">Host / hostess</h3><p class="path-desc">A cheese knife, shears, or serving set they&rsquo;ll show off. <em>Avoid anything that needs explaining &mdash; boards and serving pieces speak for themselves.</em></p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20host%2Fhostess%20gift%20idea%3F" data-ev="gift_path_selected">Ask Luke &rarr;</a></li>
+        <li class="card"><div class="path-icon" aria-hidden="true">&#9201;</div><h3 class="path-title">Retirement</h3><p class="path-desc">A lifetime gift for someone with time to cook now. <em>Avoid starter-sized picks &mdash; this is the moment for the nice one.</em></p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20retirement%20gift%20idea%3F" data-ev="gift_path_selected">Ask Luke &rarr;</a></li>
+        <li class="card"><div class="path-icon" aria-hidden="true">&#9789;</div><h3 class="path-title">Birthday / holidays</h3><p class="path-desc">One standout piece beats another gadget drawer-filler. <em>Avoid buying by price alone &mdash; match it to how they cook.</em></p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20birthday%20gift%20idea%3F" data-ev="gift_path_selected">Ask Luke &rarr;</a></li>
+        <li class="card"><div class="path-icon" aria-hidden="true">&#10067;</div><h3 class="path-title">Hard to shop for</h3><p class="path-desc">Practical, premium, and genuinely useful &mdash; the safe win. <em>Avoid gift cards; this is the &ldquo;actually thoughtful&rdquo; version.</em></p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20Cutco%20gift%20for%20someone%20hard%20to%20shop%20for%3F" data-ev="gift_path_selected">Ask Luke &rarr;</a></li>
+        <li class="card"><div class="path-icon" aria-hidden="true">&#10022;</div><h3 class="path-title">Already owns Cutco</h3><p class="path-desc">The best owner gift fills the one gap they keep working around. <em>Avoid duplicating their set &mdash; I can help you find the missing piece.</em></p><a class="path-cta" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20a%20gift%20for%20someone%20who%20already%20owns%20Cutco%3F" data-ev="gift_path_selected">Ask Luke &rarr;</a></li>
       </ul>
       <p style="text-align:center;color:var(--mut);font-size:.85rem;margin-top:var(--space-4)">Prices are set by Cutco &mdash; see current pricing on <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">cutco.com</a>. I&rsquo;ll match a great option to your budget.</p>
+    </div>
+  </section>
+
+  <section class="section" style="text-align:center">
+    <div class="container" style="max-width:620px">
+      <h2>Want me to help them get set up?</h2>
+      <p style="color:var(--mut);line-height:1.7">Some gifts land best as an introduction: you intro me to the recipient, I help them pick exactly what fits, and you cover it. It takes the guesswork out entirely &mdash; and they get a local contact for sharpening and service forever.</p>
+      <div class="card-actions" style="margin-top:var(--space-4)">
+        <a class="btn btn-primary" href="sms:+13126594280?&amp;body=Hi%20Luke%2C%20I%27d%20like%20to%20gift%20Cutco%20by%20introducing%20you%20to%20the%20recipient.%20Their%20first%20name%20is%3A%20" data-ev="referral_path_selected">Intro me to the recipient</a>
+      </div>
     </div>
   </section>
 </main>
@@ -70,7 +87,7 @@
 <footer class="site-footer">
   <div class="container">
     <p><strong>Luke Hansen</strong> &mdash; Your Cutco Guy<br>Serving Winnetka, Glencoe, Northbrook &amp; the North Shore of Chicago</p>
-    <p><a href="mailto:Lukehansen01@gmail.com">Lukehansen01@gmail.com</a> &middot; <a href="sms:+13126594280">Text 312-659-4280</a> &middot; <a href="/luke.vcf" download>Save my contact</a></p>
+    <p><a href="mailto:lukehansen01@gmail.com">lukehansen01@gmail.com</a> &middot; <a href="sms:+13126594280">Text 312-659-4280</a> &middot; <a href="/luke.vcf" download>Save my contact</a></p>
     <nav aria-label="Footer navigation"><a href="/book">Book a Demo</a> &middot; <a href="/find">Find Your Cutco</a> &middot; <a href="/faq">FAQ</a> &middot; <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">Official Cutco pricing</a></nav>
     <p style="margin-top:1em;font-size:.8em;color:var(--mut)">&copy; <span id="footer-year"></span> CutcoWithLuke &mdash; <a href="/privacy">Privacy</a> &middot; Products sold through Vector Marketing.</p>
   </div>

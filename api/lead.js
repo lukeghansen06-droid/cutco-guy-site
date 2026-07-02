@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     if (!key) { console.log("LEAD (no email configured):", lead); return; }
     const r = await fetch("https://api.resend.com/emails", { method:"POST",
       headers:{ "Authorization":`Bearer ${key}`, "Content-Type":"application/json" },
-      body: JSON.stringify({ from:"leads@cutcowithluke.com", to:"Lukehansen01@gmail.com",
+      body: JSON.stringify({ from:"leads@cutcowithluke.com", to:"lukehansen01@gmail.com",
         subject:`New lead: ${lead.name}`,
         text:`${lead.name}\n${lead.contactType}: ${lead.contact}\nWhen: ${lead.when}\nNote: ${lead.note}` }) });
     if (!r.ok) throw new Error("resend " + r.status);

@@ -210,6 +210,18 @@ function reply(q) {
   if (/(price|prices|cost|how much|expensive|afford|budget|cheap|worth it|overpriced|justify|payment|financ|installment)/.test(n))
     return { t: `Prices can change, so treat anything on the site as a <strong>June 2026 snapshot</strong> and confirm current pricing through Luke or the official Cutco page. There's a range for every budget — from a single starter knife to full sets — and Luke can talk through payment options too.`, recs: recs.length ? recs : matchProducts('starter set', 2), ctas: [CTA.official, CTA.price()], chips: ['Best 1–3 pieces', 'Is this worth it?'] };
 
+  // referred visitor (checked BEFORE the make-a-referral intent below)
+  if (/(i was referred|was referred|someone (sent|referred) me|got your (site|number) from|friend sent me)/.test(n))
+    return { t: `Welcome — glad they sent you. Quick version: Luke shows you the pieces, answers questions, and helps you figure out what actually fits. You decide from there, and "nothing right now" is a fine answer. The <a href="/referred" data-ev="path_referred">referred page</a> walks through exactly what to expect.`, ctas: [CTA.bookFull, CTA.text('Hi Luke! A friend referred me — can we set something up?')], chips: ['What happens in a demo?', 'Best 1–3 pieces', 'Is this pushy?'] };
+
+  // "what should I text Luke?"
+  if (/(what (should|do) i (text|say|send|write)|how do i (reach|contact) (luke|him))/.test(n))
+    return { t: `Keep it simple — one line is plenty. Something like: <em>"Hi Luke! I'm looking at [gift / my kitchen / my Cutco set] — where should I start?"</em> He takes it from there. Tap below and it's pre-typed for you.`, ctas: [CTA.text('Hi Luke! Here\'s my situation: '), CTA.finder], chips: ['Gift ideas', 'I already own Cutco', 'Help me book'] };
+
+  // full vs quick chooser (checked BEFORE the generic demo intent)
+  if (/(full or quick|quick or full|which (demo|one) (should|do)|full vs\.? quick|hour or 20)/.test(n))
+    return { t: `Simple rule: <strong>the hour is the full demo</strong> — rope cut, tomatoes, and time to compare pieces. <strong>The Quick 20 is for when you already know what you want</strong> — gift ideas, owner questions, or confirming a shortlist. If it's your first look at Cutco, take the hour.`, ctas: [CTA.bookFull, CTA.text('Hi Luke! Can we set up a quick 20-minute chat?')], chips: ['What happens in a demo?', 'Do I have to buy anything?'] };
+
   // pushy / MLM / Vector
   if (/(pushy|pressure|sales pitch|mlm|pyramid|scam|vector|recruit|is it (a )?)/.test(n))
     return { t: `No. The point is to see the pieces, ask questions, and decide what actually fits — you don't have to buy anything. It's not MLM: Luke doesn't recruit you, and you buy directly from Cutco at the same prices shown on cutco.com.`, ctas: [CTA.bookQuick, CTA.text("Hi Luke! I'm curious but no-pressure — can you help?")], chips: ['How long is a demo?', 'Do I have to buy anything?'] };
@@ -234,7 +246,7 @@ function reply(q) {
   if (/(my (result|pick|fit)|kitchen fit|my recommendation|explain (my|the) (pick|#1))/.test(n)) {
     const fit = getFit();
     if (fit) return { t: `Your Kitchen Fit is <strong>${esc(fit.label)}</strong>, and your #1 pick was chosen to match how you answered. Want the full ranked list again, or should we text it to Luke?`, ctas: [CTA.finder, CTA.text('Hi Luke! My Kitchen Fit is ' + fit.label + '. Can we go over my picks?')], chips: ['Best 1–3 pieces', 'Help me book'] };
-    return { t: `Take the quick 5-question finder and I'll give you a <strong>Kitchen Fit</strong> plus a ranked #1 pick with two supporting options.`, ctas: [CTA.finder] };
+    return { t: `Take the quick finder and I'll give you a <strong>Kitchen Fit</strong> plus a ranked #1 pick with two supporting options.`, ctas: [CTA.finder] };
   }
 
   // my list
@@ -248,7 +260,7 @@ function reply(q) {
   if (/(made in|where.*made|usa|american|america)/.test(n))
     return { t: `Cutco has been made in the USA (Olean, New York) since 1949 — built to be kept for life, sharpened, used daily, and handed down. Want a starting point? Tell me how you cook.`, ctas: [CTA.finder] };
   if (/(who are you|about luke|about you|your story|who is luke|meet luke)/.test(n))
-    return { t: `Luke Hansen is your Cutco guy — a 2026 Cutco Key Salesman on the North Shore (Winnetka), all about honest, zero-pressure help.`, ctas: [{ label: 'Meet Luke', href: '/meet', ev: 'assistant_text_luke_click' }, CTA.bookQuick] };
+    return { t: `Luke Hansen is your Cutco guy — a 2026 Cutco Key Salesman on the North Shore (Winnetka). Honest help, straight answers, and you decide what fits.`, ctas: [{ label: 'Meet Luke', href: '/meet', ev: 'assistant_text_luke_click' }, CTA.bookQuick] };
   if (/(ship|shipping|deliver|delivery|arrive|tracking)/.test(n))
     return { t: `Most Cutco orders arrive in about <strong>2–4 business days</strong>, and Luke keeps you posted from order to doorstep.`, ctas: [CTA.text()] };
   if (/(return|refund|money back|money-back|trial|send it back)/.test(n))
@@ -297,7 +309,7 @@ function renderShell() {
           aria-label="Ask the Cutco sidekick" autocomplete="off" maxlength="300" />
         <button class="btn btn-primary asst-send" type="submit">Ask</button>
       </form>
-      <p class="asst-tip">Instant answers about pieces, pricing, and the guarantee &mdash; knife talk only, not legal or financial advice.</p>
+      <p class="asst-tip">AI assistant &mdash; good for quick questions. For anything important, text Luke. Any price it mentions is a snapshot &mdash; confirm current pricing on cutco.com.</p>
     </div>
   `;
   logEl = mount.querySelector('#asst-log');
@@ -435,11 +447,29 @@ function hideChips() {
 // ---------------------------------------------------------------------------
 // Ask flow
 // ---------------------------------------------------------------------------
+/**
+ * Safe topic categorization for analytics — logs ONLY a coarse category,
+ * never the message text itself.
+ */
+function topicOf(q) {
+  const n = norm(q);
+  if (/(price|cost|how much|expensive|afford|budget|payment)/.test(n)) return 'price';
+  if (/(guarantee|warranty|sharpen|repair|replace|forever|service)/.test(n)) return 'guarantee';
+  if (/(gift|wedding|registry|housewarming|grad)/.test(n)) return 'gift';
+  if (/(already own|i own|my cutco|my set|inherit)/.test(n)) return 'owner';
+  if (/(book|demo|appointment|schedule|meet)/.test(n)) return 'booking';
+  if (/(pushy|pressure|mlm|scam|vector|legit)/.test(n)) return 'skeptic';
+  if (/(refer|friend|intro)/.test(n)) return 'referral';
+  if (/(knife|knives|santoku|shears|paring|set|cookware|piece)/.test(n)) return 'product';
+  return 'other';
+}
+
 function handleAsk(raw, source) {
   const q = (raw || '').trim();
   if (!q) return;
 
   track('assistant_message_send');
+  track('ai_topic_' + topicOf(q));
   if (source === 'chip') track('assistant_quick_chip_click');
 
   hideChips();

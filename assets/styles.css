@@ -1103,3 +1103,44 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .find-trust{ color:var(--mut); font-size:.86rem; letter-spacing:.01em; margin:18px 0 0; line-height:1.6; }
 .finder-panel{ max-width:680px; margin:0 auto; background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.008)); border:1px solid var(--line); border-radius:22px; padding:clamp(18px,3.5vw,30px); box-shadow:0 30px 80px -55px rgba(0,0,0,.8); }
 @media (max-width:520px){ .finder-panel{ padding:16px 12px; } }
+
+/* ===== Sales OS additions (2026-07) ===== */
+
+/* Sticky bar hides while forms/Calendly are on screen (never covers inputs) */
+.mobile-cta{ transition:transform .25s var(--ease); }
+.mobile-cta--hidden{ transform:translateY(120%); }
+
+/* Challenger insight card — one per page, teach → route */
+.insight-card{ max-width:680px; margin:0 auto; padding:clamp(16px,3vw,24px) clamp(18px,3.5vw,28px); border:1px solid rgba(236,200,133,.3); border-left:3px solid var(--gold); border-radius:var(--radius); background:linear-gradient(180deg,rgba(236,200,133,.06),rgba(255,255,255,.01)); }
+.insight-card .eyebrow{ color:var(--gold); }
+.insight-card p{ margin:.35em 0 0; color:var(--ink); font-size:var(--fs-lg); line-height:1.55; }
+.insight-card .insight-actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+
+/* "Start with your situation" path grid */
+.path-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin-top:var(--space-4); }
+.situation-card{ display:block; text-align:left; padding:16px 18px; border:1px solid var(--line); border-radius:14px; background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008)); color:var(--ink); text-decoration:none; transition:transform var(--dur) var(--ease), border-color var(--dur) var(--ease); cursor:pointer; font:inherit; width:100%; }
+.situation-card:hover,.situation-card:focus-visible{ transform:translateY(-3px); border-color:rgba(34,211,238,.45); }
+.situation-card .sit-t{ display:block; font-weight:700; font-family:var(--font-ui); font-size:.98rem; margin-bottom:4px; }
+.situation-card .sit-d{ display:block; color:var(--mut); font-size:.86rem; line-height:1.5; }
+.situation-card .sit-go{ display:inline-block; margin-top:8px; color:var(--cyan); font-size:.85rem; font-weight:600; }
+
+/* Product card "skip if" line (sets only) */
+.pskip{ color:var(--mut); font-size:.78rem; line-height:1.45; margin:6px 0 0; padding-top:6px; border-top:1px dashed var(--line); }
+
+/* Copyable text blocks (referral intros, stats drafts) */
+.copy-block{ border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.02); padding:14px 16px; }
+.copy-block p{ margin:0 0 10px; color:var(--ink); font-size:.95rem; line-height:1.55; }
+.copy-block .copy-src{ color:var(--mut); font-size:.8rem; margin-bottom:8px; }
+.copy-btn{ font:600 .85rem var(--font-ui); color:var(--cyan); background:rgba(34,211,238,.08); border:1px solid rgba(34,211,238,.35); border-radius:8px; padding:7px 14px; cursor:pointer; min-height:32px; }
+.copy-btn:hover,.copy-btn:focus-visible{ background:rgba(34,211,238,.16); }
+.copy-btn.copied{ color:var(--teal); border-color:rgba(94,234,212,.4); }
+
+/* Demo Preview Theater on /book */
+.theater{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; margin-top:var(--space-4); counter-reset:step; }
+.theater .step{ border:1px solid var(--line); border-radius:14px; padding:16px 18px; background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.006)); }
+.theater .step::before{ counter-increment:step; content:counter(step); display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; border:1px solid rgba(236,200,133,.5); color:var(--gold); font:700 .85rem var(--font-ui); margin-bottom:10px; }
+.theater .step h3{ font-size:1rem; margin:0 0 6px; }
+.theater .step p{ color:var(--mut); font-size:.88rem; line-height:1.55; margin:0; }
+
+/* Referred-by greeting */
+.ref-hello{ display:inline-block; padding:.45em 1.1em; border-radius:99px; border:1px solid rgba(236,200,133,.4); background:rgba(236,200,133,.08); color:var(--gold); font:600 .95rem var(--font-ui); margin-bottom:var(--space-3); }

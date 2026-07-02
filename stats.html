@@ -241,6 +241,37 @@
     </div>
   </div>
 
+  <!-- ===== Sales Intelligence (private; computed client-side from the same
+       aggregated /api/track payload — no new data collected, no PII) ===== -->
+  <div class="row duo">
+    <div class="card" style="animation-delay:.42s">
+      <h2><span class="em">&#128293;</span> Hot leads now <span class="pill" id="hotCount"></span></h2>
+      <p class="muted" style="margin:4px 0 10px;font-size:12.5px">High-intent actions (book taps, list sends, referral copies) by how fresh they are. The dashboard is anonymous &mdash; names live in Calendly &amp; your texts.</p>
+      <div id="hotLeads"></div>
+      <p class="muted" style="margin:10px 0 0;font-size:12px">No-show / reschedule tracking isn&rsquo;t wired up yet &mdash; that data lives in Calendly.</p>
+    </div>
+    <div class="card" style="animation-delay:.44s">
+      <h2><span class="em">&#129504;</span> Best next action</h2>
+      <div id="nextActions"></div>
+      <h2 style="margin-top:16px"><span class="em">&#128197;</span> This week in 5 numbers</h2>
+      <div id="weekDigest"></div>
+    </div>
+  </div>
+
+  <div class="row duo">
+    <div class="card" style="animation-delay:.46s">
+      <h2><span class="em">&#128278;</span> Booking &amp; source signals</h2>
+      <div id="bookingSources"></div>
+      <h2 style="margin-top:16px"><span class="em">&#129309;</span> Referral signals</h2>
+      <div id="referralLedger"></div>
+    </div>
+    <div class="card" style="animation-delay:.48s">
+      <h2><span class="em">&#128172;</span> What to say next <span class="pill">drafts</span></h2>
+      <p class="muted" style="margin:4px 0 10px;font-size:12.5px">Copy, personalize the [Name], and send yourself &mdash; nothing is ever sent automatically.</p>
+      <div id="drafts"></div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="card" style="animation-delay:.45s">
       <h2><span class="em">&#128336;</span> Live activity feed</h2>
@@ -421,10 +452,61 @@
       :'<tr><td class="empty" colspan="3">No activity in this view.</td></tr>';
   }
 
+  // ===== Sales Intelligence — derived entirely from the aggregated payload =====
+  const HOT_RE=/book|calendly|send|list_text|referral|lead|owner_photo/i;
+  function isHot(e){ return e.t==='book'||e.t==='send'||(e.t==='ev'&&HOT_RE.test(e.l||'')); }
+  function bucketOf(ageMs){ const H=3600000; return ageMs<H?['Respond now','#f87171']:ageMs<24*H?['Warm','#fbbf24']:ageMs<72*H?['Cooling','#60a5fa']:['Cold','#64748b']; }
+  function countLabels(evts,re){ let n=0; evts.forEach(e=>{ if(e.t==='ev'&&re.test(e.l||''))n++; }); return n; }
+  function renderSales(d){
+    const now=Date.now(), evts=d.recentEvents||[], byType=d.byType||{};
+    // --- Hot leads ---
+    const hot=evts.filter(isHot).slice(0,12);
+    $('hotCount').textContent=hot.length?hot.length+' recent':'';
+    $('hotLeads').innerHTML=hot.length?('<table><tbody>'+hot.map(e=>{const b=bucketOf(now-e.ts);
+      return '<tr><td style="width:110px"><span class="tag" style="color:'+b[1]+';border-color:'+b[1]+'40">'+b[0]+'</span></td><td>'+esc(e.l||e.t)+'</td><td class="muted" style="text-align:right;white-space:nowrap">'+ago(e.ts)+'</td></tr>';}).join('')+'</tbody></table>')
+      :'<div class="empty">No high-intent actions yet. They’ll show here the moment someone taps Book, sends a list, or copies an intro.</div>';
+    // --- Heuristic next actions ---
+    const quiz=countLabels(evts,/find_quiz_complete/), books=(byType.book||0)+countLabels(evts,/book_full_click|book_quick_click|calendly_clicked|booking_path_clicked|mobile_sticky_book_click|hero_book_click/);
+    const gifts=countLabels(evts,/gift_path_selected|gift_finder_click/), owners=countLabels(evts,/owner_service_click|owner_photo_click|path_owner|path_sharpening/);
+    const refs=countLabels(evts,/referral_intro_copied|referral_path_selected/), sends=(byType.send||0);
+    const tips=[];
+    if(books>0) tips.push('Book taps are coming in — fastest wins: follow up within minutes, not hours.');
+    if(quiz>0&&books===0) tips.push('People finish the Finder but don’t tap Book — send finder-follow-up drafts or sweeten the result CTA.');
+    if(gifts>1) tips.push('Gift interest is warm — lead your next referral asks with gift angles.');
+    if(owners>1) tips.push('Owner-help clicks are up — promote free sharpening; service visits become upgrade conversations.');
+    if(refs===0) tips.push('No intro copies lately — mention the referral page at the end of your next demos.');
+    if(sends>0) tips.push('Lists are being sent — reply with a price-confirm text the same day.');
+    if(!tips.length) tips.push('Quiet right now. Share the site link with one new person today — the paths do the sorting for you.');
+    $('nextActions').innerHTML=tips.slice(0,4).map(t=>'<div class="q">'+esc(t)+'</div>').join('');
+    // --- Weekly digest ---
+    const wk=[['Visits / events (7d)', d.last7||0],['Finder completions', quiz],['Booking taps', books],['Lists / texts sent', sends],['Referral signals', refs]];
+    $('weekDigest').innerHTML='<table><tbody>'+wk.map(r=>'<tr><td>'+r[0]+'</td><td class="muted" style="text-align:right"><strong style="color:var(--ink,#fff)">'+r[1]+'</strong></td></tr>').join('')+'</tbody></table>';
+    // --- Booking sources (from event labels = placement names) ---
+    const srcMap={};
+    evts.forEach(e=>{ if(e.t==='ev'&&/book|calendly/i.test(e.l||'')) srcMap[e.l]=(srcMap[e.l]||0)+1; });
+    const srcs=Object.entries(srcMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    $('bookingSources').innerHTML=srcs.length?('<table><tbody>'+srcs.map(s=>'<tr><td>'+esc(s[0])+'</td><td class="muted" style="text-align:right">'+s[1]+'</td></tr>').join('')+'</tbody></table>')
+      :'<div class="empty">No booking taps in the recent window.</div>';
+    $('referralLedger').innerHTML=(refs||0)?('<div class="q">'+refs+' referral action'+(refs===1?'':'s')+' in the recent window (intro copies + referral paths).</div>')
+      :'<div class="empty">No referral actions in the recent window.</div>';
+    // --- Drafts (copy-only; [Name] stays a placeholder — the dashboard has no names) ---
+    const DRAFTS=[
+      ['Gift follow-up',"Hey [Name], saw you were looking at gift ideas. Easiest way to narrow it down: who is it for, do they cook much, and is this more of a useful everyday gift or a bigger kitchen upgrade?"],
+      ['Owner follow-up',"Hey [Name], if you already have Cutco, the easiest starting point is a quick photo of what you have. I can help you figure out what needs sharpening, what you're missing, and what I would not waste money on."],
+      ['Finder follow-up',"Hey [Name], based on what you were looking at, I can narrow this to a few pieces instead of throwing the whole catalog at you. Want me to send the simplest starting point?"],
+      ['Referral thank-you',"Hey [Name], thanks again for thinking of people this could help. I'll reach out respectfully, mention your name, and keep it simple."],
+    ];
+    $('drafts').innerHTML=DRAFTS.map((dr,i)=>'<div class="q" style="position:relative"><strong style="display:block;margin-bottom:4px">'+dr[0]+'</strong><span id="draft'+i+'">'+esc(dr[1])+'</span><div style="margin-top:8px"><button class="btn ghost" style="font-size:12px;padding:6px 12px" data-draft="draft'+i+'">Copy draft</button></div></div>').join('');
+    [...$('drafts').querySelectorAll('[data-draft]')].forEach(b=>b.onclick=()=>{
+      const t=document.getElementById(b.dataset.draft).textContent;
+      (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{b.textContent='Copied ✓';setTimeout(()=>b.textContent='Copy draft',1800);},()=>window.prompt('Copy:',t));
+    });
+  }
+
   function render(d){
     lastData=d;
     renderKpis(d);renderChart(d);renderGauge(d);renderFunnel(d);renderBars(d);renderBooking(d);
-    renderTops(d);renderQ(d);renderFilters(d);renderFeed(d);
+    renderTops(d);renderQ(d);renderFilters(d);renderFeed(d);renderSales(d);
     const gen=d.generatedAt?new Date(d.generatedAt):new Date();
     $('updated').textContent='Live · '+gen.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
     $('genline').textContent='Snapshot generated '+gen.toLocaleString();

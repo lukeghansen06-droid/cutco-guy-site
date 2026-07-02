@@ -138,6 +138,57 @@ function detailWhy(a) {
   }
 }
 
+/**
+ * SPIN "Problem" follow-through: one extra sentence keyed to what the visitor
+ * said is annoying right now. Optional — '' when unanswered or 'none'.
+ */
+const PROBLEM_LINES = {
+  dull:    'And since dull knives are the pain right now: free sharpening for life is the whole point — this pick stays sharp, forever.',
+  prep:    'Since prep time is the pain: this is the piece that shortens the chopping, not another gadget for the drawer.',
+  hardveg: 'Since hard produce and crusty loaves are the fight: the right edge handles exactly that — no squishing, no sawing.',
+  meat:    'Since meats are where it goes wrong: clean slices come from the right blade, not more force.',
+  unsure:  'And since the real problem is not knowing what to get — that’s what this shortlist fixes. Start here; add later only if you need it.',
+};
+
+/**
+ * Honest trade-off lines per lane: why not the bigger option, why not the
+ * smaller one, and who should skip this pick entirely. Shown on the result
+ * card so the recommendation reads consultative, not promotional.
+ */
+const TRADEOFFS = {
+  simple:     { bigger: 'A block set would mostly gather dust in a simple-meals kitchen — skip it for now.',
+                smaller: 'Going smaller than one good knife means keeping the frustration you came in with.',
+                skip: 'Skip this if your current chef’s knife already feels sharp and comfortable.' },
+  starter:    { bigger: 'The bigger sets are great, but they’re a second step — you can add pieces anytime.',
+                smaller: 'A lone paring knife won’t cover daily prep — this pairing does.',
+                skip: 'Skip if you’re outfitting a full family kitchen from scratch — a set makes more sense.' },
+  everyday:   { bigger: 'The Ultimate set is more than most daily cooks use — you can grow into it later.',
+                smaller: 'A starter pair would leave your busiest nights under-equipped.',
+                skip: 'Skip if you barely cook — one great knife is the smarter start.' },
+  full:       { bigger: 'There’s nothing meaningfully bigger — the question is fit, not more.',
+                smaller: 'Piecing it together one knife at a time works, but a set settles it once.',
+                skip: 'Skip the full set if this is your first Cutco and you’d rather test-drive one piece first.' },
+  college:    { bigger: 'A full block set fights a small kitchen for counter space — compact wins here.',
+                smaller: 'Below this you’re back to guessing with one knife.',
+                skip: 'Skip if you’re outfitting a permanent home soon — buy once, there.' },
+  freshstart: { bigger: 'You can always scale up once you know how the new kitchen actually gets used.',
+                smaller: 'Starting below this means re-shopping in six months.',
+                skip: 'Skip if someone may gift you a set — registries love Cutco; ask before you buy.' },
+  gift:       { bigger: 'A bigger set can overwhelm a gift moment — useful and easy-to-explain lands better.',
+                smaller: 'Much smaller starts to feel like a stocking stuffer instead of a keeper.',
+                skip: 'Skip if they already own Cutco — fill their gap instead (I can help you find it).' },
+  owner:      { bigger: 'Another big set duplicates what you own — the gap piece is the smart money.',
+                smaller: 'Sharpening what you have is free and might be all you need — do that first.',
+                skip: 'Skip buying anything until your current pieces are sharpened and accounted for.' },
+};
+
+const NEXT_STEPS = {
+  gift:  'Best next step: text me who it’s for and I’ll sanity-check the pick before you spend anything.',
+  owner: 'Best next step: text me a photo of what you own — service first, gaps second.',
+  full:  'Best next step: book the full demo and see the whole lineup in action before deciding.',
+};
+const NEXT_STEP_DEFAULT = 'Best next step: send this result to me and we’ll confirm fit and current pricing together.';
+
 function rankFor(a) {
   if (a.owns) return [
     P('bread', 'The gap most owners are missing — crusty bread and ripe tomatoes, handled.'),
@@ -206,6 +257,8 @@ function labelFor(a) {
  * @param {'self'|'gift'|'newhome'} a.purpose
  * @param {'starter'|'mid'|'best'} a.budget
  * @param {boolean} a.owns
+ * @param {'dull'|'prep'|'hardveg'|'meat'|'unsure'|'none'} [a.problem] — optional
+ *        SPIN "what's annoying right now" answer; sharpens `detail` when present.
  */
 export function recommend(a) {
   let id;
@@ -218,16 +271,23 @@ export function recommend(a) {
 
   const ranked = rankFor(a);
   const top = ranked[0];
+  const lane = laneOf(a);
+  const problemLine = (a.problem && PROBLEM_LINES[a.problem]) || '';
+  const t = TRADEOFFS[lane] || TRADEOFFS.starter;
   return {
     id,
     title: PIECES[id].title,
     tier: PIECES[id].tier,
     label: labelFor(a),
-    lane: laneOf(a),
+    lane,
     badge: badgeFor(a),
-    detail: detailWhy(a),
+    detail: detailWhy(a) + (problemLine ? ' ' + problemLine : ''),
     uses: (top && USES[top.name]) || '',
     why: top.why,
     ranked,
+    whyNotBigger: t.bigger,
+    whyNotSmaller: t.smaller,
+    skipIf: t.skip,
+    nextStep: NEXT_STEPS[lane] || NEXT_STEP_DEFAULT,
   };
 }

@@ -145,7 +145,7 @@
     };
     function imgUrl(name){ var c=IMG[name]; return c?(IB+c+IS):''; }
     // current Cutco prices (USD) — kept fresh by a scheduled refresh
-    var PRICE_UPDATED='July 1, 2026';
+    var PRICE_UPDATED='June 29, 2026';
     var PRICES={
       '9-1/4" French Chef':'$200','7-5/8" Petite Chef':'$183','7" Santoku':'$184','5" Petite Santoku':'$164','Santoku-Style Trimmer':'$104','Trimmer (Utility Knife)':'$98','4" Vegetable Knife':'$153','6" Vegetable Knife':'$174','7-1/2" Vegetable Knife':'$201','2-3/4" Paring Knife':'$85','4" Paring Knife':'$91','Gourmet Paring Knife':'$85','Bird’s Beak Paring Knife':'$91','9" Carver':'$149','6-3/4" Petite Carver':'$142','9-3/4" Slicer (Bread Knife)':'$150','Petite Slicer (Bread Knife)':'$146','Cleaver':'$275','Butcher Knife':'$169','Boning Knife':'$132','Salmon Knife':'$162','Hardy Slicer':'$191','Gourmet Prep Knife':'$191','Cheese Knife':'$98','Traditional Cheese Knife':'$118','Spatula Spreader':'$97',
       'Super Shears':'$149','Vegetable Peeler':'$57','Ice Cream Scoop':'$61','Pizza Cutter':'$73','Can Opener':'$73','Wine Opener':'$67','Knife Sharpener':'$68','Mix-Stir':'$66','Slotted Turner':'$66','Serving Spoons & Ladle':'from $66','Potato Masher':'$81','Carving / Turning Fork':'from $75','Cutting Boards':'from $35','Kitchen Tool Sets (5–6 pc)':'from $354','Slice n’ Serve / Turn n’ Serve':'from $76','Gourmet Fry Pans (8/10/12")':'from $267','Sauce Pans (1/2/3 Qt)':'from $359','11-1/2" Skillet & Cover':'$600','Dutch Oven (4 / 6.3 Qt)':'from $430','10 Qt. Stock Pot':'$792','Wok & Cover':'$800','Steamer / Double Boiler Inserts':'from $222','Cookware Sets (Aspiring→Complete)':'from $1,617','Stainless Place Settings':'from $156','60-Pc. Flatware Set in Chest':'$1,881','Serving & Hostess Sets':'from $181','Individual Flatware':'from $39',
@@ -153,11 +153,10 @@
       'Hunting Knife':'$255','Gut Hook Hunting Knife':'$161','Drop Point Hunting Knife':'$137','Clip Point Outdoor Knife':'$137','CUTCO/KA-BAR Outdoorsman':'$279','CUTCO/KA-BAR Explorer':'$275','Fisherman’s Solution':'$132','Pocket Knife':'$83','2-3/4" Lockback Knife':'$132','Golf Mate':'$81',
       'Homemaker +8 Set with Block':'$1,715','Homemaker Set with Block':'$1,343','Homemaker Set with Trays':'$1,228','Galley + 6 Set with Block':'$1,236','Galley Set with Block':'$945','Gourmet Set with Block':'$1,072','Studio Set with Block':'$567','Essentials Set with Block':'$711','Kitchenette Set with Tray':'$559','Space Saver Set with Block':'$788','Signature Set with Block':'$2,565','Ultimate Set with Block':'$3,519','The Complete Kitchen Collection':'$13,580','3-Pc. Knife & Sheath Set':'$381','5-Pc. Knife & Sheath Set':'$695','Kitchen Classics (3-Pc.)':'$372','Carving Set':'$232','Welcome Home Set':'$228','Salad Mates':'$189','Wine & Cheese Set':'$191','Cook’s Combo (Petite Chef + Trimmer)':'$287'
     };
-    var BEST={'9-1/4" French Chef':1,'Trimmer (Utility Knife)':1,'7" Santoku':1,'Table Knife':1,'Homemaker +8 Set with Block':1,'Hunting Knife':1};
     // "when purchased separately" full value (verified on cutco.com) → powers the savings line
     var VALUES={'Homemaker +8 Set with Block':1983,'Homemaker Set with Block':1535,'Homemaker Set with Trays':1403,'Galley + 6 Set with Block':1404,'Galley Set with Block':1068,'Gourmet Set with Block':1218,'Studio Set with Block':630,'Essentials Set with Block':790,'Kitchenette Set with Tray':621,'Space Saver Set with Block':875,'Signature Set with Block':3018,'Ultimate Set with Block':4240,'The Complete Kitchen Collection':16246,'3-Pc. Knife & Sheath Set':410,'5-Pc. Knife & Sheath Set':747,'60-Pc. Flatware Set in Chest':2808,'Cookware Sets (Aspiring→Complete)':1702,'Kitchen Tool Sets (5–6 pc)':402};
     var TABS=[['all','Everything'],['knives','Kitchen Knives'],['table','Table & Steak'],['tools','Tools & Gadgets'],['cookware','Cookware'],['flatware','Flatware'],['outdoors','Outdoors & Hunting'],['sets','Sets & Gifts']];
-    var QUICK=[['Best first knife','petite chef'],['Vegetable prep','vegetable'],['Wedding gift','wedding'],['For the griller','steak'],['For the fisherman','fillet'],['Hunting','hunting'],['Cookware','cookware'],['Small kitchen','starter']];
+    var QUICK=[['Best first knife','petite chef'],['Starter pieces','starter'],['Gift picks','gift'],['Wedding gift','wedding'],['Hard vegetables','squash'],['Meat & grilling','meat'],['Bread & baking','bread'],['Hosting','entertaining'],['Small kitchen','small'],['Cookware','cookware']];
     var curTab='', curQ='', shown=0; var STEP=12;
     var search=document.getElementById('expSearch');
     var selectEl=document.getElementById('expSelect');
@@ -180,7 +179,7 @@
     function easyPayStr(num,from){ return (from?'from ':'')+money(num/5)+'/mo'; }
     function showEasy(p,num){ return p.c==='sets' || (num>=120); }
     // quick-pick chips set a search
-    QUICK.forEach(function(q){ var b=document.createElement('button'); b.textContent=q[0]; b.addEventListener('click',function(){ search.value=q[1]; curQ=q[1].toLowerCase(); selectEl.value=''; curTab=''; shown=STEP; render(); countEl.scrollIntoView({behavior:'smooth',block:'nearest'}); }); quickEl.appendChild(b); });
+    QUICK.forEach(function(q){ var b=document.createElement('button'); b.textContent=q[0]; b.addEventListener('click',function(){ search.value=q[1]; curQ=q[1].toLowerCase(); selectEl.value=''; curTab=''; shown=STEP; render(); track('ev','product_filter_used'); countEl.scrollIntoView({behavior:'smooth',block:'nearest'}); }); quickEl.appendChild(b); });
     selectEl.addEventListener('change',function(){ curTab=selectEl.value; search.value=''; curQ=''; shown=STEP; render(); if(selectEl.value && selectEl.value!=='all') track('cat',selectEl.value); });
     var _searchT;
     search.addEventListener('input',function(){ curQ=search.value.toLowerCase().trim(); if(curQ){ selectEl.value=''; curTab=''; } shown=STEP; render(); clearTimeout(_searchT); if(curQ.length>=3){ _searchT=setTimeout(function(){ track('search',search.value.trim()); },1300); } });
@@ -206,10 +205,10 @@
         ? window.PriceStatus.priceBlock(p.n, priceTxt)
         : (priceTxt?('<div class="pprice">'+esc(priceTxt)+'</div><div class="psnap">June 2026 snapshot — confirm current price</div>'):'<div class="pask">Ask Luke to confirm price</div>'));
       var easyHtml=(pp && showEasy(p,pp.num))?('<div class="peasy">Interest-free EasyPay available — ask Luke</div>'):'';
-      var badge=BEST[p.n]?'<span class="ptag">★ Bestseller</span>':'';
       var setbadge=isSet?'<span class="settag">✦ Bundle</span>':'';
-      card.innerHTML=badge+setbadge+pic+
-        '<h4>'+esc(p.n)+'</h4>'+valHtml+priceHtml+easyHtml+'<p class="pdesc">'+esc(p.d)+'</p>'+
+      var skipHtml=isSet?'<p class="pskip">Only need a few pieces? Skip the set — the Finder narrows it to 1–3.</p>':'';
+      card.innerHTML=setbadge+pic+
+        '<h4>'+esc(p.n)+'</h4>'+valHtml+priceHtml+easyHtml+'<p class="pdesc">'+esc(p.d)+'</p>'+skipHtml+
         '<div class="pacts"><button type="button" class="addbtn'+(added?' added':'')+'" data-ev="explorer_add_to_list">'+(added?'✓ On your list':'♡ Add to list')+'</button>'+
         '<a class="viewbtn" href="'+p.u+'" target="_blank" rel="noopener" data-ev="official_cutco_link_click">View ↗</a></div>';
       var btn=card.querySelector('.addbtn');
@@ -223,7 +222,7 @@
     }
     function render(){
       grid.innerHTML='';
-      if(!curTab && !curQ){ countEl.textContent=''; grid.innerHTML='<div class="exp-empty">👋 Pick a category from the menu, tap a quick-pick, or search above — the whole 89-piece lineup is in here. Or ask the assistant up top.</div>'; return; }
+      if(!curTab && !curQ){ countEl.textContent=''; grid.innerHTML='<div class="exp-empty">Pick a category from the menu, tap a quick-pick, or search above — the whole '+P.length+'-piece lineup is in here. Or ask the assistant up top.</div>'; return; }
       var items=P.filter(matches);
       if(!items.length){ countEl.textContent=''; grid.innerHTML='<div class="exp-empty">Hmm, no match for that — try a simpler word like “knife”, “gift”, “fish”, or “cookware”. Or just <a href="sms:+13126594280" style="color:#7dd3fc">text me</a> what you’re after and I’ll find it.</div>'; return; }
       if(!shown) shown=STEP;
@@ -262,8 +261,8 @@
     window.cutcoConfetti=confetti;
     function renderDrawer(){
       var hd=drawer.querySelector('.drawer-head h3'); if(hd) hd.textContent='My Cutco list'+(list.length?(' ('+list.length+')'):'');
-      if(!list.length){ cBody.innerHTML='<div class="drawer-empty">Your list is empty.<br>Tap “♡ Add to list” on any piece you’re curious about — it saves automatically, then you can send it straight to me. 🙂</div>'; cFoot.innerHTML=''; return; }
-      cBody.innerHTML='<div class="saved-note">💾 Saved on this device — it’ll still be here when you come back.</div>'+list.map(function(n){ return '<div class="witem"><span class="wn">'+esc(n)+(PRICES[n]?(' <span class="wp">'+esc(PRICES[n])+'</span>'):'')+'</span><button type="button" class="wrm" data-n="'+esc(n)+'" aria-label="Remove">×</button></div>'; }).join('');
+      if(!list.length){ cBody.innerHTML='<div class="drawer-empty">Your list is empty.<br>Tap “♡ Add to list” on any piece you’re curious about — it saves automatically, then you can send it straight to me.</div>'; cFoot.innerHTML=''; return; }
+      cBody.innerHTML='<div class="saved-note">Saved on this device — it’ll still be here when you come back.</div>'+list.map(function(n){ return '<div class="witem"><span class="wn">'+esc(n)+(PRICES[n]?(' <span class="wp">'+esc(PRICES[n])+'</span>'):'')+'</span><button type="button" class="wrm" data-n="'+esc(n)+'" aria-label="Remove">×</button></div>'; }).join('');
       Array.prototype.forEach.call(cBody.querySelectorAll('.wrm'),function(x){ x.addEventListener('click',function(){ var n=x.getAttribute('data-n'); var i=list.indexOf(n); if(i>-1){ list.splice(i,1); save(); updateCart(); } }); });
       var total=0, anyFrom=false, priced=0;
       list.forEach(function(n){ var pp=parsePrice(PRICES[n]); if(pp){ total+=pp.num; priced++; if(pp.from) anyFrom=true; } });
@@ -279,10 +278,10 @@
       var body=encodeURIComponent(raw);
       cFoot.innerHTML=totalHtml+
         '<a class="btn btn-grad" id="textListBtn" style="padding:13px" data-ev="my_list_text_luke" href="sms:+13126594280?&body='+body+'">Text my list to Luke</a>'+
-        '<a class="btn btn-ghost" style="padding:13px" href="mailto:Lukehansen01@gmail.com?subject='+encodeURIComponent('My Cutco wish list')+'&body='+body+'">✉️ Email it instead</a>'+
-        (navigator.share?'<button type="button" class="btn btn-ghost" id="shareListBtn" style="padding:13px">📤 Share my list</button>':'')+
-        '<a class="btn btn-ghost" style="padding:13px" href="https://calendly.com/lukehansen01/30min?duration=60" target="_blank" rel="noopener">📅 Book the full hour to see them</a>'+
-        '<div class="drawer-mini"><button type="button" class="mini-btn" id="copyListBtn">🔗 Copy link</button><button type="button" class="mini-btn danger" id="clearListBtn">🗑 Clear</button></div>';
+        '<a class="btn btn-ghost" style="padding:13px" href="mailto:lukehansen01@gmail.com?subject='+encodeURIComponent('My Cutco wish list')+'&body='+body+'">Email it instead</a>'+
+        (navigator.share?'<button type="button" class="btn btn-ghost" id="shareListBtn" style="padding:13px">Share my list</button>':'')+
+        '<a class="btn btn-ghost" style="padding:13px" href="https://calendly.com/lukehansen01/30min" target="_blank" rel="noopener" data-ev="booking_path_clicked">Book a demo to see them</a>'+
+        '<div class="drawer-mini"><button type="button" class="mini-btn" id="copyListBtn">Copy link</button><button type="button" class="mini-btn danger" id="clearListBtn">Clear</button></div>';
       var tb=document.getElementById('textListBtn'); if(tb) tb.addEventListener('click',function(){ confetti(); track('send','list of '+list.length); });
       var sb=document.getElementById('shareListBtn'); if(sb) sb.addEventListener('click',function(){ if(navigator.share){ navigator.share({title:'My Cutco list',text:raw,url:listLink()}).then(function(){confetti();}).catch(function(){}); } });
       var cb=document.getElementById('copyListBtn'); if(cb) cb.addEventListener('click',function(){ var link=listLink(); if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(link).then(function(){ cb.textContent='✓ Copied!'; setTimeout(function(){cb.textContent='🔗 Copy link';},1800); },function(){ window.prompt('Copy your list link:',link); }); } else { window.prompt('Copy your list link:',link); } });
@@ -298,10 +297,13 @@
       var pn=document.getElementById('priceNote');
       if(pn) pn.innerHTML='Prices shown are <strong>as of June 2026</strong> and are set by Cutco — always confirm the current price on <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">cutco.com</a> via “View ↗”. Set values are the “bought-separately” price. Interest-free <strong>EasyPay</strong> can split it into monthly payments — ask Luke.';
       Array.prototype.forEach.call(selectEl.options,function(o){
-        if(!o.value||o.value==='all') return;
+        if(!o.value) return;
+        if(o.value==='all'){ o.textContent='Everything ('+P.length+' pieces)'; return; }
         var c=P.filter(function(p){return p.c===o.value;}).length;
         if(c && o.textContent.indexOf('(')===-1) o.textContent=o.textContent+' ('+c+')';
       });
+      // P0: page counts render from the data itself (static 89 in HTML is the no-JS fallback)
+      Array.prototype.forEach.call(document.querySelectorAll('[data-product-count]'),function(el){ el.textContent=String(P.length); });
     })();
     // import a shared list from the URL (#list=...)
     (function(){

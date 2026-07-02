@@ -39,6 +39,7 @@
   <section class="section" style="text-align:center">
     <div class="container" style="max-width:680px">
       <p class="section-eyebrow">Someone sent you here</p>
+      <p class="ref-hello" id="ref-hello" hidden></p>
       <h1>Glad you came by.</h1>
       <p style="color:var(--mut);font-size:1.1rem;line-height:1.7">
         If someone sent you my site, they probably thought you&rsquo;d enjoy seeing the knives, need a gift, already own Cutco, or just want a local person who can help with service. Here&rsquo;s how it works: I show the pieces, answer your questions, and help you figure out what actually makes sense. You decide from there.
@@ -59,9 +60,43 @@
         <div class="card"><div class="path-icon" aria-hidden="true">2</div><h3 class="path-title">You see the pieces</h3><p class="path-desc">The rope cut, tomatoes, shears &mdash; the pieces people actually use most.</p></div>
         <div class="card"><div class="path-icon" aria-hidden="true">3</div><h3 class="path-title">You decide</h3><p class="path-desc">Start small or build a setup. Either way you have a real person afterward.</p></div>
       </div>
+      <!-- MEDIA SLOT (future): 30–60s "what a demo looks like" clip goes here
+           once Luke records one. Do not fill with stock footage. -->
       <div style="text-align:center;margin-top:var(--space-5)">
-        <a class="btn btn-primary" href="/book" data-ev="book_full_click">Book a Referred Demo</a>
+        <a class="btn btn-primary" href="/book" data-ev="book_full_click" data-utm="referred">Book a Referred Demo</a>
       </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Referrer toolkit — for people sending Luke to a friend
+       ============================================================ -->
+  <section class="section">
+    <div class="container" style="max-width:720px">
+      <h2 style="text-align:center">Sending me to a friend? Make it easy.</h2>
+      <p style="color:var(--mut);text-align:center;max-width:56ch;margin:0 auto var(--space-5)">
+        The best intros are short and honest. Good people to think of: a friend who cooks,
+        a new homeowner, a gift buyer, someone who already owns Cutco, a skeptical friend
+        who wants straight answers, a DePauw parent, or a North Shore neighbor.
+      </p>
+
+      <div class="copy-block" style="margin-bottom:var(--space-4)">
+        <p class="copy-src">Intro #1 — the casual one</p>
+        <p id="intro-1">Hey [Name], thought of you because you mentioned [new place / cooking / a gift]. Luke helps people figure out Cutco without making it complicated. His site has a quick finder and booking link: https://cutcowithluke.com</p>
+        <button type="button" class="copy-btn" data-copy="intro-1" data-ev="referral_intro_copied">Copy this intro</button>
+      </div>
+
+      <div class="copy-block">
+        <p class="copy-src">Intro #2 — the connection one</p>
+        <p id="intro-2">Hey [Name], I know Luke through [connection]. He does short Cutco demos and helps people narrow down what actually makes sense. No need to know what you want beforehand: https://cutcowithluke.com</p>
+        <button type="button" class="copy-btn" data-copy="intro-2" data-ev="referral_intro_copied">Copy this intro</button>
+      </div>
+
+      <!-- Referrer promise — enable once Luke confirms this is how he works:
+      <p style="text-align:center;color:var(--mut);margin-top:var(--space-4)">
+        My promise to referrers: I reach out once, mention your name, and never chase.
+      </p>
+      -->
     </div>
   </section>
 </main>
@@ -69,12 +104,42 @@
 <footer class="site-footer">
   <div class="container">
     <p><strong>Luke Hansen</strong> &mdash; Your Cutco Guy<br>Serving Winnetka, Glencoe, Northbrook &amp; the North Shore of Chicago</p>
-    <p><a href="mailto:Lukehansen01@gmail.com">Lukehansen01@gmail.com</a> &middot; <a href="sms:+13126594280">Text 312-659-4280</a> &middot; <a href="/luke.vcf" download>Save my contact</a></p>
+    <p><a href="mailto:lukehansen01@gmail.com">lukehansen01@gmail.com</a> &middot; <a href="sms:+13126594280">Text 312-659-4280</a> &middot; <a href="/luke.vcf" download>Save my contact</a></p>
     <nav aria-label="Footer navigation"><a href="/book">Book a Demo</a> &middot; <a href="/find">Find Your Cutco</a> &middot; <a href="/faq">FAQ</a> &middot; <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">Official Cutco pricing</a></nav>
     <p style="margin-top:1em;font-size:.8em;color:var(--mut)">&copy; <span id="footer-year"></span> CutcoWithLuke &mdash; <a href="/privacy">Privacy</a> &middot; Products sold through Vector Marketing.</p>
   </div>
 </footer>
 
 <script type="module" src="/assets/app.js"></script>
+<script type="module">
+// ?from=Name personalization — sanitized hard: letters/spaces/hyphens only,
+// max 24 chars, rendered via textContent (never HTML). Falls back to hidden.
+try {
+  const raw = new URLSearchParams(location.search).get('from') || '';
+  const name = raw.replace(/[^a-zA-ZÀ-ɏ' -]/g, '').trim().slice(0, 24);
+  const el = document.getElementById('ref-hello');
+  if (el && name) {
+    el.textContent = name + ' thought you might want to see this.';
+    el.hidden = false;
+  }
+} catch (e) {}
+
+// Copy-intro buttons (referral_intro_copied fires via the data-ev listener in app.js)
+document.querySelectorAll('.copy-btn[data-copy]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const src = document.getElementById(btn.getAttribute('data-copy'));
+    if (!src) return;
+    const text = src.textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.textContent = 'Copied — paste it into a text';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy this intro'; btn.classList.remove('copied'); }, 2200);
+    } catch (e) {
+      window.prompt('Copy the intro:', text);
+    }
+  });
+});
+</script>
 </body>
 </html>
