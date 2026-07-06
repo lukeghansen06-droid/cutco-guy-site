@@ -424,7 +424,7 @@ function reply(q) {
 // typing), talking (she's answering). No voice, no libraries, no tracking.
 // ---------------------------------------------------------------------------
 const WILLOW_HTML = `<span class="willow-wrap" aria-hidden="true">
-  <img src="/assets/willow-avatar.webp" alt="" class="willow-photo" width="320" height="320" loading="lazy" decoding="async"/>
+  <img src="/assets/willow-avatar.webp" alt="" class="willow-photo" width="320" height="320" decoding="async"/>
   <svg class="willow-lids" viewBox="0 0 100 100" preserveAspectRatio="none">
     <ellipse class="willow-lid willow-lid--l" cx="40" cy="44.7" rx="6.2" ry="0" fill="#a39889"/>
     <ellipse class="willow-lid willow-lid--r" cx="61.3" cy="44.7" rx="6.2" ry="0" fill="#a39889"/>
