@@ -140,12 +140,106 @@ function matchProducts(q, limit = 3) {
 }
 
 // ---------------------------------------------------------------------------
+// Owner gap analysis — "I own X, Y, Z; what should I add?"
+// Parses owned pieces from the message, maps coverage lanes, and recommends
+// the real gaps with confident, specific reasoning. Names rendered are from
+// OUR alias table (trusted) — never raw user text. No prices invented.
+// ---------------------------------------------------------------------------
+const OWN_ALIAS = [
+  { label: 'Petite Chef',        lane: 'prep',      names: ['petite chef'] },
+  { label: 'French Chef',        lane: 'prep',      names: ['french chef', "chef's knife", 'chefs knife', 'chef knife', 'big chef'] },
+  { label: 'Santoku',            lane: 'prep',      names: ['santoku'] },
+  { label: 'Trimmer',            lane: 'prep',      names: ['trimmer'] },
+  { label: 'Paring Knife',       lane: 'prep',      names: ['paring'] },
+  { label: 'Utility Knife',      lane: 'prep',      names: ['utility knife', 'hardy slicer'] },
+  { label: 'Slicer',             lane: 'bread',     names: ['slicer', 'bread knife', 'serrated'] },
+  { label: 'Table Knives',       lane: 'table',     names: ['table knife', 'table knives'] },
+  { label: 'Steak Knives',       lane: 'table',     names: ['steak knife', 'steak knives'] },
+  { label: 'Carving Set',        lane: 'host',      names: ['carving set', 'carving knife', 'carver'] },
+  { label: 'Turning Fork',       lane: 'host',      names: ['turning fork', 'carving fork'] },
+  { label: 'Cheese Knife',       lane: 'host',      names: ['cheese knife'] },
+  { label: 'Super Shears',       lane: 'tools',     names: ['shears', 'scissors'] },
+  { label: 'Vegetable Peeler',   lane: 'tools',     names: ['peeler'] },
+  { label: 'Spatula Spreader',   lane: 'tools',     names: ['spatula spreader', 'spreader'] },
+  { label: 'Butcher Knife',      lane: 'specialty', names: ['butcher'] },
+  { label: 'Boning Knife',       lane: 'specialty', names: ['boning'] },
+  { label: 'Fillet Knife',       lane: 'specialty', names: ['fillet', 'filet'] },
+  { label: 'Salmon Knife',       lane: 'specialty', names: ['salmon knife'] },
+  { label: 'a block set',        lane: 'set',       names: ['homemaker', 'galley', 'signature set', 'ultimate set', 'block set', 'knife block', 'the block'] },
+];
+const GAP_LANES = [
+  { id: 'prep',  label: 'everyday prep',      hero: 'Petite Chef Knife', also: 'Santoku',
+    why: "it becomes the knife you reach for every single day" },
+  { id: 'bread', label: 'bread & tomatoes',   hero: 'Slicer (bread knife)', also: null,
+    why: "the Double-D edge glides through crusty bread and ripe tomatoes without squishing — the piece owners tell Luke they underestimated most" },
+  { id: 'table', label: 'the table',          hero: 'Table Knives', also: 'Steak Knives',
+    why: "they get used at every single meal — day in, day out, the hardest-working pieces in the line" },
+  { id: 'tools', label: 'tools & gadgets',    hero: 'Super Shears', also: 'Vegetable Peeler',
+    why: "the sleeper hit — herbs, poultry, packaging, and they come apart for cleaning" },
+  { id: 'host',  label: 'serving & hosting',  hero: 'Carving Set', also: 'Cheese Knife',
+    why: "roasts, holiday birds, and boards — the pieces your guests actually notice" },
+];
+function detectOwned(text) {
+  const t = norm(text);
+  const found = [];
+  OWN_ALIAS.forEach(a => {
+    if (a.names.some(nm => t.includes(nm)) && !found.some(f => f.label === a.label)) found.push(a);
+  });
+  return found;
+}
+function notOwnedRecs(query, owned, limit) {
+  const ownedNorm = owned.map(o => norm(o.label));
+  return matchProducts(query, 6).filter(pr => !ownedNorm.some(on => norm(pr.n).includes(on) || on.includes(norm(pr.n)))).slice(0, limit || 3);
+}
+function ownerGapReply(q) {
+  const owned = detectOwned(q);
+  if (!owned.length) return null;
+  const lanesOwned = new Set(owned.map(o => o.lane));
+  if (lanesOwned.has('set')) { lanesOwned.add('prep'); lanesOwned.add('bread'); lanesOwned.add('table'); }
+  const gaps = GAP_LANES.filter(l => !lanesOwned.has(l.id));
+  const ownedLabels = owned.map(o => o.label);
+  const ownedStr = ownedLabels.join(', ');
+  const smsOwned = 'Hi Luke! I already own: ' + ownedLabels.join(', ') + '.';
+
+  if (!gaps.length) {
+    return {
+      t: `That's a seriously complete setup — <strong>${esc(ownedStr)}</strong> covers every core lane. Two honest moves from here: get everything <strong>sharpened free</strong> so it all cuts like day one, and look at specialty or entertaining pieces (Fillet, Butcher, serving sets) or gifting a starter to someone you love. Luke can also check for current owner specials.`,
+      recs: notOwnedRecs('fillet butcher carving cheese', owned, 3),
+      ctas: [CTA.text(smsOwned + ' What would you add, and any owner specials right now?'), CTA.explore('all', 'Browse the catalog')],
+      chips: ['Sharpening help', 'Gift ideas'],
+    };
+  }
+  const g1 = gaps[0], g2 = gaps[1] || null;
+  let msg = `Good collection — <strong>${esc(ownedStr)}</strong>. Here's the honest gap read: `;
+  const coveredNames = GAP_LANES.filter(l => lanesOwned.has(l.id)).map(l => l.label);
+  if (coveredNames.length) msg += `you've got ${esc(coveredNames.join(' and '))} handled. `;
+  msg += `The gap that pays off first is <strong>${esc(g1.label)}</strong>: get the <strong>${esc(g1.hero)}</strong>${g1.also ? ` (or ${esc(g1.also)})` : ''} — ${esc(g1.why)}.`;
+  if (g2) msg += ` After that, <strong>${esc(g2.hero)}</strong> closes out ${esc(g2.label)} — ${esc(g2.why)}.`;
+  msg += ` Text Luke your list and he'll confirm current pricing and any owner specials — sharpening what you already own is free, so bring that up too.`;
+  const addStr = g1.hero + (g2 ? ' and ' + g2.hero : '');
+  return {
+    t: msg,
+    recs: notOwnedRecs(g1.hero + ' ' + (g1.also || '') + ' ' + (g2 ? g2.hero : ''), owned, 3),
+    ctas: [CTA.text(smsOwned + ' Thinking about adding: ' + addStr + '. What do you recommend, and what is current pricing?'), CTA.explore('all', 'Browse the catalog'), CTA.finder],
+    chips: ['Sharpening help', 'Best 1\u20133 pieces', 'Help me book'],
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Reply engine — returns { t (trusted HTML), recs?, chips?, ctas? }
 // Natural, honest, next-step-oriented. Order = priority.
 // ---------------------------------------------------------------------------
 function reply(q) {
   const n = norm(q);
   const recs = matchProducts(q, 3);
+
+  // Owner gap analysis fires first: either they clearly listed pieces they own,
+  // or they used owner/add language and we recognized at least one piece.
+  const ownedHits = detectOwned(q);
+  if (ownedHits.length >= 3) { const g = ownerGapReply(q); if (g) return g; }
+  if (ownedHits.length >= 1 && /(add|adding|add-?on|missing|complete|next|round (it |them )?out|upgrade|already (own|have)|i (own|have)|what else|go with (it|them)|pair)/.test(n)) {
+    const g = ownerGapReply(q); if (g) return g;
+  }
 
   if (/\b(hi|hello|hey|yo|sup|howdy)\b/.test(n))
     return { t: `Hey — glad you're here. Tell me what you cook, who you're shopping for, or what you already own, and I'll point you to a smart starting point.`, chips: ['What should I get?', 'Gift ideas', 'I already own Cutco'] };
@@ -200,8 +294,7 @@ function reply(q) {
 
   // already own Cutco → owner lane
   if (/(already (own|have)|i own|adding to|add on|complement|owner|my (cutco|set)|fill (in )?the gap)/.test(n))
-    return { t: `If you already own Cutco, the best move is usually <strong>service first</strong>: free sharpening, a quick check of what you have, then filling the gaps rather than repeating pieces. Luke can help with all of that.`, ctas: [CTA.text('Hi Luke! I already own some Cutco — can you help me sharpen and fill the gaps?'), CTA.finder, CTA.explore('set', 'Show add-ons')], chips: ['Sharpening help', 'Best 1–3 pieces'] };
-
+    return { t: `Perfect \u2014 tell me exactly what you own (just list the pieces, like \u201cPetite Chef, table knives, shears\u201d) and I\u2019ll tell you the honest gaps worth filling and what to skip. And remember: sharpening what you already own is <strong>free for life</strong>.`, ctas: [CTA.text('Hi Luke! I already own some Cutco \u2014 here\u2019s my list: '), CTA.explore('all', 'Browse the catalog')], chips: ['Sharpening help', 'Best 1\u20133 pieces'] };
   // sharpening / guarantee / damage
   if (/(sharpen|dull|damage|damaged|broke|broken|chip|guarantee|warranty|forever|replace|lifetime|repair|service)/.test(n))
     return { t: `Cutco's <strong>Forever Guarantee</strong> is the real deal: free sharpening for life, plus repair or replacement if a knife ever fails to perform (small return-shipping fee). It even transfers with the product, so gifts and hand-me-downs are covered. Send yours in — or Luke can walk you through it.`, ctas: [CTA.text('Hi Luke! I need help with sharpening / the guarantee.'), CTA.bookQuick], chips: ['I already own Cutco', 'Is this pushy?'] };
