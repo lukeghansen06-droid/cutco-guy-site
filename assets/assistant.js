@@ -231,6 +231,15 @@ function ownerGapReply(q) {
   }
   const want = askedCount(q);
   const freshGaps = gaps.filter(g => !suggestedLaneIds.includes(g.id));
+  if (!freshGaps.length && suggestedLaneIds.length) {
+    // She already suggested every core gap — move to specialty instead of repeating.
+    return {
+      t: `We've covered your core gaps already \u2014 next tier is the fun stuff: a <strong>Fillet Knife</strong> if anyone fishes, a <strong>Butcher Knife</strong> for big cuts, or serving pieces for hosting. Or honestly? Get what you own <strong>sharpened free</strong> and see if anything's still missing after.`,
+      recs: notOwnedRecs('fillet butcher carving cheese serving', owned, 3),
+      ctas: [CTA.text('Hi Luke! I own: ' + owned.map(o => o.label).join(', ') + '. We covered the basics \u2014 what specialty piece would you add?'), CTA.explore('all', 'Browse the catalog')],
+      chips: ['Sharpening help', 'Gift ideas', 'Help me book'],
+    };
+  }
   const pool = freshGaps.length ? freshGaps : gaps;
   const picks = pool.slice(0, want > 0 ? Math.min(want, 3) : 2);
   picks.forEach(g => { if (!suggestedLaneIds.includes(g.id)) suggestedLaneIds.push(g.id); });
