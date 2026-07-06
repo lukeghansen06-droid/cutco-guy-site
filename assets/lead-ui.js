@@ -174,56 +174,90 @@ function wireReferralForm() {
     form.after(statusRegion);
   }
 
+  const rowsBox = form.querySelector('#ref-rows');
+  const addBtn = form.querySelector('#addRefRow');
+  const countEl = form.querySelector('#refCount');
   const submitBtn = form.querySelector('[type="submit"]');
+  const MAX_ROWS = 10;
+
+  function rows() { return rowsBox ? [...rowsBox.querySelectorAll('[data-ref-row]')] : []; }
+  function updateCount() {
+    if (!countEl) return;
+    const n = rows().length;
+    countEl.textContent = n + (n === 1 ? ' person' : ' people') + ' added' + (n >= MAX_ROWS ? ' (that\u2019s the max \u2014 and amazing)' : '');
+    if (addBtn) addBtn.disabled = n >= MAX_ROWS;
+  }
+  function addRow(focus) {
+    if (!rowsBox || rows().length >= MAX_ROWS) return null;
+    const tpl = rows()[0];
+    const row = tpl.cloneNode(true);
+    row.querySelectorAll('input').forEach(i => { i.value = ''; });
+    const x = document.createElement('button');
+    x.type = 'button'; x.className = 'row-x'; x.textContent = '\u00d7';
+    x.setAttribute('aria-label', 'Remove this person');
+    x.addEventListener('click', () => { row.remove(); updateCount(); });
+    row.appendChild(x);
+    rowsBox.appendChild(row);
+    updateCount();
+    if (focus) { const f = row.querySelector('input'); if (f) f.focus(); }
+    return row;
+  }
+  if (addBtn) addBtn.addEventListener('click', () => addRow(true));
+  // Prompt tiles add a spot for that person
+  document.querySelectorAll('[data-add-referral]').forEach(tile => {
+    const go = () => {
+      const empty = rows().find(r => ![...r.querySelectorAll('input')].some(i => i.value.trim()));
+      const row = empty || addRow(false);
+      if (row) { const f = row.querySelector('input'); if (f) { f.focus(); f.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }
+    };
+    tile.addEventListener('click', go);
+    tile.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+  updateCount();
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
 
-    // referee = person being referred (the actual lead to follow up with)
-    const refName    = (form.querySelector('[name="ref_name[]"]')?.value    || '').trim();
-    const refContact = (form.querySelector('[name="ref_contact[]"]')?.value || '').trim();
-    // referrer = person submitting the form
-    const refBy      = (form.querySelector('#ref-by')?.value   || '').trim();
-    const refNote    = (form.querySelector('#ref-note')?.value || '').trim();
-    const website    = form.querySelector('input[name="website"]')?.value || '';
+    const refBy   = (form.querySelector('#ref-by')?.value   || '').trim();
+    const refNote = (form.querySelector('#ref-note')?.value || '').trim();
+    const website = form.querySelector('input[name="website"]')?.value || '';
 
-    if (!refName || !refContact || !refBy) {
-      showStatus(statusRegion, 'Please fill in all required fields.', 'error');
+    const people = rows().map(r => {
+      const ins = r.querySelectorAll('input');
+      return { name: (ins[0]?.value || '').trim(), contact: (ins[1]?.value || '').trim() };
+    }).filter(p => p.name && p.contact);
+
+    if (!people.length || !refBy) {
+      showStatus(statusRegion, 'Please add at least one person (name + how to reach them) and your name.', 'error');
       return;
     }
 
-    // Auto-detect contactType from referee's contact field
-    const contactType = refContact.includes('@') ? 'email' : 'phone';
-
-    // Compose REFERRAL: note — referrer name + optional message (max 300 chars)
-    const noteText = ('REFERRAL: referred by ' + refBy + (refNote ? '. ' + refNote : '')).slice(0, 300);
-
     if (submitBtn) submitBtn.disabled = true;
-    showStatus(statusRegion, '', 'clear');
+    showStatus(statusRegion, 'Sending\u2026', 'clear');
 
-    let result;
-    try {
-      result = await postLead({
-        name: refName,
-        contact: refContact,
-        contactType,
-        when: '',
-        note: noteText,
-        website,
-      });
-    } catch {
-      showStatus(statusRegion, 'Network hiccup — please try again in a moment.', 'error');
-      if (submitBtn) submitBtn.disabled = false;
-      return;
+    let sent = 0, failed = 0;
+    for (const person of people) {
+      const contactType = person.contact.includes('@') ? 'email' : 'phone';
+      const noteText = ('REFERRAL: referred by ' + refBy + (refNote ? '. ' + refNote : '')).slice(0, 300);
+      try {
+        const result = await postLead({ name: person.name, contact: person.contact, contactType, when: '', note: noteText, website });
+        if (result.ok) sent++; else failed++;
+      } catch { failed++; }
     }
 
     if (submitBtn) submitBtn.disabled = false;
 
-    if (result.ok) {
-      showStatus(statusRegion, "Thanks for the intro! Luke will follow up with them soon.", 'success');
-      form.reset();
+    if (sent && !failed) {
+      showStatus(statusRegion, sent === 1 ? 'Thank you for the intro! Luke will reach out warmly \u2014 and mention your name once.' : 'Thank you \u2014 ' + sent + ' intros sent! Luke will reach out to each of them warmly, once.', 'success');
+      // Reset to a single empty row
+      rows().slice(1).forEach(r => r.remove());
+      rows()[0]?.querySelectorAll('input').forEach(i => { i.value = ''; });
+      form.querySelector('#ref-note') && (form.querySelector('#ref-note').value = '');
+      updateCount();
+    } else if (sent && failed) {
+      showStatus(statusRegion, sent + ' sent, ' + failed + ' didn\u2019t go through \u2014 mind trying those again?', 'error');
     } else {
-      showStatus(statusRegion, errMsg(result.error), 'error');
+      showStatus(statusRegion, 'That didn\u2019t go through \u2014 please try again in a moment.', 'error');
     }
   });
 }

@@ -521,36 +521,36 @@
       </script>
 
       <p class="sub reveal" style="text-align:center;margin-bottom:var(--space-4);font-size:.9rem">
-        Or send me their info below. A few kinds of people who often enjoy seeing the knives:
+        Or send names below &mdash; <strong>one or ten, as many as you like</strong>. Tap any card and I&rsquo;ll add a spot for that person:
       </p>
 
       <!-- Referral prompt tiles — generic guidance, NOT fabricated testimonials -->
       <div class="refer-prompts stagger reveal">
-        <div class="refer-prompt">
+        <div class="refer-prompt" role="button" tabindex="0" data-add-referral>
           <span class="pe">&#128141;</span>
           <span class="pt">Someone recently engaged or getting married &mdash; building a home together.</span>
         </div>
-        <div class="refer-prompt">
+        <div class="refer-prompt" role="button" tabindex="0" data-add-referral>
           <span class="pe">&#127968;</span>
           <span class="pt">A friend who just moved into a new place or their first apartment.</span>
         </div>
-        <div class="refer-prompt">
+        <div class="refer-prompt" role="button" tabindex="0" data-add-referral>
           <span class="pe">&#127891;</span>
           <span class="pt">A recent grad setting up their own kitchen for the first time.</span>
         </div>
-        <div class="refer-prompt">
+        <div class="refer-prompt" role="button" tabindex="0" data-add-referral>
           <span class="pe">&#128104;&#8205;&#127859;</span>
           <span class="pt">Anyone who genuinely loves to cook, bake, or host people.</span>
         </div>
-        <div class="refer-prompt">
+        <div class="refer-prompt" role="button" tabindex="0" data-add-referral>
           <span class="pe">&#127873;</span>
           <span class="pt">Someone who&rsquo;s tough to shop for &mdash; a gift that lasts a lifetime.</span>
         </div>
-        <div class="refer-prompt">
+        <div class="refer-prompt" role="button" tabindex="0" data-add-referral>
           <span class="pe">&#128298;</span>
           <span class="pt">A parent or relative whose kitchen knives have seen better days.</span>
         </div>
-        <div class="refer-prompt">
+        <div class="refer-prompt" role="button" tabindex="0" data-add-referral>
           <span class="pe">&#129309;</span>
           <span class="pt">A coworker or neighbor who&rsquo;s mentioned wanting to upgrade their kitchen.</span>
         </div>
@@ -573,34 +573,25 @@
             style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"
           />
 
-          <fieldset style="border:none;padding:0;margin:0 0 var(--space-4)">
-            <legend style="font-size:.875rem;font-weight:700;color:var(--ink);margin-bottom:var(--space-3)">Person you&rsquo;re referring</legend>
-
-            <div class="refer-row">
-              <div class="field">
-                <label for="ref-name-1">Their name</label>
-                <input
-                  type="text"
-                  id="ref-name-1"
-                  name="ref_name[]"
-                  required
-                  autocomplete="off"
-                  placeholder="First name or full name"
-                />
-              </div>
-              <div class="field" style="margin-bottom:0">
-                <label for="ref-contact-1">Best way to reach them</label>
-                <input
-                  type="text"
-                  id="ref-contact-1"
-                  name="ref_contact[]"
-                  required
-                  autocomplete="off"
-                  placeholder="Phone number, email, or &ldquo;ask me to connect you&rdquo;"
-                />
+          <fieldset style="border:none;padding:0;margin:0 0 var(--space-2)">
+            <legend style="font-size:.875rem;font-weight:700;color:var(--ink);margin-bottom:var(--space-3)">People you&rsquo;re introducing <span style="font-weight:400;color:var(--mut)">(not people who&rsquo;d buy &mdash; just people nice enough to take a look)</span></legend>
+            <div id="ref-rows">
+              <div class="refer-row" data-ref-row>
+                <div class="field">
+                  <label>Their name</label>
+                  <input type="text" name="ref_name[]" required autocomplete="off" placeholder="First name or full name" />
+                </div>
+                <div class="field" style="margin-bottom:0">
+                  <label>Best way to reach them</label>
+                  <input type="text" name="ref_contact[]" required autocomplete="off" placeholder="Phone number, email, or &ldquo;ask me to connect you&rdquo;" />
+                </div>
               </div>
             </div>
           </fieldset>
+          <div class="ref-add-row">
+            <button type="button" class="btn btn-ghost" id="addRefRow" data-ev="referral_add_row">&#43; Add another person</button>
+            <span class="ref-count" id="refCount" aria-live="polite">1 person added</span>
+          </div>
 
           <div class="field">
             <label for="ref-by">Your name (so I can thank you!)</label>
@@ -623,7 +614,7 @@
             ></textarea>
           </div>
 
-          <button type="submit" class="btn btn-grad" style="padding:13px 24px">Send Luke the intro &#128591;</button>
+          <button type="submit" class="btn btn-grad" style="padding:13px 24px">Send Luke the intros &#128591;</button>
 
           <p class="priv-note">
             &#128274; Private &mdash; this goes straight to me and is never shown on the site.

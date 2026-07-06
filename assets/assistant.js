@@ -167,7 +167,20 @@ const OWN_ALIAS = [
   { label: 'Fillet Knife',       lane: 'specialty', names: ['fillet', 'filet'] },
   { label: 'Salmon Knife',       lane: 'specialty', names: ['salmon knife'] },
   { label: 'a block set',        lane: 'set',       names: ['homemaker', 'galley', 'signature set', 'ultimate set', 'block set', 'knife block', 'the block'] },
+  { label: 'Vegetable Knife',    lane: 'prep',      names: ['vegetable knife', 'veggie knife'] },
+  { label: 'Petite Santoku',     lane: 'prep',      names: ['petite santoku'] },
+  { label: 'Gourmet Paring',     lane: 'prep',      names: ['gourmet paring'] },
+  { label: 'Hardy Slicer',       lane: 'prep',      names: ['hardy slicer'] },
+  { label: 'Pizza Cutter',       lane: 'tools',     names: ['pizza cutter'] },
+  { label: 'Ice Cream Scoop',    lane: 'tools',     names: ['ice cream scoop'] },
+  { label: 'Can Opener',         lane: 'tools',     names: ['can opener'] },
 ];
+// Session memory — Willow remembers what you told her you own (this visit only).
+let sessionOwned = [];
+let suggestedLaneIds = [];
+function rememberOwned(found) {
+  found.forEach(a => { if (!sessionOwned.some(o => o.label === a.label)) sessionOwned.push(a); });
+}
 const GAP_LANES = [
   { id: 'prep',  label: 'everyday prep',     hero: 'Petite Chef Knife', also: 'Santoku',
     why: "the do-everything knife you'll grab daily" },
@@ -198,7 +211,9 @@ function askedCount(text) {
   return { one:1, two:2, three:3 }[m[1]] || parseInt(m[1], 10) || 0;
 }
 function ownerGapReply(q) {
-  const owned = detectOwned(q);
+  const found = detectOwned(q);
+  rememberOwned(found);
+  const owned = sessionOwned.length ? sessionOwned.slice() : found;
   if (!owned.length) return null;
   const lanesOwned = new Set(owned.map(o => o.lane));
   if (lanesOwned.has('set')) { lanesOwned.add('prep'); lanesOwned.add('bread'); lanesOwned.add('table'); }
@@ -215,7 +230,10 @@ function ownerGapReply(q) {
     };
   }
   const want = askedCount(q);
-  const picks = gaps.slice(0, want > 0 ? Math.min(want, 3) : 2);
+  const freshGaps = gaps.filter(g => !suggestedLaneIds.includes(g.id));
+  const pool = freshGaps.length ? freshGaps : gaps;
+  const picks = pool.slice(0, want > 0 ? Math.min(want, 3) : 2);
+  picks.forEach(g => { if (!suggestedLaneIds.includes(g.id)) suggestedLaneIds.push(g.id); });
   const lead = picks.length === 1 ? `One pick, easy:` : picks.length === 2 ? `Two picks, easy:` : `Three picks, easy:`;
   let msg = lead;
   picks.forEach((g, i) => {
@@ -247,6 +265,20 @@ function reply(q) {
   if (ownedHits.length >= 1 && /(add|adding|add-?on|missing|complete|next|round (it |them )?out|upgrade|already (own|have)|i (own|have)|what else|go with (it|them)|pair)/.test(n)) {
     const g = ownerGapReply(q); if (g) return g;
   }
+
+  // Follow-up: she remembers what you own this session ("what else?", "and after that?")
+  if (sessionOwned.length && /^(what else|anything else|and (then|after that)|next\??|more\??|what next|after that|keep going|others?\??)\b/.test(n.trim())) {
+    const g = ownerGapReply(q); if (g) return g;
+  }
+
+  // Brand comparison — honest, no trash talk, no invented specs
+  if (/(wusthof|wüsthof|henckels|zwilling|shun|global|victorinox|cuisinart|better than|compare(d)? to|vs\.? (other|wusthof|henckels))/.test(n))
+    return { t: `Honest answer: there are several well-made knife brands, and I won't trash any of them. What's genuinely different about Cutco is the ownership experience: <strong>free sharpening forever</strong>, repair or replacement under the Forever Guarantee, American-made since 1949, and a local person (Luke) who answers. Most brands sell you a knife; Cutco sells you the last knife. Best way to judge is side by side at a demo — bring your current knives.`, ctas: [CTA.bookFull, CTA.text('Hi Luke! How does Cutco actually compare to what I have?')], chips: ['Is this worth it?', 'How long is a demo?'] };
+
+  // "What's in the Homemaker / a set?"
+  if (/(what('?s| is) (in|inside) (the )?(homemaker|galley|signature|ultimate|a set|the set)|homemaker set\??$)/.test(n))
+    return { t: `The <strong>Homemaker</strong> is Cutco's classic 10-piece block: the core prep knives, table knives, and the block itself &mdash; the &ldquo;whole kitchen in one decision&rdquo; option. Exact contents and current pricing are on the official page, and Luke can walk you through whether a full set or 2&ndash;3 targeted pieces fits you better &mdash; he'll tell you honestly if the set is too much.`, ctas: [CTA.official, CTA.finder], chips: ['Best 1\u20133 pieces', 'How much does it cost?'] };
+
 
   if (/\b(hi|hello|hey|yo|sup|howdy)\b/.test(n))
     return { t: `Hey — glad you're here. Tell me what you cook, who you're shopping for, or what you already own, and I'll point you to a smart starting point.`, chips: ['What should I get?', 'Gift ideas', 'I already own Cutco'] };
@@ -377,53 +409,34 @@ function reply(q) {
 }
 
 // ---------------------------------------------------------------------------
-// Willow — Luke's grey Maine Coon, the face (and voice) of the sidekick.
-// Animated inline SVG (blink, ear twitch, talking mouth) + optional voice via
-// the browser's built-in speechSynthesis. No libraries, no tracking.
+// Willow — Luke's grey Maine Coon, the face of the sidekick. Real photo
+// (assets/willow-avatar.webp) with layered animated eyelids (blink), a 3D
+// tilt that follows the cursor, and expression states: curious (you're
+// typing), talking (she's answering). No voice, no libraries, no tracking.
 // ---------------------------------------------------------------------------
-const WILLOW_SVG = `<svg class="willow" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-  <g class="willow-ear willow-ear--l"><path d="M22 44 L14 8 Q30 16 42 30 Z" fill="#8a919d"/><path d="M25 38 L20 16 Q30 22 36 31 Z" fill="#c9a0a8"/><path d="M15 10 L19 22 M22 8 L25 19" stroke="#e8ebef" stroke-width="2" stroke-linecap="round"/></g>
-  <g class="willow-ear willow-ear--r"><path d="M98 44 L106 8 Q90 16 78 30 Z" fill="#8a919d"/><path d="M95 38 L100 16 Q90 22 84 31 Z" fill="#c9a0a8"/><path d="M105 10 L101 22 M98 8 L95 19" stroke="#e8ebef" stroke-width="2" stroke-linecap="round"/></g>
-  <path d="M60 112 C26 112 12 90 14 64 C16 42 34 26 60 26 C86 26 104 42 106 64 C108 90 94 112 60 112 Z" fill="#9aa1ac"/>
-  <path d="M60 112 C40 112 24 102 18 84 Q34 96 60 96 Q86 96 102 84 C96 102 80 112 60 112 Z" fill="#848b96"/>
-  <path d="M40 30 Q46 40 44 48 M60 27 Q60 38 60 44 M80 30 Q74 40 76 48" stroke="#767d88" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <g class="willow-eye willow-eye--l"><ellipse cx="42" cy="62" rx="9" ry="10" fill="#7fae5e"/><ellipse cx="42" cy="62" rx="3.6" ry="8" fill="#1d2513"/><circle cx="44.5" cy="58.5" r="2" fill="#fff" opacity=".85"/><rect class="willow-lid" x="31" y="46" width="22" height="0" rx="6" fill="#9aa1ac"/></g>
-  <g class="willow-eye willow-eye--r"><ellipse cx="78" cy="62" rx="9" ry="10" fill="#7fae5e"/><ellipse cx="78" cy="62" rx="3.6" ry="8" fill="#1d2513"/><circle cx="80.5" cy="58.5" r="2" fill="#fff" opacity=".85"/><rect class="willow-lid" x="67" y="46" width="22" height="0" rx="6" fill="#9aa1ac"/></g>
-  <path d="M55 76 Q60 72 65 76 L60 81 Z" fill="#d98a94"/>
-  <g class="willow-mouth"><path d="M60 81 Q60 86 54 88 M60 81 Q60 86 66 88" stroke="#5c636e" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
-  <g stroke="#e8ebef" stroke-width="1.6" stroke-linecap="round" opacity=".9">
-    <path d="M46 80 Q30 78 18 82 M46 84 Q32 86 22 92 M74 80 Q90 78 102 82 M74 84 Q88 86 98 92"/>
-  </g>
-  <path d="M34 47 Q44 41 52 46 M86 47 Q76 41 68 46" stroke="#767d88" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-</svg>`;
+const WILLOW_HTML = `<span class="willow-wrap" aria-hidden="true">
+  <img src="/assets/willow-avatar.webp" alt="" class="willow-photo" width="320" height="320" loading="lazy" decoding="async"/>
+  <svg class="willow-lids" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <ellipse class="willow-lid willow-lid--l" cx="40" cy="44.7" rx="6.2" ry="0" fill="#a39889"/>
+    <ellipse class="willow-lid willow-lid--r" cx="61.3" cy="44.7" rx="6.2" ry="0" fill="#a39889"/>
+  </svg>
+</span>`;
 
-let voiceOn = false;
-try { voiceOn = localStorage.getItem('willowVoice') === '1'; } catch (e) {}
-function speak(html) {
-  if (!voiceOn || typeof speechSynthesis === 'undefined') return;
-  try {
-    speechSynthesis.cancel();
-    const text = html.replace(/<br\s*\/?>(?=.)/gi, '. ').replace(/<[^>]+>/g, '').replace(/&mdash;|&rsquo;|&ndash;/g, m => ({'&mdash;':', ','&rsquo;':"'",'&ndash;':'-'}[m]));
-    const u = new SpeechSynthesisUtterance(text);
-    const vs = speechSynthesis.getVoices();
-    const v = vs.find(x => /female|samantha|zira|aria|jenny/i.test(x.name) && x.lang.startsWith('en')) || vs.find(x => x.lang.startsWith('en'));
-    if (v) u.voice = v;
-    u.rate = 1.04; u.pitch = 1.15;
-    const box = mount && mount.querySelector('.asst-box');
-    if (box) { box.classList.add('asst--talking'); u.onend = () => box.classList.remove('asst--talking'); u.onerror = u.onend; }
-    speechSynthesis.speak(u);
-  } catch (e) {}
+function wireWillow3d() {
+  const head = mount.querySelector('.asst-head');
+  const wrap = mount.querySelector('.willow-wrap');
+  if (!head || !wrap) return;
+  const fine = window.matchMedia && window.matchMedia('(pointer:fine)').matches;
+  const noMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!fine || noMotion) return;
+  head.addEventListener('mousemove', e => {
+    const r = wrap.getBoundingClientRect();
+    const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+    const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+    wrap.style.transform = 'rotateY(' + (dx * 16).toFixed(1) + 'deg) rotateX(' + (-dy * 12).toFixed(1) + 'deg) scale(1.04)';
+  });
+  head.addEventListener('mouseleave', () => { wrap.style.transform = ''; });
 }
-function toggleVoice(btn) {
-  voiceOn = !voiceOn;
-  try { localStorage.setItem('willowVoice', voiceOn ? '1' : '0'); } catch (e) {}
-  if (!voiceOn && typeof speechSynthesis !== 'undefined') { try { speechSynthesis.cancel(); } catch (e) {} }
-  btn.textContent = voiceOn ? '\u{1F50A}' : '\u{1F507}';
-  btn.setAttribute('aria-pressed', voiceOn ? 'true' : 'false');
-  btn.title = voiceOn ? 'Willow reads replies aloud \u2014 tap to mute' : 'Tap to have Willow read replies aloud';
-  track(voiceOn ? 'willow_voice_on' : 'willow_voice_off');
-}
-
 // ---------------------------------------------------------------------------
 // DOM helpers
 // ---------------------------------------------------------------------------
@@ -448,12 +461,11 @@ function renderShell() {
   mount.innerHTML = `
     <div class="asst-box">
       <div class="asst-head">
-        ${WILLOW_SVG}
+        ${WILLOW_HTML}
         <div class="asst-head-id">
           <span class="asst-head-name">Willow</span>
           <span class="asst-head-sub">Luke&rsquo;s Maine Coon &middot; Cutco Sidekick</span>
         </div>
-        <button type="button" class="asst-voice" id="asst-voice" aria-pressed="false" title="Tap to have Willow read replies aloud">\u{1F507}</button>
       </div>
       <div class="asst-log" id="asst-log" role="log" aria-live="polite"
            aria-label="Conversation with Willow, Luke's Cutco sidekick" aria-atomic="false" tabindex="0"></div>
@@ -469,10 +481,12 @@ function renderShell() {
     </div>
   `;
   logEl = mount.querySelector('#asst-log');
-  const vbtn = mount.querySelector('#asst-voice');
-  if (vbtn) {
-    if (voiceOn) { vbtn.textContent = '\u{1F50A}'; vbtn.setAttribute('aria-pressed', 'true'); }
-    vbtn.addEventListener('click', () => toggleVoice(vbtn));
+  wireWillow3d();
+  const box = mount.querySelector('.asst-box');
+  const inp = mount.querySelector('#asst-input');
+  if (box && inp) {
+    inp.addEventListener('focus', () => box.classList.add('asst--curious'));
+    inp.addEventListener('blur', () => box.classList.remove('asst--curious'));
   }
 }
 
@@ -567,7 +581,7 @@ function addBotMsg(html, opts) {
 
 function addTyping() {
   const box = mount && mount.querySelector('.asst-box');
-  if (box) { box.classList.add('asst--talking'); setTimeout(() => { if (typeof speechSynthesis === 'undefined' || !speechSynthesis.speaking) box.classList.remove('asst--talking'); }, 900); }
+  if (box) box.classList.add('asst--talking');
   const d = makeEl('div', 'asst-msg asst-msg--bot asst-typing',
     '<span class="asst-dot" aria-hidden="true"></span>' +
     '<span class="asst-dot" aria-hidden="true"></span>' +
@@ -648,7 +662,8 @@ function handleAsk(raw, source) {
     try {
       const r = reply(q);
       addBotMsg(r.t, { recs: r.recs, ctas: r.ctas, chips: r.chips });
-      speak(r.t);
+      const box = mount && mount.querySelector('.asst-box');
+      if (box) { box.classList.add('asst--talking'); setTimeout(() => box.classList.remove('asst--talking'), 1600); }
     } catch { addErrorMsg(); }
   }, delay);
 }
