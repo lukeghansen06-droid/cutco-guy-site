@@ -1069,9 +1069,32 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* ===== Section 22 — AI sidekick premium polish + reply CTAs/chips ===== */
-.asst-box{ max-width:620px; margin:0 auto; background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.008)); border:1px solid var(--line); border-radius:20px; box-shadow:0 30px 80px -55px rgba(0,0,0,.8); }
-.asst-log{ max-height:400px; }
-.asst-msg{ font-size:.98rem; line-height:1.6; max-width:88%; }
+.asst-box{ max-width:920px; margin:0 auto; background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008)); border:1px solid rgba(236,200,133,.22); border-radius:22px; box-shadow:0 34px 90px -55px rgba(0,0,0,.85), 0 0 60px -40px rgba(236,200,133,.35); }
+.asst-log{ max-height:480px; }
+.asst-msg{ font-size:1.02rem; line-height:1.65; max-width:92%; }
+
+/* ── Willow header ── */
+.asst-head{ display:flex; align-items:center; gap:14px; padding:14px 18px 12px; border-bottom:1px solid var(--line); background:linear-gradient(180deg,rgba(236,200,133,.05),transparent); }
+.asst-head-id{ display:flex; flex-direction:column; line-height:1.25; }
+.asst-head-name{ font-family:'Fraunces',serif; font-size:1.35rem; font-weight:600; color:var(--ink); letter-spacing:.01em; }
+.asst-head-sub{ font-size:.78rem; color:var(--mut); letter-spacing:.04em; }
+.asst-voice{ margin-left:auto; background:var(--panel-2); border:1px solid var(--line); border-radius:99px; width:42px; height:42px; font-size:1.1rem; cursor:pointer; transition:border-color .2s, transform .2s; }
+.asst-voice:hover{ border-color:rgba(236,200,133,.4); transform:scale(1.06); }
+
+/* ── Willow — the cat herself ── */
+.willow{ width:64px; height:64px; flex:0 0 auto; filter:drop-shadow(0 4px 10px rgba(0,0,0,.4)); }
+.willow-lid{ animation:willow-blink 5.2s infinite; transform-origin:center 46px; }
+.willow-eye--r .willow-lid{ animation-delay:.05s; }
+@keyframes willow-blink{ 0%,94%,100%{ height:0; } 96%,98%{ height:20px; } }
+.willow-ear--l{ transform-origin:28px 30px; animation:willow-twitch 9s infinite; }
+.willow-ear--r{ transform-origin:92px 30px; animation:willow-twitch 13s infinite reverse; }
+@keyframes willow-twitch{ 0%,91%,100%{ transform:rotate(0); } 93%{ transform:rotate(-6deg); } 96%{ transform:rotate(2deg); } }
+.willow-mouth{ transform-origin:60px 82px; }
+.asst--talking .willow-mouth{ animation:willow-talk .34s ease-in-out infinite; }
+@keyframes willow-talk{ 0%,100%{ transform:scaleY(1); } 50%{ transform:scaleY(1.55) translateY(1.5px); } }
+.asst--talking .willow{ animation:willow-bob 1.1s ease-in-out infinite; }
+@keyframes willow-bob{ 0%,100%{ transform:rotate(0); } 30%{ transform:rotate(-2.2deg); } 70%{ transform:rotate(1.8deg); } }
+@media (prefers-reduced-motion: reduce){ .willow-lid,.willow-ear--l,.willow-ear--r,.asst--talking .willow-mouth,.asst--talking .willow{ animation:none; } }
 .asst-msg--bot{ background:linear-gradient(180deg,#12203a,#0e1a30); border-color:var(--line); }
 
 /* Action CTAs under a bot reply */

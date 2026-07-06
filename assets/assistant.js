@@ -150,7 +150,8 @@ const OWN_ALIAS = [
   { label: 'French Chef',        lane: 'prep',      names: ['french chef', "chef's knife", 'chefs knife', 'chef knife', 'big chef'] },
   { label: 'Santoku',            lane: 'prep',      names: ['santoku'] },
   { label: 'Trimmer',            lane: 'prep',      names: ['trimmer'] },
-  { label: 'Paring Knife',       lane: 'prep',      names: ['paring'] },
+  { label: 'Paring Knife',       lane: 'prep',      names: ['paring', 'pairing'] },
+  { label: 'Cleaver',            lane: 'specialty', names: ['cleav', 'meat cleaver'] },
   { label: 'Utility Knife',      lane: 'prep',      names: ['utility knife', 'hardy slicer'] },
   { label: 'Slicer',             lane: 'bread',     names: ['slicer', 'bread knife', 'serrated'] },
   { label: 'Table Knives',       lane: 'table',     names: ['table knife', 'table knives'] },
@@ -168,16 +169,16 @@ const OWN_ALIAS = [
   { label: 'a block set',        lane: 'set',       names: ['homemaker', 'galley', 'signature set', 'ultimate set', 'block set', 'knife block', 'the block'] },
 ];
 const GAP_LANES = [
-  { id: 'prep',  label: 'everyday prep',      hero: 'Petite Chef Knife', also: 'Santoku',
-    why: "it becomes the knife you reach for every single day" },
-  { id: 'bread', label: 'bread & tomatoes',   hero: 'Slicer (bread knife)', also: null,
-    why: "the Double-D edge glides through crusty bread and ripe tomatoes without squishing — the piece owners tell Luke they underestimated most" },
-  { id: 'table', label: 'the table',          hero: 'Table Knives', also: 'Steak Knives',
-    why: "they get used at every single meal — day in, day out, the hardest-working pieces in the line" },
-  { id: 'tools', label: 'tools & gadgets',    hero: 'Super Shears', also: 'Vegetable Peeler',
-    why: "the sleeper hit — herbs, poultry, packaging, and they come apart for cleaning" },
-  { id: 'host',  label: 'serving & hosting',  hero: 'Carving Set', also: 'Cheese Knife',
-    why: "roasts, holiday birds, and boards — the pieces your guests actually notice" },
+  { id: 'prep',  label: 'everyday prep',     hero: 'Petite Chef Knife', also: 'Santoku',
+    why: "the do-everything knife you'll grab daily" },
+  { id: 'bread', label: 'bread & tomatoes',  hero: 'Slicer (bread knife)', also: null,
+    why: "crusty bread and ripe tomatoes, zero squish — the most underestimated piece in the line" },
+  { id: 'table', label: 'the table',         hero: 'Table Knives', also: 'Steak Knives',
+    why: "used at every single meal, day in and day out" },
+  { id: 'tools', label: 'tools & gadgets',   hero: 'Super Shears', also: 'Vegetable Peeler',
+    why: "herbs, poultry, packaging — the sleeper hit of the catalog" },
+  { id: 'host',  label: 'serving & hosting', hero: 'Carving Set', also: 'Cheese Knife',
+    why: "roasts, boards, holidays — the pieces guests notice" },
 ];
 function detectOwned(text) {
   const t = norm(text);
@@ -191,6 +192,11 @@ function notOwnedRecs(query, owned, limit) {
   const ownedNorm = owned.map(o => norm(o.label));
   return matchProducts(query, 6).filter(pr => !ownedNorm.some(on => norm(pr.n).includes(on) || on.includes(norm(pr.n)))).slice(0, limit || 3);
 }
+function askedCount(text) {
+  const m = norm(text).match(/\b(one|two|three|1|2|3)\b\s*(more|things?|pieces?|items?|knives|knife|picks?|additions?)/);
+  if (!m) return 0;
+  return { one:1, two:2, three:3 }[m[1]] || parseInt(m[1], 10) || 0;
+}
 function ownerGapReply(q) {
   const owned = detectOwned(q);
   if (!owned.length) return null;
@@ -198,30 +204,31 @@ function ownerGapReply(q) {
   if (lanesOwned.has('set')) { lanesOwned.add('prep'); lanesOwned.add('bread'); lanesOwned.add('table'); }
   const gaps = GAP_LANES.filter(l => !lanesOwned.has(l.id));
   const ownedLabels = owned.map(o => o.label);
-  const ownedStr = ownedLabels.join(', ');
   const smsOwned = 'Hi Luke! I already own: ' + ownedLabels.join(', ') + '.';
 
   if (!gaps.length) {
     return {
-      t: `That's a seriously complete setup — <strong>${esc(ownedStr)}</strong> covers every core lane. Two honest moves from here: get everything <strong>sharpened free</strong> so it all cuts like day one, and look at specialty or entertaining pieces (Fillet, Butcher, serving sets) or gifting a starter to someone you love. Luke can also check for current owner specials.`,
+      t: `You've covered every core lane — seriously complete. Next moves: <strong>free sharpening</strong> so it all cuts like day one, or a specialty piece (Fillet, Butcher, serving sets). Luke can check current owner specials too.`,
       recs: notOwnedRecs('fillet butcher carving cheese', owned, 3),
       ctas: [CTA.text(smsOwned + ' What would you add, and any owner specials right now?'), CTA.explore('all', 'Browse the catalog')],
       chips: ['Sharpening help', 'Gift ideas'],
     };
   }
-  const g1 = gaps[0], g2 = gaps[1] || null;
-  let msg = `Good collection — <strong>${esc(ownedStr)}</strong>. Here's the honest gap read: `;
-  const coveredNames = GAP_LANES.filter(l => lanesOwned.has(l.id)).map(l => l.label);
-  if (coveredNames.length) msg += `you've got ${esc(coveredNames.join(' and '))} handled. `;
-  msg += `The gap that pays off first is <strong>${esc(g1.label)}</strong>: get the <strong>${esc(g1.hero)}</strong>${g1.also ? ` (or ${esc(g1.also)})` : ''} — ${esc(g1.why)}.`;
-  if (g2) msg += ` After that, <strong>${esc(g2.hero)}</strong> closes out ${esc(g2.label)} — ${esc(g2.why)}.`;
-  msg += ` Text Luke your list and he'll confirm current pricing and any owner specials — sharpening what you already own is free, so bring that up too.`;
-  const addStr = g1.hero + (g2 ? ' and ' + g2.hero : '');
+  const want = askedCount(q);
+  const picks = gaps.slice(0, want > 0 ? Math.min(want, 3) : 2);
+  const lead = picks.length === 1 ? `One pick, easy:` : picks.length === 2 ? `Two picks, easy:` : `Three picks, easy:`;
+  let msg = lead;
+  picks.forEach((g, i) => {
+    msg += `<br><strong>${i + 1}. ${esc(g.hero)}</strong> &mdash; ${esc(g.why)}.`;
+  });
+  msg += `<br>Text Luke this list &mdash; he&rsquo;ll confirm current pricing and owner specials. (Sharpening what you own is free, by the way.)`;
+  if (ownedLabels.length >= 3) msg = `Nice lineup &mdash; ${esc(ownedLabels.join(', '))}. ` + msg;
+  const addStr = picks.map(g => g.hero).join(' and ');
   return {
     t: msg,
-    recs: notOwnedRecs(g1.hero + ' ' + (g1.also || '') + ' ' + (g2 ? g2.hero : ''), owned, 3),
-    ctas: [CTA.text(smsOwned + ' Thinking about adding: ' + addStr + '. What do you recommend, and what is current pricing?'), CTA.explore('all', 'Browse the catalog'), CTA.finder],
-    chips: ['Sharpening help', 'Best 1\u20133 pieces', 'Help me book'],
+    recs: notOwnedRecs(picks.map(g => g.hero + ' ' + (g.also || '')).join(' '), owned, 3),
+    ctas: [CTA.text(smsOwned + ' Thinking about adding: ' + addStr + '. What do you recommend, and what is current pricing?'), CTA.explore('all', 'Browse the catalog')],
+    chips: ['Sharpening help', 'Help me book'],
   };
 }
 
@@ -370,6 +377,54 @@ function reply(q) {
 }
 
 // ---------------------------------------------------------------------------
+// Willow — Luke's grey Maine Coon, the face (and voice) of the sidekick.
+// Animated inline SVG (blink, ear twitch, talking mouth) + optional voice via
+// the browser's built-in speechSynthesis. No libraries, no tracking.
+// ---------------------------------------------------------------------------
+const WILLOW_SVG = `<svg class="willow" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+  <g class="willow-ear willow-ear--l"><path d="M22 44 L14 8 Q30 16 42 30 Z" fill="#8a919d"/><path d="M25 38 L20 16 Q30 22 36 31 Z" fill="#c9a0a8"/><path d="M15 10 L19 22 M22 8 L25 19" stroke="#e8ebef" stroke-width="2" stroke-linecap="round"/></g>
+  <g class="willow-ear willow-ear--r"><path d="M98 44 L106 8 Q90 16 78 30 Z" fill="#8a919d"/><path d="M95 38 L100 16 Q90 22 84 31 Z" fill="#c9a0a8"/><path d="M105 10 L101 22 M98 8 L95 19" stroke="#e8ebef" stroke-width="2" stroke-linecap="round"/></g>
+  <path d="M60 112 C26 112 12 90 14 64 C16 42 34 26 60 26 C86 26 104 42 106 64 C108 90 94 112 60 112 Z" fill="#9aa1ac"/>
+  <path d="M60 112 C40 112 24 102 18 84 Q34 96 60 96 Q86 96 102 84 C96 102 80 112 60 112 Z" fill="#848b96"/>
+  <path d="M40 30 Q46 40 44 48 M60 27 Q60 38 60 44 M80 30 Q74 40 76 48" stroke="#767d88" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <g class="willow-eye willow-eye--l"><ellipse cx="42" cy="62" rx="9" ry="10" fill="#7fae5e"/><ellipse cx="42" cy="62" rx="3.6" ry="8" fill="#1d2513"/><circle cx="44.5" cy="58.5" r="2" fill="#fff" opacity=".85"/><rect class="willow-lid" x="31" y="46" width="22" height="0" rx="6" fill="#9aa1ac"/></g>
+  <g class="willow-eye willow-eye--r"><ellipse cx="78" cy="62" rx="9" ry="10" fill="#7fae5e"/><ellipse cx="78" cy="62" rx="3.6" ry="8" fill="#1d2513"/><circle cx="80.5" cy="58.5" r="2" fill="#fff" opacity=".85"/><rect class="willow-lid" x="67" y="46" width="22" height="0" rx="6" fill="#9aa1ac"/></g>
+  <path d="M55 76 Q60 72 65 76 L60 81 Z" fill="#d98a94"/>
+  <g class="willow-mouth"><path d="M60 81 Q60 86 54 88 M60 81 Q60 86 66 88" stroke="#5c636e" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
+  <g stroke="#e8ebef" stroke-width="1.6" stroke-linecap="round" opacity=".9">
+    <path d="M46 80 Q30 78 18 82 M46 84 Q32 86 22 92 M74 80 Q90 78 102 82 M74 84 Q88 86 98 92"/>
+  </g>
+  <path d="M34 47 Q44 41 52 46 M86 47 Q76 41 68 46" stroke="#767d88" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+</svg>`;
+
+let voiceOn = false;
+try { voiceOn = localStorage.getItem('willowVoice') === '1'; } catch (e) {}
+function speak(html) {
+  if (!voiceOn || typeof speechSynthesis === 'undefined') return;
+  try {
+    speechSynthesis.cancel();
+    const text = html.replace(/<br\s*\/?>(?=.)/gi, '. ').replace(/<[^>]+>/g, '').replace(/&mdash;|&rsquo;|&ndash;/g, m => ({'&mdash;':', ','&rsquo;':"'",'&ndash;':'-'}[m]));
+    const u = new SpeechSynthesisUtterance(text);
+    const vs = speechSynthesis.getVoices();
+    const v = vs.find(x => /female|samantha|zira|aria|jenny/i.test(x.name) && x.lang.startsWith('en')) || vs.find(x => x.lang.startsWith('en'));
+    if (v) u.voice = v;
+    u.rate = 1.04; u.pitch = 1.15;
+    const box = mount && mount.querySelector('.asst-box');
+    if (box) { box.classList.add('asst--talking'); u.onend = () => box.classList.remove('asst--talking'); u.onerror = u.onend; }
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function toggleVoice(btn) {
+  voiceOn = !voiceOn;
+  try { localStorage.setItem('willowVoice', voiceOn ? '1' : '0'); } catch (e) {}
+  if (!voiceOn && typeof speechSynthesis !== 'undefined') { try { speechSynthesis.cancel(); } catch (e) {} }
+  btn.textContent = voiceOn ? '\u{1F50A}' : '\u{1F507}';
+  btn.setAttribute('aria-pressed', voiceOn ? 'true' : 'false');
+  btn.title = voiceOn ? 'Willow reads replies aloud \u2014 tap to mute' : 'Tap to have Willow read replies aloud';
+  track(voiceOn ? 'willow_voice_on' : 'willow_voice_off');
+}
+
+// ---------------------------------------------------------------------------
 // DOM helpers
 // ---------------------------------------------------------------------------
 function makeEl(tag, cls, html) {
@@ -392,20 +447,33 @@ let logEl = null;
 function renderShell() {
   mount.innerHTML = `
     <div class="asst-box">
+      <div class="asst-head">
+        ${WILLOW_SVG}
+        <div class="asst-head-id">
+          <span class="asst-head-name">Willow</span>
+          <span class="asst-head-sub">Luke&rsquo;s Maine Coon &middot; Cutco Sidekick</span>
+        </div>
+        <button type="button" class="asst-voice" id="asst-voice" aria-pressed="false" title="Tap to have Willow read replies aloud">\u{1F507}</button>
+      </div>
       <div class="asst-log" id="asst-log" role="log" aria-live="polite"
-           aria-label="Conversation with Luke's Cutco sidekick" aria-atomic="false" tabindex="0"></div>
+           aria-label="Conversation with Willow, Luke's Cutco sidekick" aria-atomic="false" tabindex="0"></div>
       <div class="asst-chips" id="asst-chips" aria-label="Suggested questions"></div>
       <form class="asst-form" id="asst-form" novalidate>
-        <label for="asst-input" class="asst-sr-only">Ask a question</label>
+        <label for="asst-input" class="asst-sr-only">Ask Willow a question</label>
         <input id="asst-input" class="asst-input" type="text"
-          placeholder="Ask about pieces, gifts, sharpening, pricing, or demos…"
-          aria-label="Ask the Cutco sidekick" autocomplete="off" maxlength="300" />
+          placeholder="Ask Willow about pieces, gifts, sharpening, pricing, or demos\u2026"
+          aria-label="Ask Willow, the Cutco sidekick" autocomplete="off" maxlength="300" />
         <button class="btn btn-primary asst-send" type="submit">Ask</button>
       </form>
-      <p class="asst-tip">AI assistant &mdash; good for quick questions. For anything important, text Luke. Any price it mentions is a snapshot &mdash; confirm current pricing on cutco.com.</p>
+      <p class="asst-tip">Willow&rsquo;s an AI assistant (and a cat) &mdash; great for quick questions. For anything important, text Luke. Prices she mentions are snapshots &mdash; confirm on cutco.com.</p>
     </div>
   `;
   logEl = mount.querySelector('#asst-log');
+  const vbtn = mount.querySelector('#asst-voice');
+  if (vbtn) {
+    if (voiceOn) { vbtn.textContent = '\u{1F50A}'; vbtn.setAttribute('aria-pressed', 'true'); }
+    vbtn.addEventListener('click', () => toggleVoice(vbtn));
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -498,6 +566,8 @@ function addBotMsg(html, opts) {
 }
 
 function addTyping() {
+  const box = mount && mount.querySelector('.asst-box');
+  if (box) { box.classList.add('asst--talking'); setTimeout(() => { if (typeof speechSynthesis === 'undefined' || !speechSynthesis.speaking) box.classList.remove('asst--talking'); }, 900); }
   const d = makeEl('div', 'asst-msg asst-msg--bot asst-typing',
     '<span class="asst-dot" aria-hidden="true"></span>' +
     '<span class="asst-dot" aria-hidden="true"></span>' +
@@ -578,6 +648,7 @@ function handleAsk(raw, source) {
     try {
       const r = reply(q);
       addBotMsg(r.t, { recs: r.recs, ctas: r.ctas, chips: r.chips });
+      speak(r.t);
     } catch { addErrorMsg(); }
   }, delay);
 }
@@ -606,7 +677,7 @@ function init() {
   }
 
   addBotMsg(
-    `Ask me anything about Cutco — what to get, what pieces actually do, gifts, sharpening, pricing, or how the demo works. I'll keep it simple and point you toward a smart starting point. If it needs Luke's opinion, I'll help you text him.${contextLine}`,
+    `Hi \u2014 I&rsquo;m <strong>Willow</strong>, Luke&rsquo;s Maine Coon and unofficial business partner. I&rsquo;ve napped through every demo, so I know the whole catalog cold. Ask me what to get, what pieces actually do, gifts, sharpening, or pricing \u2014 I&rsquo;ll keep it short and point you right. If it needs the human, I&rsquo;ll help you text Luke.${contextLine}`,
     { ctas: greetCtas }
   );
   renderChips(fit ? ['Explain my #1 pick', 'Gift ideas', 'Sharpening help', 'Help me book'] : START_CHIPS);
