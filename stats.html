@@ -5,7 +5,7 @@
 <meta name="robots" content="noindex,nofollow" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="dark" />
-<title>Cutco · Live Intelligence</title>
+<title>Cutco Data Center</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <style>
   :root{
@@ -170,8 +170,8 @@
     <div class="brand">
       <div class="logo">&#128225;</div>
       <div>
-        <h1>Cutco Live Intelligence</h1>
-        <div class="sub">cutcowithluke.com &middot; visitor activity</div>
+        <h1>Cutco Data Center</h1>
+        <div class="sub">cutcowithluke.com &middot; your live data center</div>
       </div>
     </div>
     <div class="controls">
@@ -301,6 +301,7 @@
 </div>
 
 <div id="toast"></div>
+<canvas id="cdc-fx" style="position:fixed;inset:0;z-index:60;pointer-events:none"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
 <script>
@@ -574,6 +575,42 @@
     if (en) en.onclick = function () { try { localStorage.removeItem(FLAG); } catch (e) {} render(); };
     render();
   })();
+</script>
+
+<!-- ===== Cutco Data Center — fun layer (self-contained, additive; does not touch data logic) ===== -->
+<script>
+(function(){
+  "use strict";
+  var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var $=function(id){return document.getElementById(id);};
+  var cvs=$('cdc-fx'), ctx=cvs&&cvs.getContext('2d'), parts=[];
+  function resize(){ if(!cvs)return; cvs.width=innerWidth; cvs.height=innerHeight; }
+  resize(); addEventListener('resize',resize);
+  var COLORS=['#ff2d55','#22e3ff','#8b5cff','#9dff5b','#ffb020','#ffffff'];
+  function burst(n){ if(reduce||!ctx)return; n=n||130; for(var i=0;i<n;i++){ parts.push({x:innerWidth/2,y:Math.max(90,innerHeight*0.16),vx:(Math.random()-0.5)*11,vy:Math.random()*-11-3,g:0.32,c:COLORS[i%COLORS.length],s:Math.random()*6+3,life:82,rot:Math.random()*6}); } }
+  function loop(){ if(ctx){ ctx.clearRect(0,0,cvs.width,cvs.height); if(!document.hidden){ parts=parts.filter(function(p){return p.life>0;}); parts.forEach(function(p){ p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.life--; p.rot+=0.2; ctx.save(); ctx.globalAlpha=Math.max(0,p.life/82); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.c; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6); ctx.restore(); }); } } requestAnimationFrame(loop); }
+  loop();
+  function say(msg){ var t=$('toast'); if(!t)return; t.textContent=msg; t.classList.add('show'); clearTimeout(t._ct); t._ct=setTimeout(function(){t.classList.remove('show');},3600); }
+  // Celebrate when Booking-clicks number goes up (watches the DOM only)
+  var bookEl=$('bookBig');
+  function bookVal(){ var n=parseInt((bookEl&&bookEl.textContent||'').replace(/[^0-9]/g,''),10); return isNaN(n)?0:n; }
+  var lastBook=null;
+  if(bookEl){ var mo=new MutationObserver(function(){ var v=bookVal(); if(lastBook!==null && v>lastBook){ burst(150); say('New booking tap! Go get it \uD83C\uDF89'); } lastBook=v; }); mo.observe(bookEl,{childList:true,characterData:true,subtree:true}); lastBook=bookVal(); }
+  // Header extras: live clock + countdown to your Spain deadline
+  var controls=document.querySelector('.controls');
+  if(controls){
+    var clock=document.createElement('span'); clock.className='chip'; clock.id='cdc-clock'; clock.title='Local time';
+    var days=document.createElement('span'); days.className='chip'; days.id='cdc-days'; days.title='Countdown to your Spain goal'; days.style.cursor='pointer';
+    days.onclick=function(){ burst(120); say('Hit the number before Spain \uD83D\uDCAA'); };
+    controls.insertBefore(days, controls.firstChild);
+    controls.insertBefore(clock, controls.firstChild);
+    var SPAIN=new Date('2026-08-01T00:00:00');
+    function tick(){ var now=new Date(); if($('cdc-clock')) $('cdc-clock').textContent='\uD83D\uDD53 '+now.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}); var d=Math.max(0,Math.ceil((SPAIN-now)/86400000)); if($('cdc-days')) $('cdc-days').textContent='\uD83C\uDF0D '+d+'d to Spain'; }
+    tick(); setInterval(tick,1000);
+  }
+  // Fun hotkey: press C to celebrate
+  document.addEventListener('keydown',function(e){ if((e.key==='c'||e.key==='C') && !/input|textarea/i.test(e.target.tagName)){ burst(160); say('\uD83C\uDF8A'); } });
+})();
 </script>
 </body>
 </html>
