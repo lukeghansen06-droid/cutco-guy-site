@@ -308,7 +308,7 @@
 (function(){
   "use strict";
   const qs = new URLSearchParams(location.search);
-  let KEY = qs.get('key') || '';
+  let KEY = qs.get('key') || (function(){try{return localStorage.getItem('cutco_dash_key')||'';}catch(e){return '';}})();
   let chart=null, sparks={}, ringTimer=null, countdown=60, lastData=null, activeFilter='all';
 
   const TYPES = {
@@ -519,9 +519,11 @@
     const b=$('refreshBtn');if(b&&manual){b.textContent='↻ …';b.disabled=true;}
     try{
       const r=await fetch('/api/track?key='+encodeURIComponent(KEY),{cache:'no-store'});
-      if(r.status===403){showGate('That key didn’t work. Try again.');return;}
+      if(r.status===403){try{localStorage.removeItem('cutco_dash_key');}catch(e){}showGate('That key didn’t work. Try again.');return;}
       if(!r.ok)throw new Error('HTTP '+r.status);
       const d=await r.json();
+      try{localStorage.setItem('cutco_dash_key',KEY);}catch(e){}
+      if(location.search.indexOf('key=')>=0){try{history.replaceState(null,'',location.pathname);}catch(e){}}
       $('gate').style.display='none';$('app').style.display='block';
       render(d);countdown=60;
     }catch(err){toast('⚠️ Couldn’t refresh ('+err.message+'). Showing last data; retrying.');}
@@ -607,6 +609,13 @@
     var SPAIN=new Date('2026-08-01T00:00:00');
     function tick(){ var now=new Date(); if($('cdc-clock')) $('cdc-clock').textContent='\uD83D\uDD53 '+now.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}); var d=Math.max(0,Math.ceil((SPAIN-now)/86400000)); if($('cdc-days')) $('cdc-days').textContent='\uD83C\uDF0D '+d+'d to Spain'; }
     tick(); setInterval(tick,1000);
+  }
+  // Forget-key control: lets you sign this device out (clears the saved key)
+  var ctr=document.querySelector('.controls');
+  if(ctr){
+    var forget=document.createElement('button'); forget.className='btn ghost'; forget.id='cdc-forget'; forget.textContent='\uD83D\uDD13 Forget key'; forget.title='Remove the saved key from this device';
+    forget.onclick=function(){ try{ localStorage.removeItem('cutco_dash_key'); }catch(e){} say('Key forgotten on this device.'); setTimeout(function(){ location.href=location.pathname; },700); };
+    ctr.appendChild(forget);
   }
   // Fun hotkey: press C to celebrate
   document.addEventListener('keydown',function(e){ if((e.key==='c'||e.key==='C') && !/input|textarea/i.test(e.target.tagName)){ burst(160); say('\uD83C\uDF8A'); } });
