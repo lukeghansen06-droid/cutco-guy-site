@@ -14,7 +14,12 @@ function clean(s, max) {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const ORIGIN = String(req.headers.origin || '');
+  const allowed = /^https:\/\/cutcowithluke\.com$/.test(ORIGIN)
+    || /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(ORIGIN)
+    || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(ORIGIN);
+  res.setHeader('Access-Control-Allow-Origin', allowed ? ORIGIN : 'https://cutcowithluke.com');
+  res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
@@ -36,18 +41,30 @@ export default async function handler(req, res) {
       if (TYPES.indexOf(t) < 0) return res.status(200).json({ ok: true }); // ignore unknown
       const l = clean(body.l, 120);
 
-      // Owner No-Track: never log events from admin/stats/local/keyed contexts.
+      // Only accept events that actually originate from this site (blocks off-site spam).
       const ref = String(req.headers['referer'] || req.headers['referrer'] || '');
+      const fromSite = allowed || /cutcowithluke\.com/i.test(ref) || /\.vercel\.app/i.test(ref);
+      // Owner No-Track: never log events from admin/stats/local/keyed contexts.
       const skip = isAdmin
+        || !fromSite
         || /[?&](key|token|admin)=/i.test(ref)
         || /\/(stats|leads|moderate|admin|ops)(\.html)?(\/|\?|#|$)/i.test(ref)
         || /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:|\/)/i.test(ref);
       if (skip) return res.status(200).json({ ok: true, skipped: true });
 
+      // Lightweight rate limit: bound events per minute to prevent flooding the store.
+      try {
+        const rlKey = 'rl:' + Math.floor(Date.now() / 60000);
+        const n = await kv.incr(rlKey);
+        if (n === 1) await kv.expire(rlKey, 120);
+        if (n > 600) return res.status(200).json({ ok: true, skipped: 'rate' });
+      } catch (e) { /* if KV rate-limit unavailable, fail open */ }
+
       let all = (await kv.get(KEY)) || [];
       all.push({ t, l, ts: Date.now() });
       if (all.length > MAX) all = all.slice(all.length - MAX);
       await kv.set(KEY, all);
+      try { await kv.incr('lifetime'); } catch (e) {}
       return res.status(200).json({ ok: true });
     }
 
@@ -98,8 +115,9 @@ export default async function handler(req, res) {
         days.push({ d, n: dayBuckets[d] || 0 });
       }
 
+      const lifetimeTotal = Math.max(all.length, Number(await kv.get('lifetime')) || 0);
       return res.status(200).json({
-        total: all.length, last24, last7,
+        total: all.length, lifetimeTotal, last24, last7,
         byType, topProducts, topCats, topSearches,
         recentQuestions, recentEvents, days,
         generatedAt: new Date().toISOString(),
