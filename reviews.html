@@ -673,5 +673,22 @@
 <script type="module" src="/assets/app.js"></script>
 <script type="module" src="/assets/reviews-ui.js"></script>
 <script type="module" src="/assets/lead-ui.js"></script>
+
+<!-- ===== Sticky mobile CTA (added by CutcoWithLuke upgrade) ===== -->
+<style>
+  #cwl-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;gap:.55rem;padding:.6rem;
+    background:linear-gradient(0deg,rgba(7,11,20,.97),rgba(7,11,20,.72));backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+  #cwl-sticky a{flex:1;text-align:center;text-decoration:none;font-family:var(--font-ui,inherit);font-weight:700;
+    border-radius:12px;padding:.8rem .5rem;font-size:.95rem}
+  #cwl-sticky .s-gold{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#241a06}
+  #cwl-sticky .s-cyan{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#04121b}
+  @media(max-width:720px){#cwl-sticky{display:flex}body{padding-bottom:74px}}
+  @media(prefers-reduced-motion:reduce){#cwl-sticky{backdrop-filter:none}}
+</style>
+<div id="cwl-sticky" aria-label="Quick actions">
+  <a class="s-gold" href="#refer">Refer a friend</a>
+  <a class="s-cyan" href="/book">Book a demo</a>
+</div>
+<!-- ===== end sticky mobile CTA ===== -->
 </body>
 </html>
