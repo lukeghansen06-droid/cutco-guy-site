@@ -106,6 +106,52 @@ async function loadReviews() {
   // API returns newest-first already; render them all
   // SECURITY: buildCardHTML escapes name+text
   list.innerHTML = `<div class="review-wall">${data.reviews.map(buildCardHTML).join('')}</div>`;
+  injectReviewSchema(data);
+}
+
+/**
+ * Inject Review + AggregateRating JSON-LD from REAL approved reviews only.
+ * Never emits ratings when there are no reviews (no fabricated structured data).
+ */
+function injectReviewSchema(data) {
+  try {
+    if (!data || !Array.isArray(data.reviews) || data.reviews.length === 0) return;
+    if (document.getElementById('review-schema')) return;
+    const rs = data.reviews.filter(r => Number(r.rating) >= 1);
+    if (!rs.length) return;
+    const avg = rs.reduce((a, r) => a + Number(r.rating || 0), 0) / rs.length;
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'LocalBusiness',
+      '@id': 'https://cutcowithluke.com/#business',
+      name: 'CutcoWithLuke \u2014 Luke Hansen',
+      url: 'https://cutcowithluke.com/reviews',
+      image: 'https://cutcowithluke.com/og-image.jpg',
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: avg.toFixed(1),
+        reviewCount: rs.length,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      review: rs.slice(0, 25).map(r => ({
+        '@type': 'Review',
+        author: { '@type': 'Person', name: String(r.name || 'Customer') },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: Math.max(1, Math.min(5, Math.round(Number(r.rating)))),
+          bestRating: 5,
+          worstRating: 1,
+        },
+        reviewBody: String(r.text || ''),
+      })),
+    };
+    const s = document.createElement('script');
+    s.type = 'application/ld+json';
+    s.id = 'review-schema';
+    s.textContent = JSON.stringify(schema);
+    document.head.appendChild(s);
+  } catch (e) { /* schema is best-effort */ }
 }
 
 // ---------------------------------------------------------------------------

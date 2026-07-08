@@ -188,11 +188,11 @@
 
   <div class="row mid">
     <div class="card" style="animation-delay:.05s">
-      <h2><span class="em">&#128200;</span> 14-day activity <span class="pill" id="chartPill"></span></h2>
+      <h2><span class="em" aria-hidden="true">&#128200;</span> 14-day activity <span class="pill" id="chartPill"></span></h2>
       <div style="position:relative;height:clamp(200px,20vw,280px)"><canvas id="chart"></canvas></div>
     </div>
     <div class="card" style="animation-delay:.1s">
-      <h2><span class="em">&#127919;</span> Booking intent</h2>
+      <h2><span class="em" aria-hidden="true">&#127919;</span> Booking intent</h2>
       <div class="gauge-wrap">
         <div class="gauge">
           <svg width="170" height="170" viewBox="0 0 170 170" style="transform:rotate(-90deg)">
@@ -206,7 +206,7 @@
       </div>
     </div>
     <div class="card" style="animation-delay:.15s">
-      <h2><span class="em">&#129516;</span> Interest funnel</h2>
+      <h2><span class="em" aria-hidden="true">&#129516;</span> Interest funnel</h2>
       <div class="funnel" id="funnel"></div>
       <div class="conv" id="convNote"></div>
     </div>
@@ -214,11 +214,11 @@
 
   <div class="row duo">
     <div class="card" style="animation-delay:.2s">
-      <h2><span class="em">&#129517;</span> What visitors did</h2>
+      <h2><span class="em" aria-hidden="true">&#129517;</span> What visitors did</h2>
       <div class="bars" id="bars"></div>
     </div>
     <div class="card spot" style="animation-delay:.25s">
-      <h2><span class="em">&#128197;</span> Booking clicks</h2>
+      <h2><span class="em" aria-hidden="true">&#128197;</span> Booking clicks</h2>
       <div class="big" id="bookBig">&mdash;</div>
       <p id="bookNote"></p>
       <div class="rowbtn">
@@ -229,14 +229,14 @@
   </div>
 
   <div class="row trio">
-    <div class="card" style="animation-delay:.3s"><h2><span class="em">&#128293;</span> Top pieces</h2><div id="topProducts"></div></div>
-    <div class="card" style="animation-delay:.33s"><h2><span class="em">&#128193;</span> Top categories</h2><div id="topCats"></div></div>
-    <div class="card" style="animation-delay:.36s"><h2><span class="em">&#128270;</span> Top searches</h2><div id="topSearches"></div></div>
+    <div class="card" style="animation-delay:.3s"><h2><span class="em" aria-hidden="true">&#128293;</span> Top pieces</h2><div id="topProducts"></div></div>
+    <div class="card" style="animation-delay:.33s"><h2><span class="em" aria-hidden="true">&#128193;</span> Top categories</h2><div id="topCats"></div></div>
+    <div class="card" style="animation-delay:.36s"><h2><span class="em" aria-hidden="true">&#128270;</span> Top searches</h2><div id="topSearches"></div></div>
   </div>
 
   <div class="row">
     <div class="card" style="animation-delay:.4s">
-      <h2><span class="em">&#128172;</span> Questions asked the assistant <span class="pill" id="qCount"></span></h2>
+      <h2><span class="em" aria-hidden="true">&#128172;</span> Questions asked the assistant <span class="pill" id="qCount"></span></h2>
       <div class="qlist" id="questions"></div>
     </div>
   </div>
@@ -245,28 +245,28 @@
        aggregated /api/track payload — no new data collected, no PII) ===== -->
   <div class="row duo">
     <div class="card" style="animation-delay:.42s">
-      <h2><span class="em">&#128293;</span> Hot leads now <span class="pill" id="hotCount"></span></h2>
+      <h2><span class="em" aria-hidden="true">&#128293;</span> Hot leads now <span class="pill" id="hotCount"></span></h2>
       <p class="muted" style="margin:4px 0 10px;font-size:12.5px">High-intent actions (book taps, list sends, referral copies) by how fresh they are. The dashboard is anonymous &mdash; names live in Calendly &amp; your texts.</p>
       <div id="hotLeads"></div>
       <p class="muted" style="margin:10px 0 0;font-size:12px">No-show / reschedule tracking isn&rsquo;t wired up yet &mdash; that data lives in Calendly.</p>
     </div>
     <div class="card" style="animation-delay:.44s">
-      <h2><span class="em">&#129504;</span> Best next action</h2>
+      <h2><span class="em" aria-hidden="true">&#129504;</span> Best next action</h2>
       <div id="nextActions"></div>
-      <h2 style="margin-top:16px"><span class="em">&#128197;</span> This week in 5 numbers</h2>
+      <h2 style="margin-top:16px"><span class="em" aria-hidden="true">&#128197;</span> This week in 5 numbers</h2>
       <div id="weekDigest"></div>
     </div>
   </div>
 
   <div class="row duo">
     <div class="card" style="animation-delay:.46s">
-      <h2><span class="em">&#128278;</span> Booking &amp; source signals</h2>
+      <h2><span class="em" aria-hidden="true">&#128278;</span> Booking &amp; source signals</h2>
       <div id="bookingSources"></div>
-      <h2 style="margin-top:16px"><span class="em">&#129309;</span> Referral signals</h2>
+      <h2 style="margin-top:16px"><span class="em" aria-hidden="true">&#129309;</span> Referral signals</h2>
       <div id="referralLedger"></div>
     </div>
     <div class="card" style="animation-delay:.48s">
-      <h2><span class="em">&#128172;</span> What to say next <span class="pill">drafts</span></h2>
+      <h2><span class="em" aria-hidden="true">&#128172;</span> What to say next <span class="pill">drafts</span></h2>
       <p class="muted" style="margin:4px 0 10px;font-size:12.5px">Copy, personalize the [Name], and send yourself &mdash; nothing is ever sent automatically.</p>
       <div id="drafts"></div>
     </div>
@@ -274,7 +274,7 @@
 
   <div class="row">
     <div class="card" style="animation-delay:.45s">
-      <h2><span class="em">&#128336;</span> Live activity feed</h2>
+      <h2><span class="em" aria-hidden="true">&#128336;</span> Live activity feed</h2>
       <div class="filters" id="filters"></div>
       <div class="feed"><table><tbody id="recent"></tbody></table></div>
     </div>
@@ -282,7 +282,7 @@
 
   <div class="row">
     <div class="card" id="notrackCard" style="animation-delay:.5s">
-      <h2><span class="em">&#128683;</span> Owner No-Track</h2>
+      <h2><span class="em" aria-hidden="true">&#128683;</span> Owner No-Track</h2>
       <p id="notrackState" class="muted" style="margin:6px 0 3px;line-height:1.5"></p>
       <p id="notrackVercel" class="muted" style="margin:0 0 14px;line-height:1.5;font-size:13px"></p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -303,7 +303,7 @@
 <div id="toast"></div>
 <canvas id="cdc-fx" style="position:fixed;inset:0;z-index:60;pointer-events:none"></canvas>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" defer integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
 <script>
 (function(){
   "use strict";
@@ -349,7 +349,7 @@
     const cards=[
       {label:'Last 24 hours',num:d.last24||0,foot:deltaHtml(t),spark:true},
       {label:'Last 7 days',num:d.last7||0,foot:'<span class="muted">rolling week</span>'},
-      {label:'All time',num:d.total||0,foot:'<span class="muted">total tracked</span>'},
+      {label:'All time',num:(d.lifetimeTotal||d.total||0),foot:'<span class="muted">total tracked</span>'},
       {label:'Booking clicks',num:book,foot:'<span class="muted">tapped Book</span>',hot:true}
     ];
     $('kpis').innerHTML=cards.map((c,i)=>
