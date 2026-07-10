@@ -24,8 +24,8 @@ Run locally with the KV env vars set to generate the digest. Nothing was exposed
   }
 
   let kv;
-  try { ({ kv } = await import('@vercel/kv')); }
-  catch (e) { console.log('Admin digest → @vercel/kv not installed; run `npm install`. Skipped.'); return; }
+  try { const m = await import('../lib/store-supabase.js'); kv = m.kvAdapter(); }
+  catch (e) { console.log('Admin digest → Supabase store unavailable (env missing). Skipped.'); return; }
 
   const safe = async (fn, dflt) => { try { return await fn(); } catch { return dflt; } };
   const pending = await safe(() => kv.get('reviews:pending'), []) || [];

@@ -11,7 +11,8 @@ export default async function handler(req, res) {
 
   const summary = { generatedAt: new Date().toISOString(), ok: true, containsPII: false };
   try {
-    const { kv } = await import('@vercel/kv');
+    const { kvAdapter } = await import('../lib/store-supabase.js');
+    const kv = kvAdapter();
     const [pending, approved, leads, analytics] = await Promise.all([
       kv.get('reviews:pending').catch(() => []),
       kv.get('reviews:approved').catch(() => []),

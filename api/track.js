@@ -1,5 +1,6 @@
-import { kv } from '@vercel/kv';
 import { isAdmin as isAdminReq } from '../lib/admin.js';
+// Supabase store (analytics_events / counters / rate_limits) is imported lazily
+// inside the handler so the pure no-track tests never load @supabase/supabase-js.
 
 // Private visitor analytics for Luke. No personal data is stored — only
 // event types, the label tapped/typed, and a timestamp. Admin GET (with the
@@ -27,6 +28,8 @@ export default async function handler(req, res) {
   const isAdmin = isAdminReq(req);
 
   try {
+    const { logEvent, getEvents, incLifetime, getLifetime, resetEvents, rateBump } =
+      await import('../lib/store-supabase.js');
     // ---- POST: log an event (public) or admin reset ----
     if (req.method === 'POST') {
       let body = req.body;
@@ -34,7 +37,7 @@ export default async function handler(req, res) {
       body = body || {};
       // Admin: clear all analytics (start fresh)
       if (isAdmin && body.action === 'reset') {
-        await kv.set(KEY, []);
+        await resetEvents();
         return res.status(200).json({ ok: true, reset: true });
       }
       const t = clean(body.t, 12);
@@ -54,24 +57,19 @@ export default async function handler(req, res) {
 
       // Lightweight rate limit: bound events per minute to prevent flooding the store.
       try {
-        const rlKey = 'rl:' + Math.floor(Date.now() / 60000);
-        const n = await kv.incr(rlKey);
-        if (n === 1) await kv.expire(rlKey, 120);
+        const n = await rateBump(Math.floor(Date.now() / 60000));
         if (n > 600) return res.status(200).json({ ok: true, skipped: 'rate' });
-      } catch (e) { /* if KV rate-limit unavailable, fail open */ }
+      } catch (e) { /* if rate-limit unavailable, fail open */ }
 
-      let all = (await kv.get(KEY)) || [];
-      all.push({ t, l, ts: Date.now() });
-      if (all.length > MAX) all = all.slice(all.length - MAX);
-      await kv.set(KEY, all);
-      try { await kv.incr('lifetime'); } catch (e) {}
+      await logEvent(t, l);
+      try { await incLifetime(); } catch (e) {}
       return res.status(200).json({ ok: true });
     }
 
     // ---- GET: aggregated stats (ADMIN ONLY — this is private to Luke) ----
     if (req.method === 'GET') {
       if (!isAdmin) return res.status(403).json({ error: 'Private. A valid key is required.' });
-      const all = (await kv.get(KEY)) || [];
+      const all = await getEvents();
       const now = Date.now();
       const DAY = 86400000;
 
@@ -115,7 +113,7 @@ export default async function handler(req, res) {
         days.push({ d, n: dayBuckets[d] || 0 });
       }
 
-      const lifetimeTotal = Math.max(all.length, Number(await kv.get('lifetime')) || 0);
+      const lifetimeTotal = Math.max(all.length, Number(await getLifetime()) || 0);
       return res.status(200).json({
         total: all.length, lifetimeTotal, last24, last7,
         byType, topProducts, topCats, topSearches,
