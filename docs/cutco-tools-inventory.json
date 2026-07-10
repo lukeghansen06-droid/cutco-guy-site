@@ -1,40 +1,24 @@
 {
-  "title": "Cutco Tools Inventory",
-  "generatedAt": "2026-07-10 05:46 CT",
-  "primaryPublicSite": "https://cutcowithluke.com/",
-  "supabase": {
-    "projectName": "cutco-with-luke",
-    "projectRef": "zzgwaldgcagbzpgqvtof",
-    "dashboard": "https://supabase.com/dashboard/project/zzgwaldgcagbzpgqvtof",
-    "purpose": "Backend for reviews, leads, analytics_events, counters, rate_limits, and tool_inventory schema"
-  },
-  "github": {
-    "repo": "lukeghansen06-droid/cutco-guy-site",
-    "url": "https://github.com/lukeghansen06-droid/cutco-guy-site",
-    "localPath": "/Users/lukehansen/cutco-guy-site"
-  },
-  "requestSource": {
-    "file": "/Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/attachments/Screenshot 2026-07-10 at 2.49.32_AM.png",
-    "processedAt": "2026-07-10 05:18 CT",
-    "extractedText": "update this to supabase, make it recognizable/easy to find, and list all Cutco sites and variations"
-  },
-  "tools": [
-    {"group":"Daily launch","name":"CutcoWithLuke website","url":"https://cutcowithluke.com/","source":"Desktop shortcut + browser history"},
-    {"group":"Daily launch","name":"Book a demo","url":"https://cutcowithluke.com/book","source":"GitHub repo book.html"},
-    {"group":"Daily launch","name":"Reviews & referrals","url":"https://cutcowithluke.com/reviews","source":"GitHub repo reviews.html"},
-    {"group":"Daily launch","name":"Find Your Cutco","url":"https://cutcowithluke.com/find","source":"GitHub repo find.html"},
-    {"group":"Admin","name":"Cutco Data Center","url":"https://cutcowithluke.com/stats","source":"Desktop shortcut + browser history"},
-    {"group":"Admin","name":"Moderate reviews","url":"https://cutcowithluke.com/moderate","source":"GitHub repo moderate.html + Supabase docs"},
-    {"group":"Admin","name":"Leads dashboard","url":"https://cutcowithluke.com/leads","source":"GitHub repo leads.html + Supabase docs"},
-    {"group":"Data/code","name":"Supabase DB: cutco-with-luke","url":"https://supabase.com/dashboard/project/zzgwaldgcagbzpgqvtof","source":"project memory + docs/SUPABASE.md"},
-    {"group":"Data/code","name":"GitHub repo: cutco-guy-site","url":"https://github.com/lukeghansen06-droid/cutco-guy-site","source":"git remote origin"},
-    {"group":"Data/code","name":"Vercel project","url":"https://vercel.com/lukehansen01-6567s-projects/cutco-guy-site","source":"browser history + project memory"},
-    {"group":"CRM/selling","name":"Local Cutco Command Center","url":"file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutco_command_center.html","source":"Aside session artifact"},
-    {"group":"CRM/selling","name":"Review requests ready to send","url":"file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/review_requests_ready_to_send.md","source":"Aside session artifact"},
-    {"group":"Vector tools","name":"VectorImpact Prospect Sheet","url":"https://vectorimpact.netlify.app/","source":"Desktop shortcut + browser history"},
-    {"group":"Vector tools","name":"VectorConnect","url":"https://www.vectorconnect.com/","source":"project memory + browser history"},
-    {"group":"Vector tools","name":"Cutco Orders","url":"https://orders.cutcoapps.com/home","source":"browser history"},
-    {"group":"Vector tools","name":"Cutco Demos","url":"https://orders.cutcoapps.com/demos-list","source":"browser history"},
-    {"group":"Local coach","name":"Live Transcript Coach","url":"http://localhost:3000/ai-coach","source":"Desktop shortcut"}
+  "generatedAt": "2026-07-10",
+  "scope": "Luke-owned sites only. Official third-party tools excluded.",
+  "primarySites": [
+    "https://cutcowithluke.com/",
+    "https://luke-maxxing-os.vercel.app/",
+    "https://regal-gnome-d05713.netlify.app/"
+  ],
+  "cutcoPublicPages": ["/","/book","/find","/meet","/reviews","/faq","/gift","/owners","/referred","/card","/north-shore-cutco","/winnetka-cutco","/glencoe-cutco","/northbrook-cutco","/evanston-cutco","/depauw-cutco","/work","/privacy"],
+  "cutcoPrivatePages": ["/stats","/moderate","/leads"],
+  "vercelPreviewVariations": [
+    "https://cutco-guy-site-git-migrate-supabase-lukehansen01-6567s-projects.vercel.app/",
+    "https://cutco-guy-site-monv7oh74-lukehansen01-6567s-projects.vercel.app/",
+    "https://cutco-guy-site-8ceu1y15l-lukehansen01-6567s-projects.vercel.app/",
+    "https://cutco-guy-site-8iwrs5733-lukehansen01-6567s-projects.vercel.app/stats",
+    "https://cutco-guy-site-nqjdyybj7-lukehansen01-6567s-projects.vercel.app/stats"
+  ],
+  "localOwnedSiteFiles": [
+    "file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutco_command_center.html",
+    "file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutco_sales_manager.html",
+    "file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutcowithluke_refer_upgrade.html",
+    "file:///Users/lukehansen/Downloads/cutco_command_center.html"
   ]
 }
