@@ -4,109 +4,331 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="robots" content="noindex,nofollow" />
-<title>Luke-Owned Sites</title>
+<title>My Sites - Luke Hansen</title>
 <style>
 :root{
-  color-scheme:light;
-  --ink:#050816;
-  --navy:#07111f;
-  --white:#ffffff;
-  --mut:#243044;
-  --cyan:#00d9ff;
-  --blue:#2563ff;
-  --pink:#ff2bd6;
-  --yellow:#fff200;
-  --green:#1be36f;
-  --line:#050816;
-  --soft:#f7fbff;
+  --bg0:#02040a; --bg1:#050914; --panel:rgba(16,22,42,.58); --panel-solid:#0b1220;
+  --line:rgba(148,180,255,.16); --line-strong:rgba(148,180,255,.34);
+  --ink:#eef2ff; --mut:#8ea0c4; --mut2:#5f7295;
+  --cyan:#22d3ee; --violet:#a78bfa; --pink:#f472b6; --gold:#fbbf24; --green:#34d399; --red:#fb7185;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,var(--yellow) 0%,#fff 18%,var(--cyan) 44%,#7c3cff 72%,var(--pink) 100%);background-attachment:fixed}
-body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 12% 8%,rgba(255,255,255,.92),transparent 30%),radial-gradient(circle at 90% 0,rgba(255,242,0,.7),transparent 26%),radial-gradient(circle at 50% 92%,rgba(0,217,255,.55),transparent 34%);pointer-events:none}
-main{position:relative;width:min(1220px,94vw);margin:0 auto;padding:34px 0 64px}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:stretch;background:rgba(255,255,255,.94);border:4px solid var(--line);box-shadow:12px 12px 0 var(--ink);border-radius:30px;padding:30px}.eyebrow{display:inline-flex;background:var(--ink);color:var(--yellow);border-radius:999px;padding:9px 13px;font-weight:950;letter-spacing:.16em;text-transform:uppercase;font-size:12px}h1{font-size:clamp(44px,8vw,92px);line-height:.88;margin:18px 0 16px;letter-spacing:-.07em}.lead{font-size:clamp(18px,2.6vw,26px);line-height:1.35;color:var(--navy);font-weight:800;max-width:760px}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.stat{background:var(--navy);color:#fff;border:3px solid var(--line);border-radius:22px;padding:18px;box-shadow:6px 6px 0 rgba(5,8,22,.92)}.stat b{display:block;font-size:38px;line-height:1;color:var(--cyan)}.stat span{display:block;margin-top:7px;font-weight:900}.quick{display:grid;gap:12px}.quick a,.card{display:block;text-decoration:none;color:#fff;background:var(--navy);border:3px solid var(--line);box-shadow:6px 6px 0 var(--ink);border-radius:22px;padding:18px;transition:.14s transform,.14s box-shadow}.quick a:hover,.card:hover{transform:translate(-2px,-2px);box-shadow:10px 10px 0 var(--ink)}.quick strong,.card strong{display:block;font-size:21px;color:#fff}.quick span,.card span{display:block;margin-top:5px;color:#dbeafe;font-weight:700}.tag{display:inline-flex;margin-top:12px;background:var(--yellow);color:var(--ink);border:2px solid var(--line);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:950}.section{margin-top:32px}.section h2{display:inline-block;margin:0 0 16px;background:var(--ink);color:var(--white);border:3px solid var(--line);box-shadow:5px 5px 0 var(--yellow);border-radius:18px;padding:10px 16px;font-size:28px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card.primary{background:linear-gradient(135deg,#001d4a,#032b88)}.card.private{background:linear-gradient(135deg,#150043,#3b0764)}.card.local{background:linear-gradient(135deg,#042f2e,#065f46)}.card.preview{background:linear-gradient(135deg,#3b1d00,#9a3412)}.pages,.source-list{display:flex;flex-wrap:wrap;gap:10px}.pages a{background:#fff;color:var(--ink);text-decoration:none;border:3px solid var(--line);box-shadow:4px 4px 0 var(--ink);border-radius:999px;padding:9px 12px;font-weight:950}.panel{background:rgba(255,255,255,.94);border:4px solid var(--line);box-shadow:8px 8px 0 var(--ink);border-radius:26px;padding:22px}.panel p,.panel li{color:var(--navy);font-weight:750;line-height:1.55}.mini{font-size:13px;color:var(--mut);font-weight:850}.source-list code{background:var(--ink);color:#fff;padding:7px 9px;border-radius:9px;font-size:12px}footer{margin-top:24px;text-align:center;font-weight:950;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.45)}@media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}h1{font-size:52px}}
+html,body{margin:0;padding:0}
+body{
+  min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--ink);background:radial-gradient(1200px 800px at 15% -10%,#0c1840 0%,transparent 60%),
+    radial-gradient(1000px 700px at 110% 10%,#3a0f5c 0%,transparent 55%),
+    linear-gradient(180deg,var(--bg0),var(--bg1) 40%,#01030a 100%);
+  overflow-x:hidden;
+}
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;filter:blur(60px) saturate(140%);opacity:.55}
+.aurora span{position:absolute;border-radius:50%;mix-blend-mode:screen}
+.a1{width:520px;height:520px;left:-120px;top:-140px;background:radial-gradient(circle,var(--cyan),transparent 70%);animation:drift1 26s ease-in-out infinite}
+.a2{width:600px;height:600px;right:-160px;top:10%;background:radial-gradient(circle,var(--violet),transparent 70%);animation:drift2 32s ease-in-out infinite}
+.a3{width:480px;height:480px;left:20%;bottom:-220px;background:radial-gradient(circle,var(--pink),transparent 70%);animation:drift3 30s ease-in-out infinite}
+.a4{width:420px;height:420px;right:10%;bottom:-180px;background:radial-gradient(circle,var(--gold),transparent 72%);animation:drift1 22s ease-in-out infinite reverse}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(60px,40px) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-70px,50px) scale(1.08)}}
+@keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-60px) scale(1.15)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+main{position:relative;z-index:1;width:min(1240px,94vw);margin:0 auto;padding:34px 0 70px}
+
+header.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px;animation:rise .5s ease both}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .mark{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:grid;place-items:center;font-weight:900;color:#04101f;box-shadow:0 0 22px rgba(34,211,238,.5)}
+.brand h1{margin:0;font-size:19px;letter-spacing:-.01em}
+.brand .sub{font-size:12px;color:var(--mut)}
+.clock{font-size:13px;color:var(--mut);text-align:right}
+.clock b{color:var(--ink);font-weight:700}
+
+.hero{background:var(--panel);backdrop-filter:blur(18px) saturate(140%);border:1px solid var(--line);border-radius:28px;padding:34px;box-shadow:0 30px 90px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05);animation:rise .6s ease both .05s}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.4);color:var(--cyan);border-radius:999px;padding:7px 13px;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+h1.title{font-size:clamp(40px,6.4vw,74px);line-height:.95;margin:16px 0 12px;letter-spacing:-.03em;background:linear-gradient(135deg,#fff 0%,#dff6ff 30%,var(--cyan) 60%,var(--violet) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(15px,1.8vw,18px);color:var(--mut);max-width:640px;line-height:1.6;font-weight:500}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:22px}
+.stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.stat b{display:block;font-size:26px;background:linear-gradient(135deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{font-size:12px;color:var(--mut);font-weight:700}
+
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:22px}
+.search{flex:1;min-width:220px;position:relative}
+.search input{width:100%;padding:12px 14px 12px 38px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);font-size:14px;outline:none;transition:.15s border-color,.15s background}
+.search input:focus{border-color:var(--cyan);background:rgba(34,211,238,.06)}
+.search:before{content:"";position:absolute;left:13px;top:50%;width:9px;height:9px;border:2px solid var(--mut);border-radius:50%;transform:translateY(-60%)}
+.search:after{content:"";position:absolute;left:20px;top:56%;width:6px;height:2px;background:var(--mut);transform:rotate(45deg)}
+.btn{border:1px solid var(--line-strong);background:rgba(255,255,255,.05);color:var(--ink);padding:12px 16px;border-radius:14px;font-weight:700;font-size:13px;cursor:pointer;transition:.15s transform,.15s box-shadow,.15s background}
+.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.09)}
+.btn.primary{background:linear-gradient(135deg,var(--cyan),#2563ff);color:#04101f;border-color:transparent;box-shadow:0 8px 24px rgba(34,211,238,.35)}
+.btn.primary:hover{box-shadow:0 10px 30px rgba(34,211,238,.5)}
+.btn[disabled]{opacity:.55;cursor:progress}
+
+nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 4px;animation:rise .6s ease both .1s}
+nav.tabs button{border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--mut);padding:9px 15px;border-radius:999px;font-size:13px;font-weight:800;cursor:pointer;transition:.15s all}
+nav.tabs button.on{background:linear-gradient(135deg,var(--cyan),var(--violet));color:#04101f;border-color:transparent}
+nav.tabs button:hover:not(.on){color:var(--ink);border-color:var(--line-strong)}
+nav.tabs button .n{opacity:.75;margin-left:5px;font-weight:700}
+
+.section{margin-top:26px;animation:rise .6s ease both .12s}
+.section h2{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--mut);margin:0 0 12px;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{position:relative;background:var(--panel);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:.18s transform,.18s box-shadow,.18s border-color;overflow:hidden}
+.card:before{content:"";position:absolute;inset:-1px;border-radius:20px;padding:1px;background:linear-gradient(135deg,var(--grad-a,transparent),var(--grad-b,transparent));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.2s opacity;pointer-events:none}
+.card:hover{transform:translateY(-4px);border-color:transparent;box-shadow:0 18px 40px rgba(0,0,0,.45),var(--glow,0 0 0 rgba(0,0,0,0))}
+.card:hover:before{opacity:1}
+.card.g-primary{--grad-a:#22d3ee;--grad-b:#2563ff;--glow:0 0 34px rgba(34,211,238,.28)}
+.card.g-pages{--grad-a:#a78bfa;--grad-b:#7c3aed;--glow:0 0 34px rgba(167,139,250,.28)}
+.card.g-private{--grad-a:#f472b6;--grad-b:#be185d;--glow:0 0 34px rgba(244,114,182,.28)}
+.card.g-preview{--grad-a:#fbbf24;--grad-b:#f97316;--glow:0 0 34px rgba(251,191,36,.24)}
+.card.g-local{--grad-a:#34d399;--grad-b:#059669;--glow:0 0 34px rgba(52,211,153,.26)}
+.card .top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card h3{margin:0;font-size:16.5px;letter-spacing:-.01em}
+.card p{margin:0;color:var(--mut);font-size:13px;line-height:1.5;flex:1}
+.card .meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:2px}
+.tag{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.06);color:var(--mut)}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--mut2)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--mut2);flex:none}
+.status.checking .dot{background:var(--gold);animation:pulse 1s infinite}
+.status.online .dot{background:var(--green);box-shadow:0 0 8px var(--green)}
+.status.down .dot{background:var(--red);box-shadow:0 0 8px var(--red)}
+.status.local .dot{background:var(--cyan)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.card .actions{display:flex;gap:8px;margin-top:4px}
+.card .actions a,.card .actions button{flex:1;text-align:center;text-decoration:none;font-size:12.5px;font-weight:800;padding:9px 10px;border-radius:11px;border:1px solid var(--line-strong);color:var(--ink);background:rgba(255,255,255,.04);cursor:pointer;transition:.15s all}
+.card .actions a:hover,.card .actions button:hover{background:rgba(255,255,255,.1)}
+.card .actions .open{background:linear-gradient(135deg,var(--grad-a),var(--grad-b));border-color:transparent;color:#04101f}
+.hidden{display:none !important}
+
+.panel{background:var(--panel);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:22px;padding:20px 22px}
+.panel p{color:var(--mut);line-height:1.6;margin:0 0 8px;font-size:13.5px}
+.panel code{background:rgba(255,255,255,.06);color:#c7d7ff;padding:2px 6px;border-radius:6px;font-size:12px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#0d1424;border:1px solid var(--line-strong);color:var(--ink);padding:11px 18px;border-radius:12px;font-size:13px;font-weight:700;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.5);z-index:5}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer.note{margin-top:26px;text-align:center;font-size:12px;color:var(--mut2);font-weight:600}
+@media(max-width:920px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span><span class="a4"></span></div>
 <main>
+  <header class="top">
+    <div class="brand"><div class="mark">L</div><div><h1>My Sites</h1><div class="sub">Luke Hansen - owned web properties</div></div></div>
+    <div class="clock" id="clock"><b id="clockTime">--:--</b><div id="clockDate">-</div></div>
+  </header>
+
   <section class="hero">
-    <div>
-      <span class="eyebrow">Luke-owned sites only</span>
-      <h1>My Sites</h1>
-      <p class="lead">A bright, high-contrast overview of the web properties that are actually yours. No official Vector tools, no Cutco corporate links, no dashboards that are not sites.</p>
-      <div class="stats" aria-label="overview stats">
-        <div class="stat"><b>1</b><span>primary Cutco domain</span></div>
-        <div class="stat"><b>18</b><span>live sitemap pages</span></div>
-        <div class="stat"><b>5</b><span>deployment variations found</span></div>
-        <div class="stat"><b>4</b><span>local owned site files</span></div>
-      </div>
+    <span class="eyebrow">Luke-owned sites only</span>
+    <h1 class="title">Every site that's actually yours</h1>
+    <p class="lead">One bright, fast, self-checking hub. No Vector tools, no Cutco corporate pages, no dashboards that aren't sites, just the properties you built or deployed.</p>
+    <div class="stats">
+      <div class="stat"><b id="statPrimary">0</b><span>primary sites</span></div>
+      <div class="stat"><b id="statPages">0</b><span>live cutcowithluke pages</span></div>
+      <div class="stat"><b id="statPreview">0</b><span>deploy previews</span></div>
+      <div class="stat"><b id="statLocal">0</b><span>local site files</span></div>
     </div>
-    <div class="quick">
-      <a href="https://cutcowithluke.com/"><strong>CutcoWithLuke</strong><span>Primary public Cutco site</span></a>
-      <a href="https://luke-maxxing-os.vercel.app/"><strong>Luke Maxxing OS</strong><span>Your personal performance system</span></a>
-      <a href="file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutco_command_center.html"><strong>Cutco Command Center</strong><span>Local CRM/Jarvis site file</span></a>
-      <a href="https://regal-gnome-d05713.netlify.app/"><strong>Regal Gnome Netlify</strong><span>Older personal goal/productivity site</span></a>
+    <div class="toolbar">
+      <div class="search"><input id="search" type="text" placeholder="Search your sites... (press / to focus)" /></div>
+      <button class="btn primary" id="checkAll">Check all links</button>
+      <button class="btn" id="expandAll">Show everything</button>
     </div>
   </section>
 
-  <section class="section">
-    <h2>Primary owned sites</h2>
-    <div class="grid">
-      <a class="card primary" href="https://cutcowithluke.com/"><strong>cutcowithluke.com</strong><span>Production Cutco sales site. Live public domain with booking, product-fit, reviews, local SEO pages, and private admin areas.</span><span class="tag">Production</span></a>
-      <a class="card primary" href="https://luke-maxxing-os.vercel.app/"><strong>luke-maxxing-os.vercel.app</strong><span>Your broader private performance system. History and local repo show dashboards, today, command center, and Cutco route.</span><span class="tag">Vercel</span></a>
-      <a class="card primary" href="https://regal-gnome-d05713.netlify.app/"><strong>regal-gnome-d05713.netlify.app</strong><span>Older Netlify personal goals/productivity web app, verified live.</span><span class="tag">Netlify</span></a>
-    </div>
-  </section>
+  <nav class="tabs" id="tabs"></nav>
+  <div id="sections"></div>
 
   <section class="section">
-    <h2>cutcowithluke.com live pages</h2>
-    <div class="panel"><div class="pages">
-      <a href="https://cutcowithluke.com/">/</a><a href="https://cutcowithluke.com/book">/book</a><a href="https://cutcowithluke.com/find">/find</a><a href="https://cutcowithluke.com/meet">/meet</a><a href="https://cutcowithluke.com/reviews">/reviews</a><a href="https://cutcowithluke.com/faq">/faq</a><a href="https://cutcowithluke.com/gift">/gift</a><a href="https://cutcowithluke.com/owners">/owners</a><a href="https://cutcowithluke.com/referred">/referred</a><a href="https://cutcowithluke.com/card">/card</a><a href="https://cutcowithluke.com/north-shore-cutco">/north-shore-cutco</a><a href="https://cutcowithluke.com/winnetka-cutco">/winnetka-cutco</a><a href="https://cutcowithluke.com/glencoe-cutco">/glencoe-cutco</a><a href="https://cutcowithluke.com/northbrook-cutco">/northbrook-cutco</a><a href="https://cutcowithluke.com/evanston-cutco">/evanston-cutco</a><a href="https://cutcowithluke.com/depauw-cutco">/depauw-cutco</a><a href="https://cutcowithluke.com/work">/work</a><a href="https://cutcowithluke.com/privacy">/privacy</a>
-    </div><p class="mini">Source: live sitemap and local repo. Private/admin pages are below because they are yours, but not public sitemap pages.</p></div>
-  </section>
-
-  <section class="section">
-    <h2>Your private pages on your site</h2>
-    <div class="grid">
-      <a class="card private" href="https://cutcowithluke.com/stats"><strong>/stats</strong><span>Cutco Data Center. Private analytics page on your domain.</span><span class="tag">Private</span></a>
-      <a class="card private" href="https://cutcowithluke.com/moderate"><strong>/moderate</strong><span>Review moderation page on your domain.</span><span class="tag">Private</span></a>
-      <a class="card private" href="https://cutcowithluke.com/leads"><strong>/leads</strong><span>Lead review page on your domain.</span><span class="tag">Private</span></a>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2>Development and preview variations</h2>
-    <div class="grid">
-      <a class="card preview" href="https://cutco-guy-site-git-migrate-supabase-lukehansen01-6567s-projects.vercel.app/"><strong>migrate-supabase preview</strong><span>Vercel preview deployment found in recent history.</span><span class="tag">Preview</span></a>
-      <a class="card preview" href="https://cutco-guy-site-monv7oh74-lukehansen01-6567s-projects.vercel.app/"><strong>monv7oh74 preview</strong><span>Earlier Cutco site preview deployment found in history.</span><span class="tag">Preview</span></a>
-      <a class="card preview" href="https://cutco-guy-site-8ceu1y15l-lukehansen01-6567s-projects.vercel.app/"><strong>8ceu1y15l preview</strong><span>Earlier Cutco site preview deployment found in history.</span><span class="tag">Preview</span></a>
-      <a class="card preview" href="https://cutco-guy-site-8iwrs5733-lukehansen01-6567s-projects.vercel.app/stats"><strong>8iwrs5733 stats preview</strong><span>Stats preview URL found in history.</span><span class="tag">Preview</span></a>
-      <a class="card preview" href="https://cutco-guy-site-nqjdyybj7-lukehansen01-6567s-projects.vercel.app/stats"><strong>nqjdyybj7 stats preview</strong><span>Stats preview URL found in history.</span><span class="tag">Preview</span></a>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2>Local owned site files</h2>
-    <div class="grid">
-      <a class="card local" href="file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutco_command_center.html"><strong>Cutco Command Center</strong><span>Canonical local CRM/Jarvis app.</span><span class="tag">Local HTML</span></a>
-      <a class="card local" href="file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutco_sales_manager.html"><strong>Cutco Sales Manager</strong><span>Older local sales manager app file.</span><span class="tag">Local HTML</span></a>
-      <a class="card local" href="file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutcowithluke_refer_upgrade.html"><strong>CutcoWithLuke refer upgrade</strong><span>Local referral-upgrade page artifact.</span><span class="tag">Local HTML</span></a>
-      <a class="card local" href="file:///Users/lukehansen/Downloads/cutco_command_center.html"><strong>Downloads Command Center copy</strong><span>Older downloaded copy of the local CRM app.</span><span class="tag">Local copy</span></a>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2>What I excluded</h2>
-    <div class="panel"><p>I left out official third-party tools because they are not your sites: VectorImpact, VectorConnect, Cutco Orders, demos.cutcoapps.com, cutco.com, GitHub, Supabase, and Vercel dashboards. They can stay in bookmarks or an archive, but not on this site-only hub.</p></div>
-  </section>
-
-  <section class="section">
-    <h2>Where this came from</h2>
+    <h2>What I left out on purpose</h2>
     <div class="panel">
-      <p>Sources checked: memory, Chrome history, live cutcowithluke.com sitemap, live production pages, local Desktop files, cutco-guy-site repo, luke-maxxing-os repo/routes, Aside artifacts, and the older Netlify URL.</p>
-      <div class="source-list"><code>cutcowithluke.com/sitemap.xml</code><code>/Users/lukehansen/cutco-guy-site</code><code>/Users/lukehansen/luke-maxxing-os</code><code>Desktop previous Cutco Tools files</code><code>Aside Cutco Command Center artifacts</code><code>Chrome history</code></div>
+      <p>VectorImpact, VectorConnect, Cutco Orders, demos.cutcoapps.com, and cutco.com are official Vector/Cutco tools, not your sites. GitHub, Supabase, and Vercel are dashboards/platforms, not sites themselves, they stay out of this hub too.</p>
     </div>
   </section>
-  <footer>Desktop cleaned safely. Old files were archived under ALL/Desktop Cleanup 2026-07-10 - Site Hub.</footer>
+
+  <section class="section">
+    <h2>Where this data comes from</h2>
+    <div class="panel">
+      <p>Checked live: <code>cutcowithluke.com/sitemap.xml</code>, direct HTTP checks on every link below, and the local repos at <code>/Users/lukehansen/cutco-guy-site</code> and <code>/Users/lukehansen/luke-maxxing-os</code>. Also used: Chrome history, Aside project memory, and local Desktop/Downloads/Aside artifact files. "Check all links" re-verifies every web link live, right now, in this browser.</p>
+    </div>
+  </section>
+
+  <footer class="note">Desktop stays clean, everything else lives in ALL/Desktop Cleanup 2026-07-10 - Site Hub.</footer>
 </main>
+<div class="toast" id="toast"></div>
+<script>
+const DATA = [
+  {id:'cutcowithluke',name:'cutcowithluke.com',url:'https://cutcowithluke.com/',desc:'Production Cutco sales site. Booking, product-fit, reviews, and local SEO pages.',group:'primary',kind:'web'},
+  {id:'lukemaxxing',name:'luke-maxxing-os.vercel.app',url:'https://luke-maxxing-os.vercel.app/',desc:'Your broader private performance system. Dashboard, today, command center, and a /cutco route.',group:'primary',kind:'web'},
+  {id:'regalgnome',name:'regal-gnome-d05713.netlify.app',url:'https://regal-gnome-d05713.netlify.app/',desc:'Older personal goals/productivity app on Netlify. Verified live.',group:'primary',kind:'web'},
+
+  {id:'p-home',name:'/ (home)',url:'https://cutcowithluke.com/',desc:'Homepage.',group:'pages',kind:'web'},
+  {id:'p-book',name:'/book',url:'https://cutcowithluke.com/book',desc:'Book a demo.',group:'pages',kind:'web'},
+  {id:'p-find',name:'/find',url:'https://cutcowithluke.com/find',desc:'Find Your Cutco knife finder.',group:'pages',kind:'web'},
+  {id:'p-meet',name:'/meet',url:'https://cutcowithluke.com/meet',desc:'Meet Luke bio page.',group:'pages',kind:'web'},
+  {id:'p-reviews',name:'/reviews',url:'https://cutcowithluke.com/reviews',desc:'Reviews and referrals.',group:'pages',kind:'web'},
+  {id:'p-faq',name:'/faq',url:'https://cutcowithluke.com/faq',desc:'FAQ and guarantee.',group:'pages',kind:'web'},
+  {id:'p-gift',name:'/gift',url:'https://cutcowithluke.com/gift',desc:'Gift finder.',group:'pages',kind:'web'},
+  {id:'p-owners',name:'/owners',url:'https://cutcowithluke.com/owners',desc:'Already own Cutco, service and sharpening.',group:'pages',kind:'web'},
+  {id:'p-referred',name:'/referred',url:'https://cutcowithluke.com/referred',desc:'Referral landing page.',group:'pages',kind:'web'},
+  {id:'p-card',name:'/card',url:'https://cutcowithluke.com/card',desc:'Digital contact card.',group:'pages',kind:'web'},
+  {id:'p-northshore',name:'/north-shore-cutco',url:'https://cutcowithluke.com/north-shore-cutco',desc:'Local SEO page.',group:'pages',kind:'web'},
+  {id:'p-winnetka',name:'/winnetka-cutco',url:'https://cutcowithluke.com/winnetka-cutco',desc:'Local SEO page.',group:'pages',kind:'web'},
+  {id:'p-glencoe',name:'/glencoe-cutco',url:'https://cutcowithluke.com/glencoe-cutco',desc:'Local SEO page.',group:'pages',kind:'web'},
+  {id:'p-northbrook',name:'/northbrook-cutco',url:'https://cutcowithluke.com/northbrook-cutco',desc:'Local SEO page.',group:'pages',kind:'web'},
+  {id:'p-evanston',name:'/evanston-cutco',url:'https://cutcowithluke.com/evanston-cutco',desc:'Local SEO page.',group:'pages',kind:'web'},
+  {id:'p-depauw',name:'/depauw-cutco',url:'https://cutcowithluke.com/depauw-cutco',desc:'Local SEO page.',group:'pages',kind:'web'},
+  {id:'p-work',name:'/work',url:'https://cutcowithluke.com/work',desc:'Work with Vector recruiting page.',group:'pages',kind:'web'},
+  {id:'p-privacy',name:'/privacy',url:'https://cutcowithluke.com/privacy',desc:'Privacy policy.',group:'pages',kind:'web'},
+
+  {id:'priv-stats',name:'/stats',url:'https://cutcowithluke.com/stats',desc:'Cutco Data Center, private analytics.',group:'private',kind:'web'},
+  {id:'priv-moderate',name:'/moderate',url:'https://cutcowithluke.com/moderate',desc:'Review moderation.',group:'private',kind:'web'},
+  {id:'priv-leads',name:'/leads',url:'https://cutcowithluke.com/leads',desc:'Leads dashboard.',group:'private',kind:'web'},
+
+  {id:'prev-migrate',name:'migrate-supabase preview',url:'https://cutco-guy-site-git-migrate-supabase-lukehansen01-6567s-projects.vercel.app/',desc:'Vercel branch preview deployment.',group:'preview',kind:'web'},
+  {id:'prev-monv7',name:'monv7oh74 preview',url:'https://cutco-guy-site-monv7oh74-lukehansen01-6567s-projects.vercel.app/',desc:'Earlier Vercel preview deployment.',group:'preview',kind:'web'},
+  {id:'prev-8ceu',name:'8ceu1y15l preview',url:'https://cutco-guy-site-8ceu1y15l-lukehansen01-6567s-projects.vercel.app/',desc:'Earlier Vercel preview deployment.',group:'preview',kind:'web'},
+  {id:'prev-8iwrs',name:'8iwrs5733 stats preview',url:'https://cutco-guy-site-8iwrs5733-lukehansen01-6567s-projects.vercel.app/stats',desc:'Stats preview deployment.',group:'preview',kind:'web'},
+  {id:'prev-nqjdy',name:'nqjdyybj7 stats preview',url:'https://cutco-guy-site-nqjdyybj7-lukehansen01-6567s-projects.vercel.app/stats',desc:'Stats preview deployment.',group:'preview',kind:'web'},
+
+  {id:'loc-cc',name:'Cutco Command Center',url:'file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutco_command_center.html',desc:'Canonical local CRM/Jarvis app. 466 KB.',group:'local',kind:'local'},
+  {id:'loc-sm',name:'Cutco Sales Manager',url:'file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutco_sales_manager.html',desc:'Older local sales manager app. 18 KB.',group:'local',kind:'local'},
+  {id:'loc-refer',name:'CutcoWithLuke refer upgrade',url:'file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutcowithluke_refer_upgrade.html',desc:'Local referral-upgrade page artifact. 19 KB.',group:'local',kind:'local'},
+  {id:'loc-dl',name:'Downloads Command Center copy',url:'file:///Users/lukehansen/Downloads/cutco_command_center.html',desc:'Older downloaded copy of the local CRM. 315 KB.',group:'local',kind:'local'},
+];
+const GROUPS = [
+  {id:'all',label:'All'},
+  {id:'primary',label:'Primary'},
+  {id:'pages',label:'Pages'},
+  {id:'private',label:'Private'},
+  {id:'preview',label:'Previews'},
+  {id:'local',label:'Local files'},
+];
+const GROUP_TITLES = {primary:'Primary owned sites',pages:'cutcowithluke.com pages',private:'Your private pages',preview:'Development and preview variations',local:'Local owned site files'};
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fmtTime(d){return d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});}
+function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});}
+function tick(){const d=new Date();document.getElementById('clockTime').textContent=fmtTime(d);document.getElementById('clockDate').textContent=fmtDate(d);}
+tick();setInterval(tick,15000);
+
+document.getElementById('statPrimary').textContent = DATA.filter(d=>d.group==='primary').length;
+document.getElementById('statPages').textContent = DATA.filter(d=>d.group==='pages').length;
+document.getElementById('statPreview').textContent = DATA.filter(d=>d.group==='preview').length;
+document.getElementById('statLocal').textContent = DATA.filter(d=>d.group==='local').length;
+
+let activeTab = 'all';
+let query = '';
+const statusState = {};
+
+function cardHtml(item){
+  const groupClass = 'g-' + item.group;
+  const saved = statusState[item.id];
+  const statusClass = saved ? saved.cls : (item.kind === 'local' ? 'local' : '');
+  const statusLabel = saved ? saved.label : (item.kind === 'local' ? 'Local file' : 'Not checked yet');
+  return `<div class="card ${groupClass}" data-id="${item.id}" data-name="${esc(item.name.toLowerCase())}" data-desc="${esc(item.desc.toLowerCase())}" data-group="${item.group}">
+    <div class="top-row"><h3>${esc(item.name)}</h3><span class="tag">${esc(item.group)}</span></div>
+    <p>${esc(item.desc)}</p>
+    <div class="meta">
+      <span class="status ${statusClass}" data-status-for="${item.id}"><span class="dot"></span><span class="label">${statusLabel}</span></span>
+    </div>
+    <div class="actions">
+      <a class="open" href="${esc(item.url)}">Open</a>
+      <button data-copy="${esc(item.url)}">Copy link</button>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const tabsEl = document.getElementById('tabs');
+  tabsEl.innerHTML = GROUPS.map(g=>{
+    const n = g.id==='all' ? DATA.length : DATA.filter(d=>d.group===g.id).length;
+    return `<button data-tab="${g.id}" class="${activeTab===g.id?'on':''}">${g.label}<span class="n">${n}</span></button>`;
+  }).join('');
+  tabsEl.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{activeTab=b.dataset.tab;render();}));
+
+  const groupsToShow = activeTab==='all' ? ['primary','pages','private','preview','local'] : [activeTab];
+  const q = query.trim().toLowerCase();
+  const sectionsEl = document.getElementById('sections');
+  sectionsEl.innerHTML = groupsToShow.map(gid=>{
+    let items = DATA.filter(d=>d.group===gid);
+    if(q) items = items.filter(d=> d.name.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q));
+    if(!items.length) return '';
+    return `<section class="section"><h2>${GROUP_TITLES[gid]}</h2><div class="grid">${items.map(cardHtml).join('')}</div></section>`;
+  }).join('') || '<div class="panel"><p>No sites match that search.</p></div>';
+
+  sectionsEl.querySelectorAll('[data-copy]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const ok = await copyText(btn.dataset.copy);
+      toast(ok ? 'Link copied' : 'Copy blocked, select the URL manually');
+    });
+  });
+}
+render();
+
+document.getElementById('search').addEventListener('input', e=>{ query = e.target.value; render(); });
+document.addEventListener('keydown', e=>{
+  if(e.key==='/' && document.activeElement.id!=='search'){ e.preventDefault(); document.getElementById('search').focus(); }
+});
+document.getElementById('expandAll').addEventListener('click', ()=>{ activeTab='all'; query=''; document.getElementById('search').value=''; render(); });
+
+function copyText(text){
+  return new Promise(resolve=>{
+    let done = false;
+    const finish = ok => { if(!done){ done = true; resolve(ok); } };
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly','');
+      ta.style.position='fixed'; ta.style.left='-9999px'; ta.style.top='0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if(ok){ finish(true); return; }
+    }catch(e){}
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      const timer = setTimeout(()=>finish(false), 1200);
+      navigator.clipboard.writeText(text).then(()=>{clearTimeout(timer); finish(true);}).catch(()=>{clearTimeout(timer); finish(false);});
+    } else {
+      finish(false);
+    }
+  });
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function setStatus(id, cls, label){
+  statusState[id] = { cls, label };
+  document.querySelectorAll(`[data-status-for="${id}"]`).forEach(el=>{
+    el.className = 'status ' + cls;
+    el.querySelector('.label').textContent = label;
+  });
+}
+
+async function checkOne(item){
+  if(item.kind === 'local') return;
+  setStatus(item.id, 'checking', 'Checking...');
+  try{
+    await fetch(item.url, { mode:'no-cors', cache:'no-store' });
+    setStatus(item.id, 'online', 'Online just now');
+  }catch(e){
+    setStatus(item.id, 'down', 'Unreachable');
+  }
+}
+
+document.getElementById('checkAll').addEventListener('click', async ()=>{
+  const btn = document.getElementById('checkAll');
+  btn.disabled = true; btn.textContent = 'Checking...';
+  const webItems = DATA.filter(d=>d.kind==='web');
+  await Promise.all(webItems.map(checkOne));
+  btn.disabled = false; btn.textContent = 'Check all links';
+  toast('Checked ' + webItems.length + ' links');
+});
+
+// Auto-run a check shortly after load so status is meaningful without a click.
+setTimeout(()=>{ document.getElementById('checkAll').click(); }, 500);
+</script>
 </body>
 </html>
