@@ -66,10 +66,11 @@ export async function handleReviews(req, kv) {
   return { status: 405, json: { ok: false, error: "method" } };
 }
 
-// Vercel adapter — lazy-imports kv so bun test (no @vercel/kv installed) can still
-// import handleReviews without hitting the real KV package.
+// Vercel adapter — lazy-imports the Supabase store so bun test (which passes an
+// in-memory mock into handleReviews) never needs @supabase/supabase-js installed.
 export default async function handler(req, res) {
-  const { kv } = await import("@vercel/kv");
+  const { kvAdapter } = await import("../lib/store-supabase.js");
+  const kv = kvAdapter();
   const body = req.method === "POST" ? req.body : undefined;
   const out = await handleReviews({ method: req.method, body, isAdmin: isAdmin(req) }, kv);
   res.status(out.status).json(out.json);

@@ -5,13 +5,13 @@
  * gitignored report for Luke's own follow-up. Contacts NO ONE. Sends nothing.
  * Contact info is masked in the report.
  */
-import { writeOpsReport, hasKvEnv, stamp } from '../ops/lib/ops-common.mjs';
+import { writeOpsReport, hasSupabaseEnv, stamp } from '../ops/lib/ops-common.mjs';
 
-if (!hasKvEnv()) { console.log('Lead helper → SKIPPED (no KV env). Nothing queried.'); process.exit(0); }
+if (!hasSupabaseEnv()) { console.log('Lead helper → SKIPPED (no Supabase env). Nothing queried.'); process.exit(0); }
 
 let kv;
-try { ({ kv } = await import('@vercel/kv')); }
-catch { console.log('Lead helper → @vercel/kv not installed; run npm install. Skipped.'); process.exit(0); }
+try { ({ kvAdapter: kv } = await import('../lib/store-supabase.js')); kv = kv(); }
+catch { console.log('Lead helper → Supabase store unavailable. Skipped.'); process.exit(0); }
 
 const leads = (await kv.lrange('leads:v1', 0, 199).catch(() => [])) || [];
 

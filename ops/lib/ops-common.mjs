@@ -28,6 +28,7 @@ export function runScript(rel, args = '') {
 }
 
 export function hasKvEnv() { return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN); }
+export function hasSupabaseEnv() { return !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY); }
 export function stamp() { return new Date().toISOString(); }
 
 /** Read a generated automation report JSON if present (else null). */

@@ -9,7 +9,7 @@ on every push to **main**.
 3. Vercel auto-deploys in ~20s and re-aliases cutcowithluke.com.
 
 ## Private dashboard
-`/stats.html?key=<your key>` — data served by `api/track.js` (Vercel KV). No names stored.
+`/stats.html?key=<your key>` — data served by `api/track.js` (Supabase Postgres). No names stored. See `docs/SUPABASE.md`.
 
 ## Notes
 - Vercel Web Analytics is enabled (script in index.html + stats.html).

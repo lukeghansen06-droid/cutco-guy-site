@@ -5,13 +5,13 @@
  * NEVER approves or rejects anything. Writes a gitignored private report.
  * Report avoids PII: uses review id + a short redacted preview only.
  */
-import { writeOpsReport, hasKvEnv, stamp, li } from '../ops/lib/ops-common.mjs';
+import { writeOpsReport, hasSupabaseEnv, stamp, li } from '../ops/lib/ops-common.mjs';
 
-if (!hasKvEnv()) { console.log('Review helper → SKIPPED (no KV env). Nothing queried.'); process.exit(0); }
+if (!hasSupabaseEnv()) { console.log('Review helper → SKIPPED (no Supabase env). Nothing queried.'); process.exit(0); }
 
 let kv;
-try { ({ kv } = await import('@vercel/kv')); }
-catch { console.log('Review helper → @vercel/kv not installed; run npm install. Skipped.'); process.exit(0); }
+try { ({ kvAdapter: kv } = await import('../lib/store-supabase.js')); kv = kv(); }
+catch { console.log('Review helper → Supabase store unavailable. Skipped.'); process.exit(0); }
 
 const pending = (await kv.get('reviews:pending').catch(() => [])) || [];
 

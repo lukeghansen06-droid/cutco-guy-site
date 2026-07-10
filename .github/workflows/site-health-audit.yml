@@ -31,7 +31,7 @@ jobs:
         with:
           bun-version: latest
 
-      # Only dependency is @vercel/kv (declared in package.json). No secrets.
+      # Only dependency is @supabase/supabase-js (declared in package.json). No secrets.
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 

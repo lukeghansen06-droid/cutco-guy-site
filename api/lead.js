@@ -10,10 +10,11 @@ export async function handleLead(req, kv, sendEmail) {
   try { await sendEmail(lead); } catch (e) { /* stored anyway; never block the user */ }
   return { status:200, json:{ ok:true } };
 }
-// Vercel adapter — lazy-imports kv so bun test (no @vercel/kv installed) can still
-// import handleLead without hitting the real KV package. Same pattern as reviews.js.
+// Vercel adapter — lazy-imports the Supabase store so bun test (which passes an
+// in-memory mock into handleLead) never needs @supabase/supabase-js installed.
 export default async function handler(req, res) {
-  const { kv } = await import("@vercel/kv");
+  const { kvAdapter } = await import("../lib/store-supabase.js");
+  const kv = kvAdapter();
   const send = async (lead) => {
     const key = process.env.RESEND_API_KEY;
     if (!key) { console.log("LEAD (no email configured):", lead); return; }
