@@ -292,17 +292,34 @@ img, video {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 40;
-  display: flex;
-  gap: var(--space-2);
-  justify-content: center;
-  padding: var(--space-2) var(--space-3);
-  background: rgba(7,11,20,.92);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  z-index: 80;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(7,11,20,.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--line);
 }
-
+.book-bar > a {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--ink);
+  font-weight: 800;
+  line-height: 1;
+}
+.book-bar > a:first-child {
+  border-color: transparent;
+  color: #06121f;
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  box-shadow: 0 12px 30px -14px rgba(34,211,238,.72);
+}
 @media (min-width: 761px) {
   .book-bar { display: none; }
 }
@@ -817,7 +834,7 @@ h1,h2,h3 { letter-spacing:-.01em; }
 /* ===== Section 15 — Mobile sticky CTA (Book + Text) & helpers ===== */
 .mobile-cta{position:fixed;left:0;right:0;bottom:0;z-index:80;display:none;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(7,11,20,.93);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line)}
 .mobile-cta .btn{flex:1;text-align:center;padding:14px 10px;font-size:1rem}
-@media (max-width:760px){.mobile-cta{display:flex}body{padding-bottom:76px}}
+@media (max-width:760px){.mobile-cta{display:flex}body{padding-bottom:86px}}
 .card-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
 .intro-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(18px,3vw,26px)}
 .intro-box textarea{width:100%;min-height:120px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:14px;font:inherit;line-height:1.55;resize:vertical}
@@ -1176,3 +1193,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .ref-count{ font-size:.85rem; color:var(--mut); }
 .refer-prompt{ cursor:pointer; }
 .refer-prompt:focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; }
+
+
+/* Truthful proof badges near conversion CTAs */
+.proof-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px;color:var(--mut);font-size:.82rem}
+.proof-badges span{display:inline-flex;align-items:center;min-height:32px;padding:.35rem .72rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.035)}
+.proof-badges span:nth-child(3),.proof-badges span:nth-child(4){border-color:rgba(251,191,36,.28);color:#f6d28a;background:rgba(251,191,36,.07)}
+@media(max-width:520px){.proof-badges{justify-content:flex-start}.hero-section .proof-badges,.section[style*="text-align:center"] .proof-badges{justify-content:center}}

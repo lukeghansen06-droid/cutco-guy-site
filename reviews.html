@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Reviews &amp; Referrals &mdash; CutcoWithLuke | Luke Hansen, North Shore Chicago</title>
-<meta name="description" content="Real reviews from real demos with Luke Hansen, your Cutco guy on the North Shore. Leave a review or refer a friend &mdash; every word here is genuine." />
+<title>Referrals &amp; Future Reviews | Luke Hansen, North Shore Chicago</title>
+<meta name="description" content="Refer a friend to Luke Hansen or leave a review after a real Cutco demo. Approved reviews will appear only after they are real and moderated." />
 <link rel="canonical" href="https://cutcowithluke.com/reviews" />
 <link rel="icon" type="image/png" href="/favicon.png" />
 <link rel="manifest" href="/manifest.json" />
@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="CutcoWithLuke" />
 <link rel="apple-touch-icon" href="/favicon.png" />
-<meta property="og:title" content="Reviews &amp; Referrals &mdash; CutcoWithLuke" />
-<meta property="og:description" content="Real reviews from real demos. Leave your own or refer a friend to Luke Hansen, your Cutco guy on the North Shore." />
+<meta property="og:title" content="Referrals &amp; Reviews &mdash; CutcoWithLuke" />
+<meta property="og:description" content="Real reviews, once approved. Leave your own or refer a friend to Luke Hansen, your Cutco guy on the North Shore." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://cutcowithluke.com/reviews" />
 <meta property="og:image" content="https://cutcowithluke.com/og-image.jpg" />
@@ -23,8 +23,8 @@
 <meta property="og:site_name" content="CutcoWithLuke" />
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Reviews &amp; Referrals &mdash; CutcoWithLuke" />
-<meta name="twitter:description" content="Real reviews from real demos with Luke Hansen, your Cutco guy on the North Shore." />
+<meta name="twitter:title" content="Referrals &amp; Reviews &mdash; CutcoWithLuke" />
+<meta name="twitter:description" content="Real reviews, once approved with Luke Hansen, your Cutco guy on the North Shore." />
 <meta name="twitter:image" content="https://cutcowithluke.com/og-image.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -392,7 +392,11 @@
   </div>
 </header>
 
-<a class="book-bar" href="/book">Book a Demo &rarr;</a>
+<nav class="book-bar" aria-label="Quick actions">
+  <a href="/book" data-ev="mobile_sticky_book_click">Book</a>
+  <a href="tel:+13126594280" data-ev="mobile_sticky_call_click">Call</a>
+  <a href="sms:+13126594280?&amp;body=Hi%20Luke!%20Quick%20question%3A%20" data-ev="mobile_sticky_text_click">Text</a>
+</nav>
 
 <main>
 
@@ -401,10 +405,10 @@
        ============================================================ -->
   <section id="reviews-intro">
     <div class="container" style="text-align:center">
-      <div class="eyebrow reveal">Real people, real demos</div>
-      <h1 class="reveal">Reviews &amp; Referrals</h1>
+      <div class="eyebrow reveal">Respectful referrals, real reviews only</div>
+      <h1 class="reveal">Referrals &amp; Reviews</h1>
       <p class="sub reveal" style="margin-bottom:var(--space-4)">
-        Every word on this page comes from an actual person I've worked with &mdash; no stock quotes, no made-up names, no placeholders. If we've met, I'd love to hear from you. If you know someone I should meet, I'd be grateful for the introduction.
+        I&rsquo;m only showing approved reviews from actual demos. There are no placeholder quotes here. If we&rsquo;ve met, I&rsquo;d love to hear from you; if you know someone I should meet, I&rsquo;d be grateful for a respectful introduction.
       </p>
       <div class="reveal" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
         <span class="pill">100% real reviews only</span>
@@ -419,7 +423,7 @@
        ============================================================ -->
   <section id="reviews-section">
     <div class="container">
-      <h2 class="reveal">What people are saying</h2>
+      <h2 class="reveal">Approved reviews will appear here</h2>
       <p class="sub reveal" style="text-align:center;margin-bottom:var(--space-5)">
         Had a good experience with me? I'd love it if you added yours below.
       </p>
@@ -428,7 +432,7 @@
       <div id="reviews-list" data-mount="reviews">
         <div class="reviews-empty reveal">
           <p style="margin:0;font-size:1.05rem">
-            <strong>Real reviews only.</strong><br>
+            <strong>No approved public reviews yet.</strong><br>
             This page will show approved customer notes as they come in. If we've met,
             you can add yours with the form below.
           </p>
@@ -695,21 +699,5 @@
 <script type="module" src="/assets/reviews-ui.js"></script>
 <script type="module" src="/assets/lead-ui.js"></script>
 
-<!-- ===== Sticky mobile CTA (added by CutcoWithLuke upgrade) ===== -->
-<style>
-  #cwl-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;gap:.55rem;padding:.6rem;
-    background:linear-gradient(0deg,rgba(7,11,20,.97),rgba(7,11,20,.72));backdrop-filter:blur(12px);border-top:1px solid var(--line)}
-  #cwl-sticky a{flex:1;text-align:center;text-decoration:none;font-family:var(--font-ui,inherit);font-weight:700;
-    border-radius:12px;padding:.8rem .5rem;font-size:.95rem}
-  #cwl-sticky .s-gold{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#241a06}
-  #cwl-sticky .s-cyan{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#04121b}
-  @media(max-width:720px){#cwl-sticky{display:flex}body{padding-bottom:74px}}
-  @media(prefers-reduced-motion:reduce){#cwl-sticky{backdrop-filter:none}}
-</style>
-<div id="cwl-sticky" aria-label="Quick actions">
-  <a class="s-gold" href="#refer">Refer a friend</a>
-  <a class="s-cyan" href="/book">Book a demo</a>
-</div>
-<!-- ===== end sticky mobile CTA ===== -->
 </body>
 </html>
