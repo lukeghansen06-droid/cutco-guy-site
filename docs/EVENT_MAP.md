@@ -53,7 +53,9 @@ Unknown types are silently ignored by `api/track.js`.
 | `thanks_review_click`, `share_click`, `save_contact_click` | /thanks, /card | post-demo favors | referral engine | Referral signals |
 | `knife_audit_text_luke` | /find | knife-drawer photo CTA | lead magnet health | Hot leads |
 | `insight_finder_click` | home, /find | insight-card CTA | insight card ROI | (raw feed) |
-| `review_submitted` / `lead_form_submit` | — | **not events**: real submissions live in KV (`reviews:pending`, `leads:v1`) and email — higher-trust records than analytics | — | counts via /api/admin-ops |
+| `lead_submitted` | /book | Valid lead saved successfully; no contact details enter analytics | GA4 + first-party conversion | Lead conversion |
+| `demo_booked` | /book | Calendly emits `calendly.event_scheduled` after a completed booking | Canonical booking conversion | Booking conversion |
+| `review_submitted` | — | **not an analytics event**: real submissions live in Supabase (`reviews`, pending) — a higher-trust record than analytics | — | counts via /api/admin-ops |
 
 ## Attribution context (not events)
 

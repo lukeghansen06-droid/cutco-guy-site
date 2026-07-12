@@ -75,6 +75,44 @@ if (typeof document !== "undefined") {
     }
     loadVercelAnalyticsIfAllowed();
 
+    // Optional GA4. The ID is served from /api/public-config only when the
+    // GA4_MEASUREMENT_ID Vercel env var is configured. No ID = no script.
+    window.CutcoAnalytics = {
+      conversion: function (name, params) {
+        if (window.__cutcoNoTrack) return;
+        var safeName = String(name || "").replace(/[^a-z0-9_]/gi, "").slice(0, 40);
+        if (!safeName) return;
+        try {
+          if (typeof window.gtag === "function") window.gtag("event", safeName, params || {});
+        } catch (e) {}
+        try {
+          if (navigator.sendBeacon) navigator.sendBeacon("/api/track", new Blob([
+            JSON.stringify({ t: "ev", l: safeName })
+          ], { type: "application/json" }));
+        } catch (e) {}
+      }
+    };
+
+    async function loadGa4IfConfigured() {
+      if (!analyticsAllowedFrom(currentEnv())) return;
+      try {
+        var response = await fetch("/api/public-config", { cache: "no-store" });
+        if (!response.ok) return;
+        var config = await response.json();
+        var id = String(config.ga4MeasurementId || "");
+        if (!/^G-[A-Z0-9]{6,20}$/i.test(id)) return;
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+        window.gtag("js", new Date());
+        window.gtag("config", id, { anonymize_ip: true });
+        var script = document.createElement("script");
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+        document.head.appendChild(script);
+      } catch (e) {}
+    }
+    loadGa4IfConfigured();
+
     // Tiny API used by the /stats Owner No-Track card.
     window.CutcoOwnerTrack = {
       isExcluded: function () { try { return localStorage.getItem(FLAG) === "1"; } catch (e) { return false; } },
@@ -223,6 +261,23 @@ if (typeof document !== "undefined") {
         } catch (e) {}
       });
     } catch (e) {}
+
+    // A true Calendly completion, not merely a click. This is the canonical
+    // `demo_booked` conversion and reveals the post-booking confirmation.
+    window.addEventListener("message", (event) => {
+      try {
+        const host = new URL(event.origin).hostname;
+        if (host !== "calendly.com" && !host.endsWith(".calendly.com")) return;
+      } catch (e) { return; }
+      if (!event.data || event.data.event !== "calendly.event_scheduled") return;
+      window.CutcoAnalytics && window.CutcoAnalytics.conversion("demo_booked", { method: "calendly" });
+      const confirmation = document.querySelector("[data-booking-confirmation]");
+      if (confirmation) {
+        confirmation.hidden = false;
+        confirmation.scrollIntoView({ behavior: "smooth", block: "center" });
+        confirmation.focus({ preventScroll: true });
+      }
+    });
 
     // --- Path context: clicking a "start with your situation" card remembers
     //     the lane (safe label from our own data-path attribute, no free text).

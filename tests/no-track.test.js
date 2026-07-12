@@ -63,3 +63,15 @@ test("app.js injects the analytics loader (gated)", () => {
   expect(src.includes("loadVercelAnalyticsIfAllowed")).toBe(true);
   expect(src.includes("/_vercel/insights/script.js")).toBe(true);
 });
+
+test("GA4 and Calendly conversions are optional, gated, and use real completion events", () => {
+  const app = readFileSync("assets/app.js", "utf8");
+  const lead = readFileSync("assets/lead-ui.js", "utf8");
+  const book = readFileSync("book.html", "utf8");
+  expect(app.includes("/api/public-config")).toBe(true);
+  expect(app.includes("calendly.event_scheduled")).toBe(true);
+  expect(app.includes('conversion("demo_booked"')).toBe(true);
+  expect(app.includes('endsWith(".calendly.com")')).toBe(true);
+  expect(lead.includes("conversion('lead_submitted'")).toBe(true);
+  expect(book.includes("data-booking-confirmation")).toBe(true);
+});

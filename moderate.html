@@ -33,6 +33,7 @@
   .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0e2a2f;border:1px solid var(--line);
          color:#d7fff0;padding:11px 18px;border-radius:12px;font-size:14px;opacity:0;transition:.25s;pointer-events:none}
   .toast.show{opacity:1}
+  .template{white-space:pre-wrap;color:var(--ink);font-size:14px;margin:0}
 </style>
 </head>
 <body>
@@ -48,6 +49,24 @@
   <div id="app" style="display:none">
     <h1>Review moderation</h1>
     <p class="sub">Approve a review to put it live on your site. Reject to delete it.</p>
+
+    <h2>📨 Review request toolkit</h2>
+    <div class="card">
+      <p class="template" id="reviewText">Hi! Thanks again for letting me help with your Cutco. If you have 60 seconds, would you leave an honest review about your experience? No pressure and please use your own words: https://cutcowithluke.com/reviews#leave-review</p>
+      <div class="row"><button type="button" class="btn" data-copy="reviewText">Copy text request</button></div>
+    </div>
+    <div class="card">
+      <p class="template" id="reviewEmail">Subject: Quick favor after your Cutco demo
+
+Thanks again for your time. If the demo or follow-up was helpful, I’d appreciate an honest review in your own words. It takes about a minute:
+
+https://cutcowithluke.com/reviews#leave-review
+
+Thank you,
+Luke</p>
+      <div class="row"><button type="button" class="btn" data-copy="reviewEmail">Copy email request</button></div>
+    </div>
+    <p class="sub">Send only to real customers or demo participants. No incentives, scripts presented as testimonials, or invented reviews.</p>
 
     <h2>⏳ Waiting for you <span class="count" id="pendCount">0</span></h2>
     <div id="pending"></div>
@@ -94,6 +113,10 @@
     document.querySelectorAll('[data-approve]').forEach(function(b){ b.onclick=function(){ act('approve', b.getAttribute('data-approve')); }; });
     document.querySelectorAll('[data-reject]').forEach(function(b){ b.onclick=function(){ act('reject', b.getAttribute('data-reject')); }; });
     document.querySelectorAll('[data-unpublish]').forEach(function(b){ b.onclick=function(){ act('unpublish', b.getAttribute('data-unpublish')); }; });
+    document.querySelectorAll('[data-copy]').forEach(function(b){ b.onclick=function(){
+      var el=$(b.getAttribute('data-copy')); if(!el)return;
+      navigator.clipboard.writeText(el.textContent.trim()).then(function(){toast('Copied ✓');}).catch(function(){toast('Copy failed — select the text manually');});
+    }; });
   }
 
   function act(action, id){

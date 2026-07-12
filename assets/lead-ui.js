@@ -111,6 +111,9 @@ function wireLeadForm() {
     if (submitBtn) submitBtn.disabled = false;
 
     if (result.ok) {
+      if (window.CutcoAnalytics) {
+        window.CutcoAnalytics.conversion('lead_submitted', { method: contactType });
+      }
       showConfirmation(form, name);
     } else {
       showStatus(statusRegion, errMsg(result.error), 'error');
