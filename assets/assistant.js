@@ -69,7 +69,6 @@ function listSms() {
 const CTA = {
   finder:    { label: 'Start the Finder',        ev: 'assistant_start_finder_click', finder: true },
   bookFull:  { label: 'Book the Full Experience', href: BOOK, ev: 'assistant_book_click' },
-  bookQuick: { label: 'Book the Quick 20',        href: BOOK, ev: 'assistant_book_click' },
   official:  { label: 'View official Cutco page', href: CUTCO_PRODUCTS, ev: 'official_cutco_link_click', external: true },
   text: (msg) => ({ label: 'Text Luke', href: smsBody(msg || 'Hi Luke! I have a quick Cutco question:'), ev: 'assistant_text_luke_click' }),
   price: (name) => ({ label: 'Ask Luke to confirm price', href: smsBody('Hi Luke! Can you confirm the current price for' + (name ? (': ' + name) : ' a few pieces') + '?'), ev: 'assistant_price_check_click' }),
@@ -345,7 +344,7 @@ function reply(q) {
     return { t: `Perfect \u2014 tell me exactly what you own (just list the pieces, like \u201cPetite Chef, table knives, shears\u201d) and I\u2019ll tell you the honest gaps worth filling and what to skip. And remember: sharpening what you already own is <strong>free for life</strong>.`, ctas: [CTA.text('Hi Luke! I already own some Cutco \u2014 here\u2019s my list: '), CTA.explore('all', 'Browse the catalog')], chips: ['Sharpening help', 'Best 1\u20133 pieces'] };
   // sharpening / guarantee / damage
   if (/(sharpen|dull|damage|damaged|broke|broken|chip|guarantee|warranty|forever|replace|lifetime|repair|service)/.test(n))
-    return { t: `Cutco's <strong>Forever Guarantee</strong> is the real deal: free sharpening for life, plus repair or replacement if a knife ever fails to perform (small return-shipping fee). It even transfers with the product, so gifts and hand-me-downs are covered. Send yours in — or Luke can walk you through it.`, ctas: [CTA.text('Hi Luke! I need help with sharpening / the guarantee.'), CTA.bookQuick], chips: ['I already own Cutco', 'Is this pushy?'] };
+    return { t: `Cutco's <strong>Forever Guarantee</strong> is the real deal: free sharpening for life, plus repair or replacement if a knife ever fails to perform (small return-shipping fee). It even transfers with the product, so gifts and hand-me-downs are covered. Send yours in — or Luke can walk you through it.`, ctas: [CTA.text('Hi Luke! I need help with sharpening / the guarantee.'), CTA.bookFull], chips: ['I already own Cutco', 'Is this pushy?'] };
 
   // pricing — HONEST, no "live", no invented numbers
   if (/(price|prices|cost|how much|expensive|afford|budget|cheap|worth it|overpriced|justify|payment|financ|installment)/.test(n))
@@ -365,19 +364,19 @@ function reply(q) {
 
   // pushy / MLM / Vector
   if (/(pushy|pressure|sales pitch|mlm|pyramid|scam|vector|recruit|is it (a )?)/.test(n))
-    return { t: `No. The point is to see the pieces, ask questions, and decide what actually fits — you don't have to buy anything. It's not MLM: Luke doesn't recruit you, and you buy directly from Cutco at the same prices shown on cutco.com.`, ctas: [CTA.bookQuick, CTA.text("Hi Luke! I'm curious but no-pressure — can you help?")], chips: ['How long is a demo?', 'Do I have to buy anything?'] };
+    return { t: `No. The point is to see the pieces, ask questions, and decide what actually fits — you don't have to buy anything. It's not MLM: Luke doesn't recruit you, and you buy directly from Cutco at the same prices shown on cutco.com.`, ctas: [CTA.bookFull, CTA.text("Hi Luke! I'm curious but no-pressure — can you help?")], chips: ['How long is a demo?', 'Do I have to buy anything?'] };
 
   // demo / book
   if (/(demo|book|booking|appointment|meet|meeting|schedule|show me|in person|video call)/.test(n))
-    return { t: `The <strong>Full Experience</strong> is best if you want to actually see the pieces (about an hour — the rope cut, tomatoes, the works). The <strong>Quick 20</strong> is better if you already know what you want or just have a few questions.`, ctas: [CTA.bookFull, CTA.bookQuick], chips: ['How long is a demo?', 'Do I have to buy anything?'] };
+    return { t: `The <strong>Full Experience</strong> is the one to book — about an hour: the rope cut, tomatoes, the works, and time to actually talk it through. The Quick 20 exists only if you <em>already know exactly what you want</em> — text Luke for that one.`, ctas: [CTA.bookFull, CTA.text('Hi Luke! I already know what I want — can we set up a quick call?')], chips: ['How long is a demo?', 'Do I have to buy anything?'] };
 
   // demo length
   if (/(how long|duration|how much time|take long)/.test(n))
-    return { t: `Two options: the <strong>Full Experience</strong> runs about an hour (the fun one — you see everything), or the <strong>Quick 20</strong> is roughly 20 minutes if you just need answers. Both are in person or over video.`, ctas: [CTA.bookFull, CTA.bookQuick] };
+    return { t: `The <strong>Full Experience</strong> runs about an hour — Luke's flexible, but the hour is the fun version: you see everything and there's time to actually talk, no rush. In person or over video. (Already know exactly what you want? Text Luke — that takes about 20 minutes.)`, ctas: [CTA.bookFull, CTA.text('Hi Luke! I already know what I want — can we set up a quick call?')] };
 
   // obligation
   if (/(have to buy|obligation|commit|forced|pressure to buy|do i need to)/.test(n))
-    return { t: `Nope — zero obligation. Come see the pieces, ask questions, and decide later. Plenty of people just want a look, and that's genuinely welcome.`, ctas: [CTA.bookQuick, CTA.text()], chips: ['Is this pushy?', 'How long is a demo?'] };
+    return { t: `Nope — zero obligation. Come see the pieces, ask questions, and decide later. Plenty of people just want a look, and that's genuinely welcome.`, ctas: [CTA.bookFull, CTA.text()], chips: ['Is this pushy?', 'How long is a demo?'] };
 
   // referral
   if (/(referr?al|refer|friend who|know someone|recommend luke|send a friend)/.test(n))
@@ -401,11 +400,11 @@ function reply(q) {
   if (/(made in|where.*made|usa|american|america)/.test(n))
     return { t: `Cutco has been made in the USA (Olean, New York) since 1949 — built to be kept for life, sharpened, used daily, and handed down. Want a starting point? Tell me how you cook.`, ctas: [CTA.finder] };
   if (/(who are you|about luke|about you|your story|who is luke|meet luke)/.test(n))
-    return { t: `Luke Hansen is your Cutco guy — a 2026 Cutco Key Salesman on the North Shore (Winnetka). Honest help, straight answers, and you decide what fits.`, ctas: [{ label: 'Meet Luke', href: '/meet', ev: 'assistant_text_luke_click' }, CTA.bookQuick] };
+    return { t: `Luke Hansen is your Cutco guy — a 2026 Cutco Key Salesman on the North Shore (Winnetka). Honest help, straight answers, and you decide what fits.`, ctas: [{ label: 'Meet Luke', href: '/meet', ev: 'assistant_text_luke_click' }, CTA.bookFull] };
   if (/(ship|shipping|deliver|delivery|arrive|tracking)/.test(n))
     return { t: `Most Cutco orders arrive in about <strong>2–4 business days</strong>, and Luke keeps you posted from order to doorstep.`, ctas: [CTA.text()] };
   if (/(return|refund|money back|money-back|trial|send it back)/.test(n))
-    return { t: `New purchases come with a <strong>15-day money-back guarantee</strong>, and after that the Forever Guarantee covers sharpening, repair, and replacement for life. About as low-risk as it gets.`, ctas: [CTA.bookQuick] };
+    return { t: `New purchases come with a <strong>15-day money-back guarantee</strong>, and after that the Forever Guarantee covers sharpening, repair, and replacement for life. About as low-risk as it gets.`, ctas: [CTA.bookFull] };
   if (/(special|sale|deal|discount|promo|coupon|offer)/.test(n))
     return { t: `Cutco runs rotating specials and owner-only offers that change month to month. Here's the official page: <a href="${CUTCO_SPECIALS}" target="_blank" rel="noopener" data-ev="official_cutco_link_click">current specials ↗</a>. Or ask Luke what's best right now.`, ctas: [CTA.text("Hi Luke! What Cutco specials are running right now?")] };
 
