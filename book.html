@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&family=Sora:wght@700;800&display=swap" />
-<link rel="stylesheet" href="/assets/styles.css" />
+<link rel="stylesheet" href="/assets/styles.css?v=20260721" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -209,9 +209,11 @@
       </div>
 
       <div class="reveal" style="max-width:820px;margin:0 auto">
-        <!-- BOOKING CONFIG — currently ONE real Calendly event exists ("Cutco Demo",
-             /30min). The demo is about an hour — the /30min slug is legacy; the
-             Calendly event's duration should be set to 60 minutes in Calendly.
+        <!-- BOOKING CONFIG — ONE real Calendly event exists ("Cutco Demo", /30min).
+             VERIFIED in Calendly 2026-07-21: duration IS 60 minutes, Google Meet,
+             rolling 60-day booking window (was a fixed range that expired Jul 27).
+             The /30min slug is legacy but KEPT deliberately — renaming it would
+             break every previously shared link and the 13 links on this site.
              the Quick-20 SMS links with:
                FULL_HOUR_CALENDLY_URL (60-min event)
                QUICK_20_CALENDLY_URL  (20-min event)
@@ -418,7 +420,7 @@
 </footer>
 
 <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<script type="module" src="/assets/app.js"></script>
+<script type="module" src="/assets/app.js?v=20260721"></script>
 <script type="module" src="/assets/lead-ui.js"></script>
 <script type="module">
 // demo_preview_viewed — fires once when the Demo Preview Theater scrolls into view.
