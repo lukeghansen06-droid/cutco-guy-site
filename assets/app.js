@@ -163,10 +163,24 @@ if (typeof document !== "undefined") {
     // --- Mobile menu toggle ---
     const burger = document.querySelector("[data-burger]");
     const menu = document.querySelector("[data-menu]");
-    if (burger && menu) burger.addEventListener("click", () => {
-      const open = menu.toggleAttribute("data-open");
-      burger.setAttribute("aria-expanded", String(open));
-    });
+    if (burger && menu) {
+      const setOpen = (open) => {
+        menu.toggleAttribute("data-open", open);
+        burger.setAttribute("aria-expanded", String(open));
+      };
+      burger.addEventListener("click", () => {
+        setOpen(!menu.hasAttribute("data-open"));
+      });
+      menu.addEventListener("click", (e) => {
+        if (e.target.closest("a")) setOpen(false);
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menu.hasAttribute("data-open")) {
+          setOpen(false);
+          burger.focus();
+        }
+      });
+    }
 
     // --- Scroll reveal (adds .in to .reveal / .stagger when they enter view) ---
     const reveals = document.querySelectorAll(".reveal, .stagger");
@@ -188,6 +202,30 @@ if (typeof document !== "undefined") {
         // Safety net: if anything is still hidden after 2.5s, just show it.
         setTimeout(() => reveals.forEach(el => el.classList.add("in")), 2500);
       }
+    }
+
+    // --- Count-up: animate [data-count-up] numbers from 0 to their real DOM
+    //     value when scrolled into view. The value already in the markup is the
+    //     source of truth; no-JS and reduced-motion users just see it as-is. ---
+    const counters = document.querySelectorAll("[data-count-up]");
+    if (counters.length && !reduce && "IntersectionObserver" in window) {
+      const cio = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          cio.unobserve(en.target);
+          const el = en.target;
+          const target = parseInt(el.textContent.replace(/[^0-9]/g, ""), 10);
+          if (!target || target > 100000) return;
+          const t0 = performance.now(), dur = 900;
+          const tick = (t) => {
+            const p = Math.min(1, (t - t0) / dur);
+            el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        });
+      }, { threshold: 0.6 });
+      counters.forEach(el => cio.observe(el));
     }
 
     // --- Cursor spotlight glow (desktop, pointer devices only) ---
@@ -302,17 +340,12 @@ if (typeof document !== "undefined") {
     }, { passive: true });
   });
 
-  // --- Service worker: register the fresh (network-first) SW, replace any stale
-  //     one, and reload once when the new version takes control. ---
+  // --- Service worker: register the fresh (network-first) SW. No reload on
+  //     controllerchange — pages are network-first, so the next navigation is
+  //     already fresh; forced reloads interrupted forms and Calendly mid-flow. ---
   if ("serviceWorker" in navigator) {
     addEventListener("load", () => {
       navigator.serviceWorker.register("/sw.js").then((reg) => { reg.update(); }).catch(() => {});
-      let reloaded = false;
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
-        if (reloaded) return;
-        reloaded = true;
-        location.reload();
-      });
     });
   }
 }

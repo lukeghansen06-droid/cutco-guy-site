@@ -3,14 +3,19 @@
  * both use the SAME logic (no duplication). Exposes window.PriceStatus.
  *
  * Status model:
- *   "verified_snapshot" — has a hand-set June-2026 price (NOT live-verified).
+ *   "verified_snapshot" — has a hand-set snapshot price (NOT live-verified; dated PRICE_DATE).
  *   "needs_refresh"     — flagged stale (optional; none flagged today).
  *   "unavailable"       — no price on record.
  *
  * Rules baked in: never says "live"/"current"/"estimated"; never shows savings.
+ * PRICE_DATE / PRICE_MONTH are THE site-wide snapshot date — when the ops
+ * price-review job refreshes prices, bump them here (and the static prose in
+ * index/book/faq that names the month).
  */
 (function () {
-  var SNAP_LABEL = 'June 2026 snapshot — confirm current price';
+  var PRICE_DATE = 'July 17, 2026';
+  var PRICE_MONTH = 'July 2026';
+  var SNAP_LABEL = PRICE_MONTH + ' snapshot — confirm current price';
   var NEEDS = new Set(); // product names manually flagged needs_refresh (none today)
 
   function statusOf(name, price) {
@@ -40,5 +45,5 @@
     return '<a class="pofficial" href="' + url + '" target="_blank" rel="noopener" data-ev="official_cutco_link_click">' + (label || 'View official Cutco page &rarr;') + '</a>';
   }
 
-  window.PriceStatus = { SNAP_LABEL: SNAP_LABEL, statusOf: statusOf, priceBlock: priceBlock, officialLink: officialLink };
+  window.PriceStatus = { SNAP_LABEL: SNAP_LABEL, PRICE_DATE: PRICE_DATE, PRICE_MONTH: PRICE_MONTH, statusOf: statusOf, priceBlock: priceBlock, officialLink: officialLink };
 })();

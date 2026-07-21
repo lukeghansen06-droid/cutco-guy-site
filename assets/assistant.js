@@ -10,7 +10,7 @@
  *   user-supplied content. Product names come from our own PRODUCTS array.
  *
  * PRICING: never states exact prices and never calls pricing "live" or current —
- *   it points to the June 2026 snapshot on the site + official Cutco page + Luke.
+ *   it points to the dated snapshot on the site (PriceStatus.PRICE_MONTH) + official Cutco page + Luke.
  */
 
 // ---------------------------------------------------------------------------
@@ -348,7 +348,7 @@ function reply(q) {
 
   // pricing — HONEST, no "live", no invented numbers
   if (/(price|prices|cost|how much|expensive|afford|budget|cheap|worth it|overpriced|justify|payment|financ|installment)/.test(n))
-    return { t: `Prices can change, so treat anything on the site as a <strong>June 2026 snapshot</strong> and confirm current pricing through Luke or the official Cutco page. There's a range for every budget — from a single starter knife to full sets — and Luke can talk through payment options too.`, recs: recs.length ? recs : matchProducts('starter set', 2), ctas: [CTA.official, CTA.price()], chips: ['Best 1–3 pieces', 'Is this worth it?'] };
+    return { t: `Prices can change, so treat anything on the site as a <strong>${(window.PriceStatus&&PriceStatus.PRICE_MONTH)||'July 2026'} snapshot</strong> and confirm current pricing through Luke or the official Cutco page. There's a range for every budget — from a single starter knife to full sets — and Luke can talk through payment options too.`, recs: recs.length ? recs : matchProducts('starter set', 2), ctas: [CTA.official, CTA.price()], chips: ['Best 1–3 pieces', 'Is this worth it?'] };
 
   // referred visitor (checked BEFORE the make-a-referral intent below)
   if (/(i was referred|was referred|someone (sent|referred) me|got your (site|number) from|friend sent me)/.test(n))

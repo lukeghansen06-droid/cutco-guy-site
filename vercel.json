@@ -5,30 +5,81 @@
     {
       "source": "/sw.js",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
-        { "key": "Service-Worker-Allowed", "value": "/" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
       ]
     },
     {
       "source": "/(.*)\\.(jpg|jpeg|png|webp|avif|gif|svg|ico|woff2)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
       ]
     },
     {
       "source": "/assets/(.*)\\.(css|js)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
       ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Permissions-Policy", "value": "browsing-topics=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "browsing-topics=()"
+        }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/catalog",
+      "destination": "/find#explore",
+      "permanent": false
+    },
+    {
+      "source": "/shop",
+      "destination": "/find#explore",
+      "permanent": false
+    },
+    {
+      "source": "/demo",
+      "destination": "/book",
+      "permanent": false
+    },
+    {
+      "source": "/refer",
+      "destination": "/reviews#referrals",
+      "permanent": false
+    },
+    {
+      "source": "/refer-a-friend",
+      "destination": "/reviews#referrals",
+      "permanent": false
     }
   ]
 }

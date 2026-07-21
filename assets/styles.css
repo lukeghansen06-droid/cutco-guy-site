@@ -8,7 +8,6 @@
 /* Pages should also add <link rel="preconnect" href="https://fonts.googleapis.com">
    and <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    in <head> before this stylesheet for fastest load. */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
 
 /* --- 1. Design Tokens ------------------------------------- */
 :root {
@@ -245,7 +244,47 @@ img, video {
 .site-header__nav a:hover { color: #fff; }
 
 @media (max-width: 760px) {
-  .site-header__nav a:not(.btn) { display: none; }
+  .site-header__nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: var(--space-2) var(--space-4) var(--space-4);
+    background: rgba(7,11,20,.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+  }
+  .site-header__nav[data-open] {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity .22s ease, transform .22s ease;
+  }
+  .site-header__nav a:not(.btn) {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    border-bottom: 1px solid var(--line);
+    font-size: 1rem;
+  }
+  .site-header__nav a:not(.btn):last-of-type { border-bottom: 0; }
+}
+
+@media (min-width: 761px) {
+  [data-burger] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header__nav { transition: none; }
 }
 
 /* --- 7. Site Footer --------------------------------------- */
@@ -526,7 +565,7 @@ img, video {
   border: 1px solid var(--line);
   border-radius: 10px;
   color: var(--ink);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-base); /* 16px floor: prevents iOS Safari focus-zoom */
   transition: border-color var(--dur) var(--ease);
 }
 .asst-input::placeholder { color: var(--mut); }
@@ -1200,3 +1239,37 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .proof-badges span{display:inline-flex;align-items:center;min-height:32px;padding:.35rem .72rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.035)}
 .proof-badges span:nth-child(3),.proof-badges span:nth-child(4){border-color:rgba(251,191,36,.28);color:#f6d28a;background:rgba(251,191,36,.07)}
 @media(max-width:520px){.proof-badges{justify-content:flex-start}.hero-section .proof-badges,.section[style*="text-align:center"] .proof-badges{justify-content:center}}
+
+/* --- Touch devices: neutralize hover-lift effects (prevents iOS sticky first-tap) --- */
+@media (hover: none) {
+  .path-card:hover,
+  .shot:hover,
+  .famphoto:hover { transform: none; box-shadow: none; }
+}
+
+/* --- Page-to-page View Transitions (progressive enhancement) --- */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+/* --- Scroll progress "knife edge" (scroll-driven; no-ops where unsupported) --- */
+@supports (animation-timeline: scroll()) {
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    z-index: 99;
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--cyan), #a5b4fc, var(--gold));
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    animation: cutco-progress linear both;
+    animation-timeline: scroll(root);
+  }
+  @keyframes cutco-progress { to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) {
+    body::before { display: none; }
+  }
+}

@@ -1,7 +1,8 @@
 /* assets/explorer.js — "Explore every Cutco piece" on /find.
  * Ported from the original single-page explorer. Self-contained: bails if #expGrid is absent.
  * Images are served locally from /assets/products/<SKU>.jpg (Cutco CDN is referer-blocked cross-origin).
- * Real Cutco prices as of June 2026 — never auto-updates; always links cutco.com to confirm.
+ * Snapshot Cutco prices (dated via PriceStatus.PRICE_DATE) — refreshed by the ops
+ * price-review job; always links cutco.com to confirm the current price.
  */
 (function(){
   function track(t,l){
@@ -12,7 +13,7 @@
       else { fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:data,keepalive:true}).catch(function(){}); }
     }catch(e){}
   }
-  track('page','home');
+  track('page','find');
   document.addEventListener('click',function(e){
     var a=e.target&&e.target.closest?e.target.closest('a'):null; if(!a) return;
     var href=a.getAttribute('href')||'';
@@ -144,8 +145,11 @@
       'Table Knife':'1759CSH','Stainless Table Knife':'1959','Steak Knife':'2159CSH','Table Knife Sets (4–12 pc)':'1869C','4-Pc. Steak Knife Set':'2065C','Hunting Knife':'1769C','Gut Hook Hunting Knife':'5717BK','Drop Point Hunting Knife':'5718BK','Clip Point Outdoor Knife':'5719BK','CUTCO/KA-BAR Outdoorsman':'5726','CUTCO/KA-BAR Explorer':'5725','Fisherman’s Solution':'5721BK','Pocket Knife':'1886BK','2-3/4" Lockback Knife':'1891BK','Golf Mate':'1890BK','Homemaker +8 Set with Block':'2018C','Homemaker Set with Block':'2001C','Homemaker Set with Trays':'2000C','Galley + 6 Set with Block':'2008C','Galley Set with Block':'2007C','Gourmet Set with Block':'1805C','Studio Set with Block':'1809C','Essentials Set with Block':'1845C','Kitchenette Set with Tray':'1783C','Space Saver Set with Block':'1847C','Signature Set with Block':'1814C','Ultimate Set with Block':'1813C','The Complete Kitchen Collection':'6815C','3-Pc. Knife & Sheath Set':'2031C','5-Pc. Knife & Sheath Set':'2035C','Kitchen Classics (3-Pc.)':'1827CD','Carving Set':'1834CD','Welcome Home Set':'3826CD','Salad Mates':'1820CD','Wine & Cheese Set':'2130CD','Cook’s Combo (Petite Chef + Trimmer)':'1853CD'
     };
     function imgUrl(name){ var c=IMG[name]; return c?(IB+c+IS):''; }
-    // current Cutco prices (USD) — kept fresh by a scheduled refresh
-    var PRICE_UPDATED='July 17, 2026';
+    // Snapshot Cutco prices (USD) — hand-refreshed via the ops price-review job.
+    // The displayed date comes from PriceStatus (assets/price-status.js), the
+    // site-wide single source of truth for the snapshot label.
+    var PRICE_UPDATED=(window.PriceStatus&&window.PriceStatus.PRICE_DATE)||'July 17, 2026';
+    var PRICE_MONTH=(window.PriceStatus&&window.PriceStatus.PRICE_MONTH)||'July 2026';
     var PRICES={
       '9-1/4" French Chef':'$200','7-5/8" Petite Chef':'$183','7" Santoku':'$184','5" Petite Santoku':'$164','Santoku-Style Trimmer':'$104','Trimmer (Utility Knife)':'$98','4" Vegetable Knife':'$153','6" Vegetable Knife':'$174','7-1/2" Vegetable Knife':'$201','2-3/4" Paring Knife':'$85','4" Paring Knife':'$91','Gourmet Paring Knife':'$85','Bird’s Beak Paring Knife':'$91','9" Carver':'$149','6-3/4" Petite Carver':'$142','9-3/4" Slicer (Bread Knife)':'$150','Petite Slicer (Bread Knife)':'$146','Cleaver':'$275','Butcher Knife':'$169','Boning Knife':'$132','Salmon Knife':'$162','Hardy Slicer':'$191','Gourmet Prep Knife':'$191','Cheese Knife':'$98','Traditional Cheese Knife':'$118','Spatula Spreader':'$97',
       'Super Shears':'$149','Vegetable Peeler':'$57','Ice Cream Scoop':'$61','Pizza Cutter':'$73','Can Opener':'$73','Wine Opener':'$67','Knife Sharpener':'$68','Mix-Stir':'$66','Slotted Turner':'$66','Serving Spoons & Ladle':'from $66','Potato Masher':'$81','Carving / Turning Fork':'from $75','Cutting Boards':'from $35','Kitchen Tool Sets (5–6 pc)':'from $354','Slice n’ Serve / Turn n’ Serve':'from $76','Gourmet Fry Pans (8/10/12")':'from $267','Sauce Pans (1/2/3 Qt)':'from $359','11-1/2" Skillet & Cover':'$600','Dutch Oven (4 / 6.3 Qt)':'from $430','10 Qt. Stock Pot':'$792','Wok & Cover':'$800','Steamer / Double Boiler Inserts':'from $142','Cookware Sets (Aspiring→Complete)':'from $1,617','Stainless Place Settings':'from $156','60-Pc. Flatware Set in Chest':'$1,881','Serving & Hostess Sets':'from $181','Individual Flatware':'from $39',
@@ -195,7 +199,7 @@
       var card=document.createElement('div'); card.className='pcard'+(isSet?' is-set':'');
       var iu=imgUrl(p.n);
       var pic=iu
-        ? '<div class="pic"><img src="'+iu+'" alt="'+esc(p.n)+'" decoding="async" onerror="var pp=this.parentNode;this.remove();var s=pp&&pp.querySelector(\'svg\');if(s)s.style.display=\'\'"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:none">'+(ICONS[p.ic]||ICONS.knife)+'</svg></div>'
+        ? '<div class="pic"><img src="'+iu+'" alt="'+esc(p.n)+'" loading="lazy" decoding="async" onerror="var pp=this.parentNode;this.remove();var s=pp&&pp.querySelector(\'svg\');if(s)s.style.display=\'\'"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:none">'+(ICONS[p.ic]||ICONS.knife)+'</svg></div>'
         : '<div class="pic"><svg viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[p.ic]||ICONS.knife)+'</svg></div>';
       var pr=PRICES[p.n], pp=parsePrice(pr);
       var val=VALUES[p.n];
@@ -203,7 +207,7 @@
       var priceTxt=pr?(pp?(money(pp.num)+(pp.from?'+':'')):pr):null;
       var priceHtml=(window.PriceStatus
         ? window.PriceStatus.priceBlock(p.n, priceTxt)
-        : (priceTxt?('<div class="pprice">'+esc(priceTxt)+'</div><div class="psnap">June 2026 snapshot — confirm current price</div>'):'<div class="pask">Ask Luke to confirm price</div>'));
+        : (priceTxt?('<div class="pprice">'+esc(priceTxt)+'</div><div class="psnap">'+PRICE_MONTH+' snapshot — confirm current price</div>'):'<div class="pask">Ask Luke to confirm price</div>'));
       var easyHtml=(pp && showEasy(p,pp.num))?('<div class="peasy">Interest-free EasyPay available — ask Luke</div>'):'';
       var setbadge=isSet?'<span class="settag">✦ Bundle</span>':'';
       var skipHtml=isSet?'<p class="pskip">Only need a few pieces? Skip the set — the Finder narrows it to 1–3.</p>':'';
@@ -269,12 +273,12 @@
       var allVerified = list.length>0 && priced===list.length;
       var totalHtml = allVerified
         ? ('<div class="cart-total"><div class="ct-row"><span>Listed snapshot total</span><strong>'+money(total)+(anyFrom?'+':'')+'</strong></div>'+
-           '<div class="ct-note">June 2026 snapshot — before tax, shipping, personalization, and current specials. Confirm current pricing with Luke or Cutco.</div>'+
+           '<div class="ct-note">'+PRICE_MONTH+' snapshot — before tax, shipping, personalization, and current specials. Confirm current pricing with Luke or Cutco.</div>'+
            '<div class="ct-easy">Interest-free EasyPay can split it into monthly payments — ask Luke.</div></div>')
         : ('<div class="cart-total"><div class="ct-row"><span>Some prices need confirmation.</span></div>'+
            '<div class="ct-note">A few items don’t have a listed price yet — text me and I’ll confirm current pricing.</div></div>');
       var fit=''; try{ var qf=JSON.parse(localStorage.getItem('cutcoFit')||'null'); if(qf&&qf.label) fit='Kitchen Fit: '+qf.label+(qf.answers?(' ('+qf.answers+')'):'')+'\n\n'; }catch(e){}
-      var raw='Hi Luke! Here’s my Cutco wish list from your site:\n\n'+fit+list.map(function(n,i){ var sku=IMG[n]||''; var pr=PRICES[n]; return (i+1)+'. '+n+(sku?(' ['+sku+']'):'')+(pr?(' — '+pr+' (June 2026 snapshot)'):' — price to confirm'); }).join('\n')+(allVerified?('\n\nListed snapshot total: '+money(total)+(anyFrom?'+':'')+' (before tax/shipping — please confirm current pricing)'):'\n\nSome prices need confirming — can you check?')+'\n\nCan we go over these? I’d love the full demo.';
+      var raw='Hi Luke! Here’s my Cutco wish list from your site:\n\n'+fit+list.map(function(n,i){ var sku=IMG[n]||''; var pr=PRICES[n]; return (i+1)+'. '+n+(sku?(' ['+sku+']'):'')+(pr?(' — '+pr+' ('+PRICE_MONTH+' snapshot)'):' — price to confirm'); }).join('\n')+(allVerified?('\n\nListed snapshot total: '+money(total)+(anyFrom?'+':'')+' (before tax/shipping — please confirm current pricing)'):'\n\nSome prices need confirming — can you check?')+'\n\nCan we go over these? I’d love the full demo.';
       var body=encodeURIComponent(raw);
       cFoot.innerHTML=totalHtml+
         '<a class="btn btn-grad" id="textListBtn" style="padding:13px" data-ev="my_list_text_luke" href="sms:+13126594280?&body='+body+'">Text my list to Luke</a>'+
@@ -295,7 +299,7 @@
     // dated price note + per-category counts in the dropdown
     (function(){
       var pn=document.getElementById('priceNote');
-      if(pn) pn.innerHTML='Prices shown are <strong>as of June 2026</strong> and are set by Cutco — always confirm the current price on <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">cutco.com</a> via “View ↗”. Set values are the “bought-separately” price. Interest-free <strong>EasyPay</strong> can split it into monthly payments — ask Luke.';
+      if(pn) pn.innerHTML='Prices shown are <strong>as of '+PRICE_MONTH+'</strong> and are set by Cutco — always confirm the current price on <a href="https://www.cutco.com/products/" target="_blank" rel="noopener">cutco.com</a> via “View ↗”. Set values are the “bought-separately” price. Interest-free <strong>EasyPay</strong> can split it into monthly payments — ask Luke.';
       Array.prototype.forEach.call(selectEl.options,function(o){
         if(!o.value) return;
         if(o.value==='all'){ o.textContent='Everything ('+P.length+' pieces)'; return; }

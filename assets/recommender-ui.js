@@ -403,7 +403,7 @@ function showResult() {
   const priceOf = (n) => (data && data.price) ? data.price(n) : '';
   const priceBlock = (name) => window.PriceStatus
     ? window.PriceStatus.priceBlock(name, priceOf(name))
-    : (priceOf(name) ? `<div class="pprice">${esc(priceOf(name))}</div><div class="psnap">June 2026 snapshot — confirm current price</div>` : '<div class="pask">Ask Luke to confirm price</div>');
+    : (priceOf(name) ? `<div class="pprice">${esc(priceOf(name))}</div><div class="psnap">${(window.PriceStatus&&PriceStatus.PRICE_MONTH)||'July 2026'} snapshot — confirm current price</div>` : '<div class="pask">Ask Luke to confirm price</div>');
 
   const badgeStar = result.badge.strong ? '★ ' : '';
   const diagnosis = DIAGNOSIS[result.lane] || 'Here’s the setup that best fits your answers.';
@@ -473,7 +473,7 @@ function showResult() {
         <a class="btn btn-ghost" href="#expGrid" data-ev="keep_browsing_products">Keep Browsing Products</a>
         <button type="button" class="btn btn-ghost rec-result-reset">Start Over</button>
       </div>
-      <p class="rec-note">Prices are a June 2026 snapshot set by Cutco &mdash; confirm current pricing on cutco.com. Not quite right? Change any answer above.</p>
+      <p class="rec-note">Prices are a ${(window.PriceStatus&&PriceStatus.PRICE_MONTH)||'July 2026'} snapshot set by Cutco &mdash; confirm current pricing on cutco.com. Not quite right? Change any answer above.</p>
     </div>
   `;
 
