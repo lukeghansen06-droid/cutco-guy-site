@@ -360,7 +360,7 @@ function reply(q) {
 
   // full vs quick chooser (checked BEFORE the generic demo intent)
   if (/(full or quick|quick or full|which (demo|one) (should|do)|full vs\.? quick|hour or 20)/.test(n))
-    return { t: `Simple rule: <strong>the hour is the full demo</strong> — rope cut, tomatoes, and time to compare pieces. <strong>The Quick 20 is for when you already know what you want</strong> — gift ideas, owner questions, or confirming a shortlist. If it's your first look at Cutco, take the hour.`, ctas: [CTA.bookFull, CTA.text('Hi Luke! Can we set up a quick 20-minute chat?')], chips: ['What happens in a demo?', 'Do I have to buy anything?'] };
+    return { t: `<strong>The hour is the demo</strong> — rope cut, tomatoes, time to compare pieces and actually talk. If it's your first look at Cutco, book the hour. The Quick 20 exists only if you <em>already know exactly what you want</em> (gift ideas, owner questions, confirming a shortlist) — text Luke for that.`, ctas: [CTA.bookFull, CTA.text('Hi Luke! I already know what I want — can we set up a quick call?')], chips: ['What happens in a demo?', 'Do I have to buy anything?'] };
 
   // pushy / MLM / Vector
   if (/(pushy|pressure|sales pitch|mlm|pyramid|scam|vector|recruit|is it (a )?)/.test(n))

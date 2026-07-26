@@ -1454,3 +1454,10 @@ h3,h4{font-family:var(--font-display);font-weight:600;color:var(--ink);letter-sp
 
 /* remove the old decorative glow-orbs (a hallmark of the AI-glow look) */
 .orb{display:none !important}
+
+/* ── Section 19d: neutralize page-level hero glow left in inner-page inline <style> ── */
+.hero-section::before{background:radial-gradient(52% 62% at 50% 0%, rgba(169,129,44,.05), transparent 70%) !important}
+.hero-portrait{box-shadow:0 0 0 1px var(--line), 0 22px 46px -20px rgba(60,40,20,.45) !important}
+.final-cta-section{background:radial-gradient(60% 90% at 50% 100%, rgba(169,129,44,.08), transparent 72%), var(--panel-2) !important}
+/* bare single-link book bar (owners/referred/what-to-expect): center it on mobile */
+@media(max-width:760px){a.book-bar{display:flex;align-items:center;justify-content:center;min-height:48px;font-weight:800;text-align:center}}
