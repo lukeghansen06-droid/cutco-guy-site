@@ -8,7 +8,7 @@
   <link rel="canonical" href="https://cutcowithluke.com/" />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#070b14" />
+  <meta name="theme-color" content="#f4eee2" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="CutcoWithLuke" />
@@ -47,8 +47,7 @@
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(40% 60% at 20% 10%, rgba(34,211,238,.10), transparent 65%),
-        radial-gradient(40% 50% at 80% 20%, rgba(99,102,241,.10), transparent 65%);
+        radial-gradient(52% 62% at 50% 0%, rgba(169,129,44,.06), transparent 70%);
     }
     .hero-section > .container { position: relative; z-index: 1; }
 
@@ -65,16 +64,8 @@
       margin-block: 0 var(--space-4);
     }
     .hero-gradient {
-      background: linear-gradient(105deg, var(--cyan) 0%, #a5b4fc 38%, var(--gold) 66%, var(--cyan) 100%);
-      background-size: 240% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: gradshift 9s linear infinite;
-    }
-    @keyframes gradshift { to { background-position: 240% center; } }
-    @media (prefers-reduced-motion: reduce) {
-      .hero-gradient { animation: none; background: none; color: var(--cyan); }
+      color: var(--brand);
+      font-style: italic;
     }
 
     .hero-lead {
@@ -87,16 +78,16 @@
     }
 
     .hero-portrait {
-      width: clamp(140px, 35vw, 200px);
-      height: clamp(140px, 35vw, 200px);
+      position: relative;
+      width: clamp(150px, 36vw, 212px);
+      height: clamp(150px, 36vw, 212px);
       border-radius: 50%;
-      overflow: hidden;
       margin-inline: auto;
       margin-block: 0 var(--space-5);
-      border: 2px solid var(--line);
+      border: 4px solid #fff;
       box-shadow:
-        0 0 0 6px rgba(34,211,238,.12),
-        0 20px 50px -16px rgba(0,0,0,.7);
+        0 0 0 1px var(--line),
+        0 22px 46px -20px rgba(60,40,20,.45);
     }
     .hero-portrait img {
       width: 100%;
@@ -104,6 +95,7 @@
       object-fit: cover;
       object-position: 46% 26%;
       display: block;
+      border-radius: 50%;
     }
 
     .hero-cta-row {
@@ -152,8 +144,8 @@
     }
     .path-card:hover {
       transform: translateY(-3px);
-      border-color: rgba(34,211,238,.4);
-      box-shadow: 0 12px 32px -12px rgba(34,211,238,.18);
+      border-color: rgba(166,58,40,.42);
+      box-shadow: 0 18px 36px -20px rgba(60,40,20,.4);
     }
     .path-icon {
       font-size: 2rem;
@@ -180,9 +172,48 @@
     /* ---- Final CTA section ---- */
     .final-cta-section {
       background:
-        radial-gradient(50% 80% at 50% 100%, rgba(34,211,238,.06), transparent 70%),
-        var(--bg);
+        radial-gradient(60% 90% at 50% 100%, rgba(169,129,44,.09), transparent 72%),
+        var(--panel-2);
+      border-top: 1px solid var(--line);
     }
+
+    /* ---- Heritage signatures: maker's seal, proof tags, knife rule ---- */
+    .hero-portrait .seal {
+      position: absolute;
+      right: -10px;
+      bottom: -4px;
+      width: clamp(58px, 15vw, 80px);
+      height: clamp(58px, 15vw, 80px);
+      color: var(--gold);
+      filter: drop-shadow(0 6px 14px rgba(60,40,20,.28));
+    }
+    .hero-portrait .seal svg { width: 100%; height: 100%; display: block; }
+    .hero-portrait .seal text { font-family: var(--font-mono); }
+    .seal-face { fill: var(--panel); }
+
+    .hero-h1 { font-weight: 600; line-height: 1.03; }
+
+    .proof-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 10px;
+      justify-content: center;
+      margin-top: var(--space-5);
+    }
+    .proof-badges span {
+      font-family: var(--font-mono);
+      font-size: .66rem;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: var(--mut);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 12px;
+    }
+
+    .hero-knife { margin: var(--space-6) auto 0; max-width: 640px; width: 100%; }
+    .hero-knife svg { color: var(--gold); }
   </style>
 <script type="application/ld+json">
 {
@@ -285,9 +316,24 @@
           fetchpriority="high"
           decoding="async"
         />
+        <span class="seal" aria-hidden="true"><svg viewBox="0 0 100 100">
+          <defs>
+            <path id="sealTop" d="M15,50 a35,35 0 0,1 70,0"/>
+            <path id="sealBot" d="M15,50 a35,35 0 0,0 70,0"/>
+          </defs>
+          <circle class="seal-face" cx="50" cy="50" r="48"/>
+          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width="0.7"/>
+          <text font-size="7.6" letter-spacing="0.8" font-weight="600" fill="currentColor"><textPath href="#sealTop" startOffset="50%" text-anchor="middle">FOREVER GUARANTEE</textPath></text>
+          <text font-size="7" letter-spacing="1.4" font-weight="600" fill="currentColor"><textPath href="#sealBot" startOffset="50%" text-anchor="middle">SINCE 1949</textPath></text>
+          <g fill="currentColor" transform="translate(50,53)">
+            <rect x="-20" y="-3" width="12.5" height="6" rx="2.6"/>
+            <path d="M-9,-3.4 L20,-1 L24,1 L-9,3.6 Z"/>
+          </g>
+        </svg></span>
       </figure>
 
-      <p class="hero-eyebrow">Winnetka &middot; North Shore Chicago &middot; DePauw University</p>
+      <p class="hero-eyebrow">Winnetka &middot; North Shore &middot; DePauw</p>
 
       <h1 id="hero-heading" class="hero-h1">
         Cutco demos with a<br>
@@ -309,6 +355,13 @@
   <span>Cutco Forever Guarantee</span>
   <span>Free sharpening for life</span>
 </div>
+
+      <div class="knife-rule hero-knife" aria-hidden="true">
+        <svg viewBox="0 0 132 22" width="132" height="22" fill="currentColor">
+          <rect x="2" y="7.5" width="34" height="7" rx="3.5"/>
+          <path d="M38,7 L124,9.4 L130,11 L38,15 Z"/>
+        </svg>
+      </div>
 
     </div>
   </section>

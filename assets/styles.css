@@ -11,25 +11,25 @@
 
 /* --- 1. Design Tokens ------------------------------------- */
 :root {
-  /* Palette — dark premium brand theme */
+  /* Palette — dark premium brand theme.
+
+     ⚠ Section 16 at the bottom of this file contains a SECOND :root block. Custom
+     properties cascade by declaration order at equal specificity, so whatever is
+     declared there wins document-wide — including for rules written above it.
+     These tokens live in Section 16 and must be edited there, not here:
+       --mut  --gold  --radius  --ease  --fs-base  --fs-lg  --fs-h3  --fs-h2  --fs-h1
+     They were previously duplicated here with stale values that never rendered. */
   --bg:      #070b14;
   --panel:   #0b1626;
   --panel-2: #11203a;
   --line:    #1b2c48;
   --ink:     #e8eef7;
-  --mut:     #a3b4ca;
   --cyan:    #22d3ee;
   --blue:    #3b82f6;
   --teal:    #5eead4;
-  --gold:    #fbbf24;
 
-  /* Type scale */
+  /* Type scale — the rest of the scale is in Section 16 */
   --fs-sm:   .875rem;
-  --fs-base: 1rem;
-  --fs-lg:   clamp(1.05rem, 1rem + .4vw, 1.2rem);
-  --fs-h3:   clamp(1.25rem, 1.05rem + 1vw, 1.6rem);
-  --fs-h2:   clamp(1.6rem, 1.2rem + 2vw, 2.4rem);
-  --fs-h1:   clamp(2.2rem, 1.6rem + 3.4vw, 3.6rem);
 
   /* Spacing scale */
   --space-1: .5rem;
@@ -885,6 +885,9 @@ h1,h2,h3 { letter-spacing:-.01em; }
    (North Shore Cutco concierge — Fraunces display + Inter body,
     steel-cyan + champagne-gold, orchestrated motion)
    ============================================================ */
+/* This block is the EFFECTIVE source of truth for every token it declares — it wins
+   over the :root at the top of the file. Edit brand gold, muted text, radius, easing
+   and the type scale here. */
 :root{
   --font-display:"Fraunces",Georgia,"Times New Roman",serif;
   --font-body:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -1273,3 +1276,181 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     body::before { display: none; }
   }
 }
+.qr-card img{max-width:min(220px,70vw);height:auto}
+
+/* ============================================================
+   Section 19 — HERITAGE REDESIGN (warm paper / craftsman's card)
+   The final :root wins for tokens, so this flips the whole palette
+   from the old dark-neon theme to a warm, editorial, non-templated
+   identity: cream paper, espresso ink, oxblood red, hunter green,
+   brass. Overrides the loud "tech" rules (gradient text, cyan glow,
+   cursor spotlight, rainbow borders). Page-level inline <style> may
+   still re-override on individual pages — sweep those per page.
+   ============================================================ */
+:root{
+  --bg:#f4eee2;            /* warm cream paper (matches the brand banner) */
+  --ink:#221c15;           /* warm espresso — main text */
+  --mut:#6f6455;           /* warm stone — muted text */
+  --line:#e3d8c4;          /* warm hairline border */
+  --panel:#fbf7ee;         /* lifted cream — card surface */
+  --panel-2:#eee5d4;       /* secondary surface */
+  --cyan:#a63a28;          /* REPURPOSED → brand oxblood red (all old cyan refs turn red) */
+  --blue:#8a3122;          /* REPURPOSED → deep red */
+  --teal:#2e4a3a;          /* REPURPOSED → hunter green (eyebrows / secondary) */
+  --gold:#a9812c;          /* brass (was champagne) */
+  --gold-deep:#8a6a22;
+  --forest:#223a2c;        /* deep hunter-green surface (footer) */
+  --brand:#a63a28;
+  --brand-ink:#fbf3e6;     /* cream text on red */
+  --font-mono:ui-monospace,"SFMono-Regular","Cascadia Code",Menlo,Consolas,monospace;
+  --radius:12px;
+  --glow-cyan:0 20px 44px -24px rgba(60,40,20,.28);
+  --glow-gold:0 20px 44px -24px rgba(120,90,40,.24);
+}
+
+/* base surface — kill the dark radial gradient */
+html{background:var(--bg)}
+body{
+  background:radial-gradient(1100px 520px at 50% -12%, #fbf6ec, rgba(251,246,236,0) 60%), var(--bg) !important;
+  background-attachment:scroll !important;
+  color:var(--ink);
+}
+::selection{background:rgba(166,58,40,.18);color:var(--ink)}
+
+/* headings — Fraunces carries the personality */
+h1,h2{color:var(--ink)}
+h3,h4{font-family:var(--font-display);font-weight:600;color:var(--ink);letter-spacing:-.01em}
+
+/* eyebrows → typed spec-tag labels (mono), hunter green with a brass tick */
+.eyebrow,.section-eyebrow,.hero-eyebrow,.rec-fit-eyebrow,.rec-support-label{
+  font-family:var(--font-mono);font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  font-size:.72rem;color:var(--teal);
+}
+.eyebrow::before,.section-eyebrow::before,.hero-eyebrow::before{display:none}
+
+/* kill gradient text → solid oxblood */
+.hero-gradient,.grad-ink{
+  background:none !important;-webkit-background-clip:border-box !important;background-clip:border-box !important;
+  -webkit-text-fill-color:var(--brand) !important;color:var(--brand) !important;animation:none !important;
+}
+/* kill cursor spotlight + rainbow hover border */
+.cursor-spot{display:none !important}
+.rainbow::after,.tilt::after,.path-card::after,.refer-prompt::after{display:none !important}
+
+/* cards — cream, warm hairline, quiet warm shadow, red hover */
+.card,.path-card{
+  background:var(--panel) !important;border:1px solid var(--line) !important;border-radius:var(--radius);
+  box-shadow:0 1px 2px rgba(120,90,40,.05);
+}
+.card:hover,.path-card:hover,.tilt:hover{
+  transform:translateY(-3px);border-color:rgba(166,58,40,.42) !important;
+  box-shadow:0 20px 40px -26px rgba(60,40,20,.5) !important;
+}
+.path-cta,.rec-ask,.rpc-kicker{color:var(--brand) !important}
+
+/* buttons */
+.btn::after{display:none !important}   /* kill shimmer sweep */
+.btn{border-radius:11px;font-family:var(--font-body);font-weight:700}
+.btn-primary,.btn-grad{
+  color:var(--brand-ink) !important;background:var(--brand) !important;
+  border:1px solid rgba(120,30,20,.35);box-shadow:0 12px 26px -16px rgba(166,58,40,.7) !important;
+}
+.btn-primary:hover,.btn-grad:hover{filter:none;transform:translateY(-1px);background:#8f3122 !important}
+.btn-ghost{color:var(--ink) !important;background:rgba(255,255,255,.5) !important;border:1px solid var(--line) !important;font-weight:600}
+.btn-ghost:hover{background:rgba(255,255,255,.85) !important;border-color:var(--gold) !important}
+.btn-gold{color:#2a2110 !important;background:var(--gold) !important}
+
+/* header — cream, translucent, warm hairline */
+.site-header{background:rgba(246,241,231,.86) !important;border-bottom:1px solid var(--line) !important;backdrop-filter:saturate(1.1) blur(10px);-webkit-backdrop-filter:saturate(1.1) blur(10px)}
+.site-header__logo{color:var(--ink) !important;font-family:var(--font-display);font-weight:600;letter-spacing:-.01em}
+.site-header__nav a{color:var(--mut) !important;font-weight:600}
+.site-header__nav a:hover,.site-header__nav a[aria-current]{color:var(--brand) !important}
+
+/* footer — deep hunter-green surface (the one dark moment, on purpose) */
+.site-footer{background:var(--forest) !important;color:#d8e1d2 !important;border-top:3px solid var(--gold)}
+.site-footer a{color:#f3eee1 !important}
+.site-footer a:hover{color:#fff !important}
+.site-footer strong{color:#fff}
+
+/* trust bar — quiet cream marquee */
+.trust-bar{background:var(--panel-2) !important;border-block:1px solid var(--line) !important;color:var(--mut) !important}
+.trust-bar__track span{color:var(--mut)}
+
+/* alternating sections — warm tint band */
+.section-alt{background:linear-gradient(180deg,#efe7d7,transparent) !important;border-block:1px solid var(--line)}
+
+/* sticky mobile bars — cream */
+.book-bar,.mobile-cta{background:rgba(251,247,238,.95) !important;border-top:1px solid var(--line) !important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.book-bar > a,a.book-bar{color:var(--brand) !important;font-weight:800}
+
+/* form controls — white fields, warm border, red focus */
+.exp-search input,.exp-select,.asst-input,.intro-box textarea{background:#fff !important;border:1px solid var(--line) !important;color:var(--ink) !important}
+.exp-search input:focus,.exp-select:focus,.asst-input:focus,.intro-box textarea:focus{border-color:var(--brand) !important;box-shadow:0 0 0 3px rgba(166,58,40,.15) !important}
+.intro-box{background:var(--panel) !important;border:1px solid var(--line) !important}
+.exp-select option{background:#fff;color:var(--ink)}
+.exp-count,.exp-pricenote,.rec-based{color:var(--mut) !important}
+:focus-visible{outline-color:var(--brand) !important}
+
+/* icon badge + pills */
+.iconbadge{background:linear-gradient(150deg,#f4e7cf,#efe6d4) !important;border:1px solid var(--line) !important}
+.iconbadge svg{stroke:var(--brand) !important}
+.card:hover .iconbadge,.tilt:hover .iconbadge{box-shadow:0 12px 24px -14px rgba(166,58,40,.4) !important;border-color:rgba(166,58,40,.4) !important}
+.pill{background:var(--panel) !important;border:1px solid var(--line) !important;color:var(--mut) !important}
+.pill-gold{color:var(--gold-deep) !important;border-color:rgba(169,129,44,.4) !important;background:rgba(169,129,44,.1) !important}
+
+/* misc surfaces that hardcoded dark values */
+.feature{background:linear-gradient(160deg,#fbf7ee,#f1e8d8) !important;border:1px solid var(--line) !important}
+.insight-card,.rec-result-card{background:var(--panel) !important;border:1px solid var(--line) !important}
+.prep .q{background:var(--panel) !important;border:1px solid var(--line) !important}
+.prep .q .n,.rec-rank{color:var(--brand-ink) !important;background:var(--brand) !important}
+.rpc-badge.is-strong{color:#2a2110 !important;background:var(--gold) !important}
+.ranked-pick-card{background:#fff !important;border:1px solid var(--line) !important}
+.ranked-pick-card.is-top-pick{background:#fbf7ee !important;border-color:rgba(166,58,40,.35) !important}
+.rpc-photo,.rec-pic{background:#fff !important}
+.rpc-uses span{color:var(--gold-deep) !important}
+
+/* ── Signature marks: maker's seal + hand-drawn knife rule ── */
+.knife-rule{display:flex;align-items:center;justify-content:center;gap:16px;color:var(--gold);margin:0 auto}
+.knife-rule::before,.knife-rule::after{content:"";height:1px;flex:1;max-width:220px;background:linear-gradient(90deg,transparent,var(--line))}
+.knife-rule::after{background:linear-gradient(90deg,var(--line),transparent)}
+.seal{--sz:104px;width:var(--sz);height:var(--sz);flex:0 0 auto;color:var(--gold)}
+.seal svg{width:100%;height:100%;display:block}
+
+/* ── Section 19b: fix dark stragglers from the old "premium polish" blocks ── */
+/* Willow (AI sidekick) chat — was navy bubbles with now-dark text */
+.asst-box{background:var(--panel) !important;border:1px solid var(--line) !important;box-shadow:0 24px 60px -42px rgba(60,40,20,.4) !important}
+.asst-msg--bot{background:#fff !important;border:1px solid var(--line) !important;color:var(--ink)}
+.asst-msg--user{background:rgba(46,74,58,.08) !important;border:1px solid rgba(46,74,58,.22) !important;color:var(--ink)}
+.asst-head{background:linear-gradient(180deg,rgba(169,129,44,.06),transparent) !important}
+.willow-wrap{border-color:rgba(169,129,44,.5) !important;box-shadow:0 6px 16px rgba(60,40,20,.28) !important}
+.asst-cta{background:#fff !important;border:1px solid var(--line) !important;color:var(--ink) !important}
+.asst-cta:hover,.asst-cta:focus-visible{border-color:var(--brand) !important;background:rgba(166,58,40,.07) !important}
+.asst-cta--primary{color:#2a2110 !important;background:linear-gradient(135deg,var(--gold),#e6c98a) !important}
+.asst-rec{border-color:rgba(166,58,40,.35) !important;background:rgba(166,58,40,.06) !important}
+.asst-rec:hover{background:rgba(166,58,40,.14) !important;border-color:var(--brand) !important}
+.asst-chip:hover,.asst-chip:focus-visible{border-color:var(--brand) !important;background:rgba(166,58,40,.06) !important;color:var(--ink) !important}
+.finder-panel{background:var(--panel) !important;box-shadow:0 30px 70px -52px rgba(60,40,20,.5) !important}
+.rec-progress{background:rgba(60,40,20,.1) !important}
+.rec-progress-fill{background:linear-gradient(90deg,var(--brand),var(--gold)) !important}
+
+/* "vs" comparison, situation cards, copy blocks, referral prompts */
+.vs .col.me{border-color:rgba(166,58,40,.42) !important;background:linear-gradient(180deg,rgba(166,58,40,.06),transparent) !important}
+.vs .yes{color:var(--teal) !important}
+.vs .no{color:var(--brand) !important}
+.situation-card{background:var(--panel) !important;border:1px solid var(--line) !important}
+.situation-card:hover,.situation-card:focus-visible{border-color:rgba(166,58,40,.45) !important}
+.situation-card .sit-go{color:var(--brand) !important}
+.copy-block{background:#fff !important;border:1px solid var(--line) !important}
+.copy-btn{color:var(--brand) !important;background:rgba(166,58,40,.08) !important;border:1px solid rgba(166,58,40,.35) !important}
+.copy-btn:hover,.copy-btn:focus-visible{background:rgba(166,58,40,.16) !important}
+.ref-hello{border-color:rgba(169,129,44,.45) !important;background:rgba(169,129,44,.1) !important;color:var(--gold-deep) !important}
+.theater .step{background:var(--panel) !important;border:1px solid var(--line) !important}
+.theater .step::before{border-color:rgba(169,129,44,.5) !important;color:var(--gold-deep) !important}
+
+/* proof badges — unified typed spec-tags, readable on cream, brass accents legible */
+.proof-badges{display:flex;flex-wrap:wrap;gap:8px 10px;justify-content:center;margin-top:var(--space-5);color:var(--mut)}
+.proof-badges span{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);background:var(--panel) !important;border:1px solid var(--line) !important;border-radius:999px;padding:6px 12px}
+.proof-badges span:nth-child(3),.proof-badges span:nth-child(4){border-color:rgba(169,129,44,.42) !important;color:var(--gold-deep) !important;background:rgba(169,129,44,.1) !important}
+
+/* remove the old decorative glow-orbs (a hallmark of the AI-glow look) */
+.orb{display:none !important}
