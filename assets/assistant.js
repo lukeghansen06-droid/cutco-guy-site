@@ -31,7 +31,7 @@ const BOOK  = '/book';
 const FINDER = '#recommender';
 const PHONE = 'sms:+13126594280';
 const PHONE_DISPLAY = '312-659-4280';
-const CUTCO_PRODUCTS = 'https://www.cutco.com/products/';
+const CUTCO_PRODUCTS = 'https://www.cutco.com/shop/kitchen-knives'; // /products/ 404s; verified 200 on 2026-07-27
 const CUTCO_SPECIALS = 'https://www.cutco.com/promotions/sale';
 
 // ---------------------------------------------------------------------------
@@ -105,22 +105,33 @@ const SYN = {
   paring:['paring'],pare:['paring'],
   slice:['slicer'],slicing:['slicer'],dice:['dicing','chef'],chop:['chopping','chef'],chopping:['chopping','chef'],
 };
+/* Official-page links.
+ *
+ * These previously used a `cutco.com/products/<cat>/<slug>` scheme that does not
+ * exist — every one of the 15 returned 404, which broke the exact escape hatch the
+ * pricing guardrail sends people to ("confirm current pricing on cutco.com").
+ *
+ * They now point at the same `/shop/<category>` scheme already proven in
+ * explorer.js. Each URL below was checked live (HTTP 200) on 2026-07-27. These are
+ * CATEGORY pages, not per-SKU deep links: a category page that resolves is more
+ * honest than a guessed product slug that 404s, and the link text says so.
+ * If you add a product here, curl the URL before committing it. */
 const PRODUCTS = [
-  { n: 'Petite Chef Knife',  k: 'chef everyday all-purpose vegetable chopping starter', url: 'https://www.cutco.com/products/knives/petite-chef-knife' },
-  { n: 'Trimmer',            k: 'everyday utility small versatile starter',               url: 'https://www.cutco.com/products/knives/trimmer' },
-  { n: 'French Chef Knife',  k: 'chef all-purpose chopping vegetable',                    url: 'https://www.cutco.com/products/knives/french-chef-knife' },
-  { n: 'Santoku',            k: 'santoku sushi japanese all-purpose vegetable everyday',  url: 'https://www.cutco.com/products/knives/santoku' },
-  { n: 'Paring Knife',       k: 'paring peeling fruit apple potato small',                url: 'https://www.cutco.com/products/knives/paring-knife' },
-  { n: 'Bread Knife',        k: 'bread loaf bagel serrated tomato',                       url: 'https://www.cutco.com/products/knives/bread-knife' },
-  { n: 'Salmon Knife',       k: 'salmon fish fillet sushi seafood',                       url: 'https://www.cutco.com/products/knives/salmon-knife' },
-  { n: 'Fillet Knife',       k: 'fillet fish fishing angler flexible',                    url: 'https://www.cutco.com/products/knives/fillet-knife' },
-  { n: 'Carving Set',        k: 'carver carving roast turkey ham brisket meat host',      url: 'https://www.cutco.com/products/knives/carving-fork-and-knife-set' },
-  { n: 'Cheese Knife',       k: 'cheese charcuterie board host entertain',                url: 'https://www.cutco.com/products/knives/cheese-knife' },
-  { n: 'Super Shears',       k: 'shears scissors herbs poultry kitchen everyday',         url: 'https://www.cutco.com/products/kitchen-tools/super-shears' },
-  { n: 'Vegetable Peeler',   k: 'peeler peel potato fruit',                               url: 'https://www.cutco.com/products/kitchen-tools/peeler' },
-  { n: 'Homemaker+8 Set',    k: 'set starter gift homemaker all-purpose block',           url: 'https://www.cutco.com/products/sets/homemaker-8-set' },
-  { n: 'Hunting Knife',      k: 'hunting deer elk game outdoor camp skinning',            url: 'https://www.cutco.com/products/outdoor/hunting-knife' },
-  { n: 'Steak Knife Set',    k: 'steak knife table dinner mealtime host grill',           url: 'https://www.cutco.com/products/knives/steak-knife' },
+  { n: 'Petite Chef Knife',  k: 'chef everyday all-purpose vegetable chopping starter', url: 'https://www.cutco.com/shop/chef-knives' },
+  { n: 'Trimmer',            k: 'everyday utility small versatile starter',               url: 'https://www.cutco.com/shop/utility-knives' },
+  { n: 'French Chef Knife',  k: 'chef all-purpose chopping vegetable',                    url: 'https://www.cutco.com/shop/chef-knives' },
+  { n: 'Santoku',            k: 'santoku sushi japanese all-purpose vegetable everyday',  url: 'https://www.cutco.com/shop/santoku-style-knives' },
+  { n: 'Paring Knife',       k: 'paring peeling fruit apple potato small',                url: 'https://www.cutco.com/shop/paring-knives' },
+  { n: 'Bread Knife',        k: 'bread loaf bagel serrated tomato',                       url: 'https://www.cutco.com/shop/kitchen-knives' },
+  { n: 'Salmon Knife',       k: 'salmon fish fillet sushi seafood',                       url: 'https://www.cutco.com/shop/carving-slicing-knives' },
+  { n: 'Fillet Knife',       k: 'fillet fish fishing angler flexible',                    url: 'https://www.cutco.com/shop/outdoor-knives' },
+  { n: 'Carving Set',        k: 'carver carving roast turkey ham brisket meat host',      url: 'https://www.cutco.com/shop/carving-slicing-knives' },
+  { n: 'Cheese Knife',       k: 'cheese charcuterie board host entertain',                url: 'https://www.cutco.com/shop/cheese-knives' },
+  { n: 'Super Shears',       k: 'shears scissors herbs poultry kitchen everyday',         url: 'https://www.cutco.com/p/super-shears' },
+  { n: 'Vegetable Peeler',   k: 'peeler peel potato fruit',                               url: 'https://www.cutco.com/shop/cooks-tools' },
+  { n: 'Homemaker+8 Set',    k: 'set starter gift homemaker all-purpose block',           url: 'https://www.cutco.com/shop/knife-sets' },
+  { n: 'Hunting Knife',      k: 'hunting deer elk game outdoor camp skinning',            url: 'https://www.cutco.com/shop/outdoor-knives' },
+  { n: 'Steak Knife Set',    k: 'steak knife table dinner mealtime host grill',           url: 'https://www.cutco.com/shop/table-steak-knives' },
 ];
 function norm(s)   { return (s || '').toLowerCase(); }
 function tokens(s) { return norm(s).replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean); }
@@ -363,7 +374,12 @@ function reply(q) {
     return { t: `<strong>The hour is the demo</strong> — rope cut, tomatoes, time to compare pieces and actually talk. If it's your first look at Cutco, book the hour. The Quick 20 exists only if you <em>already know exactly what you want</em> (gift ideas, owner questions, confirming a shortlist) — text Luke for that.`, ctas: [CTA.bookFull, CTA.text('Hi Luke! I already know what I want — can we set up a quick call?')], chips: ['What happens in a demo?', 'Do I have to buy anything?'] };
 
   // pushy / MLM / Vector
-  if (/(pushy|pressure|sales pitch|mlm|pyramid|scam|vector|recruit|is it (a )?)/.test(n))
+  // NOTE: this used to end in `|is it (a )?`, where the optional group made the
+  // alternative match the bare string "is it". Any question containing those two
+  // words — "is it dishwasher safe?", "is it made in the USA?" — was hijacked into
+  // the answer below and got told "It's not MLM." The intent (catching "is it a
+  // scam / is this legit") is now spelled out instead of caught by a wildcard.
+  if (/(pushy|pressure|sales pitch|mlm|pyramid|scam|vector|recruit|is (it|this) (a |an )?(legit|legitimate|real thing|scam|pyramid|mlm|scheme))/.test(n))
     return { t: `No. The point is to see the pieces, ask questions, and decide what actually fits — you don't have to buy anything. It's not MLM: Luke doesn't recruit you, and you buy directly from Cutco at the same prices shown on cutco.com.`, ctas: [CTA.bookFull, CTA.text("Hi Luke! I'm curious but no-pressure — can you help?")], chips: ['How long is a demo?', 'Do I have to buy anything?'] };
 
   // demo / book
@@ -402,7 +418,10 @@ function reply(q) {
   if (/(who are you|about luke|about you|your story|who is luke|meet luke)/.test(n))
     return { t: `Luke Hansen is your Cutco guy — a 2026 Cutco Key Salesman on the North Shore (Winnetka). Honest help, straight answers, and you decide what fits.`, ctas: [{ label: 'Meet Luke', href: '/meet', ev: 'assistant_text_luke_click' }, CTA.bookFull] };
   if (/(ship|shipping|deliver|delivery|arrive|tracking)/.test(n))
-    return { t: `Most Cutco orders arrive in about <strong>2–4 business days</strong>, and Luke keeps you posted from order to doorstep.`, ctas: [CTA.text()] };
+    // Was "2–4 business days", which contradicted faq.html (and its FAQPage
+    // JSON-LD), both of which say 7–10. Two different numbers on one site is worse
+    // than one conservative number, so this now matches the FAQ exactly.
+    return { t: `Most standard orders arrive in approximately <strong>7–10 business days</strong>, and Luke keeps you posted from order to doorstep. Express shipping is available for an additional charge — the <a href="/faq">FAQ</a> has the details.`, ctas: [CTA.text()] };
   if (/(return|refund|money back|money-back|trial|send it back)/.test(n))
     return { t: `New purchases come with a <strong>15-day money-back guarantee</strong>, and after that the Forever Guarantee covers sharpening, repair, and replacement for life. About as low-risk as it gets.`, ctas: [CTA.bookFull] };
   if (/(special|sale|deal|discount|promo|coupon|offer)/.test(n))

@@ -36,3 +36,11 @@ ops/approvals/followup-messages.md
 ops/approvals/approved-updates.json
 ops/approvals/approved-copy-fixes.json
 growth/
+
+# Withheld Wilmette media — optimised and kept locally, deliberately NOT deployed.
+# The demo video shows identifiable people who have not consented to appearing on a
+# public commercial site; the in-store portrait has legible dated promo pricing on
+# the wall behind. Un-ignore only once Luke confirms consent / re-shoots.
+assets/media/video/
+assets/media/luke/
+assets/media/posters/

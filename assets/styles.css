@@ -116,7 +116,13 @@ img, video {
 .btn {
   position: relative;
   overflow: hidden;
-  display: inline-block;
+  /* inline-flex + min-height keeps every button a 44px touch target regardless of
+     the inline padding a page happens to set. Applied unconditionally rather than
+     inside a mobile media query, so buttons do not change layout mode at 900px. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   padding: .7em 1.4em;
   border: 0;
   border-radius: var(--radius);
@@ -355,9 +361,12 @@ img, video {
 }
 .book-bar > a:first-child {
   border-color: transparent;
-  color: #06121f;
-  background: linear-gradient(135deg, var(--cyan), var(--blue));
-  box-shadow: 0 12px 30px -14px rgba(34,211,238,.72);
+  /* Heritage repaint. --cyan/--blue are repurposed to oxblood by the final :root,
+     so the old gradient + dark ink turned this into oxblood-on-oxblood (~1.0:1).
+     Solid brand fill with light ink instead. */
+  color: var(--brand-ink, #fbf7ee);
+  background: var(--brand);
+  box-shadow: 0 12px 26px -16px rgba(166,58,40,.7);
 }
 @media (min-width: 761px) {
   .book-bar { display: none; }
@@ -956,7 +965,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 @media (prefers-reduced-motion: reduce){
   .hero-gradient,.grad-ink{animation:none}
-  .reveal{opacity:1;transform:none;filter:none;transition:none}
+  /* .stagger > * is opacity:0 by default and is only revealed by the revealRise
+     animation — which the global reduced-motion reset kills with
+     `* { animation: none !important }`. Without this line, users who ask for
+     reduced motion get permanently invisible content. */
+  .reveal,.stagger > *{opacity:1;transform:none;filter:none;transition:none}
   .hero-section .hero-eyebrow,.hero-section .hero-h1,.hero-section .hero-lead,.hero-section .hero-banner,.hero-section .hero-cta-row{animation:none;opacity:1;transform:none;filter:none}
 }
 
@@ -1328,8 +1341,10 @@ h3,h4{font-family:var(--font-display);font-weight:600;color:var(--ink);letter-sp
 }
 .eyebrow::before,.section-eyebrow::before,.hero-eyebrow::before{display:none}
 
-/* kill gradient text → solid oxblood */
-.hero-gradient,.grad-ink{
+/* kill gradient text → solid oxblood
+   .animated-gradient-text is live on the /find quiz-result headline; two of its
+   gradient stops are near-white, so on cream it was near-invisible. */
+.hero-gradient,.grad-ink,.animated-gradient-text{
   background:none !important;-webkit-background-clip:border-box !important;background-clip:border-box !important;
   -webkit-text-fill-color:var(--brand) !important;color:var(--brand) !important;animation:none !important;
 }
@@ -1381,7 +1396,10 @@ h3,h4{font-family:var(--font-display);font-weight:600;color:var(--ink);letter-sp
 
 /* sticky mobile bars — cream */
 .book-bar,.mobile-cta{background:rgba(251,247,238,.95) !important;border-top:1px solid var(--line) !important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.book-bar > a,a.book-bar{color:var(--brand) !important;font-weight:800}
+/* :not(:first-child) — the first link is the filled primary button and needs
+   light text on oxblood, not oxblood text. Without this exclusion the rule below
+   painted the sticky "Book" label the same colour as its own background. */
+.book-bar > a:not(:first-child),a.book-bar{color:var(--brand) !important;font-weight:800}
 
 /* form controls — white fields, warm border, red focus */
 .exp-search input,.exp-select,.asst-input,.intro-box textarea{background:#fff !important;border:1px solid var(--line) !important;color:var(--ink) !important}
@@ -1461,3 +1479,90 @@ h3,h4{font-family:var(--font-display);font-weight:600;color:var(--ink);letter-sp
 .final-cta-section{background:radial-gradient(60% 90% at 50% 100%, rgba(169,129,44,.08), transparent 72%), var(--panel-2) !important}
 /* bare single-link book bar (owners/referred/what-to-expect): center it on mobile */
 @media(max-width:760px){a.book-bar{display:flex;align-items:center;justify-content:center;min-height:48px;font-weight:800;text-align:center}}
+
+/* ── Section 20: mobile legibility + touch targets ─────────────────────────────
+   Measured with Playwright at 375/390/430px. Two problems showed up site-wide:
+   descriptive card copy rendered at 14px, and several buttons came out 40px tall.
+   Both are below the thresholds we hold ourselves to on iPhone (16px body text,
+   44px touch targets), so they are fixed at the token/component level here rather
+   than patched per page. */
+
+/* Card body copy is prose, not a label — it needs to be readable, not small.
+   Eyebrows are excluded by selector rather than re-sized afterwards: an earlier
+   version of this block "protected" them by setting font-size:var(--fs-sm), which
+   actually enlarged .eyebrow (.75rem) and .proof-badges span (.66rem) instead of
+   leaving them alone. Excluding them keeps the heritage sizes untouched. */
+.path-desc,
+.rec-note,
+.card p:not(.eyebrow):not(.section-eyebrow):not(.hero-eyebrow):not(.path-desc){font-size:1rem;line-height:1.6}
+
+/* Touch targets are handled on the base .btn rule (see top of file), not here,
+   so there is one source of truth for button sizing rather than a mobile-only
+   override layer. */
+
+/* ── Section 21: finish the heritage repaint on the product explorer ───────────
+   Section 14 (the /find explorer, ~L700-880) predates the warm-heritage redesign
+   and was never repainted, so it still carried dark-theme literals. On cream that
+   produced genuinely unreadable UI — worst of all the wish-list drawer, a
+   near-black panel (#0a1018) whose text inherits the heritage espresso ink.
+   These override the Section 14 literals rather than editing them in place,
+   matching how 19/19b/19d were applied, so the explorer's layout rules stay
+   untouched and this repaint can be reverted as one block. */
+
+/* Wish-list drawer: cream panel, warm scrim, ink text. */
+.drawer-panel{background:var(--panel) !important;color:var(--ink) !important}
+.drawer-back{background:rgba(60,40,20,.45) !important}
+.drawer-head,.drawer-foot{border-color:var(--line) !important}
+.cart-total{color:var(--ink) !important}
+
+/* Floating cart button + its counter: brand fill, light ink (was near-black ink
+   on an oxblood gradient, and a neon-blue counter). */
+.cartfab{background:var(--brand) !important;color:var(--brand-ink, #fbf7ee) !important;
+         box-shadow:0 12px 28px -10px rgba(166,58,40,.6) !important}
+.cartfab .cnt{background:rgba(0,0,0,.28) !important;color:var(--brand-ink, #fbf7ee) !important}
+
+/* "Added" state on a product card. */
+.pcard .addbtn.added{background:var(--brand) !important;color:var(--brand-ink, #fbf7ee) !important}
+
+/* Set badge: brass on cream instead of the indigo/cyan gradient. */
+.pcard .settag{background:rgba(169,129,44,.16) !important;color:var(--gold-deep, #6d5318) !important;
+               box-shadow:none !important;border:1px solid rgba(169,129,44,.4)}
+
+/* Toast: dark ink card with cream text reads fine, but it was teal/navy with a
+   cyan border — repainted to the heritage dark surface. */
+.toast{background:var(--ink) !important;border-color:rgba(169,129,44,.45) !important;
+       color:var(--paper, #f4eee2) !important}
+
+/* Product image placeholder sat on a navy swatch while images load. */
+.pcard .pic img{background:var(--panel-2, #efe7d8) !important}
+
+/* Product-card text still carried dark-theme neon values, measured on the live
+   page at 1280px against the cream card (#fbf7ee):
+     .pprice   rgb(134,239,196) mint   → 1.30:1   ← this is the PRICE
+     .addbtn   rgb(191,243,251) cyan   → 1.50:1
+     .exp-more rgb(191,243,251) cyan   → 1.50:1
+     .peasy    rgb(174,191,212) blue   → 1.75:1
+   All four are below the 4.5:1 AA threshold and the price was effectively
+   invisible. Repainted to heritage ink/brand. */
+.pcard .pprice{color:var(--ink) !important}
+.pcard .peasy{color:var(--mut) !important}
+.pcard .addbtn,.exp-more{
+  color:var(--brand) !important;
+  background:rgba(166,58,40,.07) !important;
+  border-color:rgba(166,58,40,.32) !important;
+}
+
+/* Small brass labels sat between 3.35:1 and 3.96:1 on cream — under AA for text
+   this size. --gold (#a9812c) and --gold-deep (#8a6a22) are both too light at
+   11px; this darker brass measures 5.5:1 on cream and 4.9:1 on the tinted badge
+   fill while still reading as brass, not brown. */
+.announcement__label,
+.start-step,
+.proof-badges span:nth-child(3),
+.proof-badges span:nth-child(4){color:#7a5c1c !important}
+
+/* Inline text links inside prose get vertical room without breaking line flow. */
+@media(max-width:900px){
+  .site-footer nav a,
+  .site-footer p a{display:inline-block;padding-block:10px}
+}
