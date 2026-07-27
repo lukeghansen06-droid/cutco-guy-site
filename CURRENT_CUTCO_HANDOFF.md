@@ -99,6 +99,57 @@
 - **Forms** — submit a test review (should land pending in `/moderate`) and a test referral/lead (should land in `/leads`).
 - **Knife Drawer Audit** — confirm whether this feature exists or is still to build.
 
+## 7b. OPEN BLOCKER — demo length says an hour, Calendly books 30 minutes
+
+**Status: unresolved on purpose. Do not "fix" this without Luke's input.**
+
+The site promises a demo of **approximately one hour** everywhere (this is Luke's
+standing rule: the hour is the only length offered when booking, and the "Quick 20"
+exists only as a text-me carve-out). But every booking CTA still opens the
+**30-minute** Calendly event `calendly.com/lukehansen01/30min`, so a customer is
+told an hour and then books a 30-minute slot.
+
+**This requires Luke to supply the verified 60-minute Calendly URL.** Nothing else
+unblocks it.
+
+Rules for whoever picks this up:
+- **Do NOT** change the website copy to say 30 minutes. The copy is correct; the
+  Calendly event is wrong.
+- **Do NOT** guess, invent, or pattern-match a new Calendly slug (e.g. `/60min`,
+  `/cutco-demo`). An unverified slug that 404s is worse than the current mismatch.
+- **Do NOT** mark the hour-first work complete while these URLs remain.
+- Once Luke provides the verified URL it is a single find-and-replace across the
+  12 active code locations below.
+
+**12 active code locations** (verified against commit `69596bf`):
+
+```text
+book.html:113
+book.html:224      <- Calendly inline-widget data-url
+book.html:232
+gift.html:76
+winnetka-cutco.html:59
+glencoe-cutco.html:59
+evanston-cutco.html:59
+northbrook-cutco.html:59
+north-shore-cutco.html:59
+depauw-cutco.html:59
+stats.html:293
+assets/explorer.js:287
+```
+
+`index.html` is **not** a thirteenth location: its hero CTA was repointed to
+`/book` in `69596bf`, so the homepage no longer links Calendly directly. That is a
+structural improvement, not a fix — `/book` still embeds the 30-minute event.
+
+Stale non-code references (historical documents — do **not** edit these just to
+look current; they are accurate records of their own date):
+
+```text
+docs/SALES_OS_FULL_UPGRADE_PLAN.md:195
+analytics-reports/ — 2 files (2026-07-14, 2026-07-17)
+```
+
 ## 8. Known risks / fragile areas
 - **Explorer empty on load** — renders only after category/search; may look "broken/empty" to first-time visitors.
 - **79 vs 89 product-count mismatch** — label/array/image set may be out of sync.

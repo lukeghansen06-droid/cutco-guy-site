@@ -1,0 +1,50 @@
+# Line-ending policy for cutco-guy-site.
+#
+# WHY: core.autocrlf=true with no attributes file let a bulk edit commit CRLF
+# blobs for six city pages, so a three-line content change showed up as ~187
+# changed lines. That hides real changes in review and invites merge conflicts.
+# Declaring the policy here makes the repo authoritative instead of depending on
+# each machine's git config.
+#
+# Text files are normalised to LF in the repository AND checked out as LF, so the
+# stored form and the working form agree no matter which OS is editing.
+
+* text=auto
+
+# --- source / content ---
+*.html   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.mjs    text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.xml    text eol=lf
+*.txt    text eol=lf
+*.yml    text eol=lf
+*.sql    text eol=lf
+*.py     text eol=lf
+*.vcf    text eol=lf
+.gitignore     text eol=lf
+.vercelignore  text eol=lf
+.gitattributes text eol=lf
+
+# --- Windows batch files must keep CRLF or cmd.exe can mis-parse them ---
+*.bat    text eol=crlf
+
+# --- binaries: never touched, never diffed as text ---
+*.jpg    binary
+*.jpeg   binary
+*.png    binary
+*.webp   binary
+*.gif    binary
+*.ico    binary
+*.svg    binary
+*.mp4    binary
+*.webm   binary
+*.mov    binary
+*.pdf    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.otf    binary
+*.zip    binary

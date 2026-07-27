@@ -97,6 +97,8 @@ nav.tabs button .n{opacity:.75;margin-left:5px;font-weight:700}
 .card .actions a,.card .actions button{flex:1;text-align:center;text-decoration:none;font-size:12.5px;font-weight:800;padding:9px 10px;border-radius:11px;border:1px solid var(--line-strong);color:var(--ink);background:rgba(255,255,255,.04);cursor:pointer;transition:.15s all}
 .card .actions a:hover,.card .actions button:hover{background:rgba(255,255,255,.1)}
 .card .actions .open{background:linear-gradient(135deg,var(--grad-a),var(--grad-b));border-color:transparent;color:#04101f}
+/* local-only entries have no URL: a plain note, deliberately not a link */
+.card .actions .local-only{flex:1;font-size:12.5px;font-style:italic;opacity:.72;padding:9px 2px}
 .hidden{display:none !important}
 
 .panel{background:var(--panel);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:22px;padding:20px 22px}
@@ -147,7 +149,7 @@ footer.note{margin-top:26px;text-align:center;font-size:12px;color:var(--mut2);f
   <section class="section">
     <h2>Where this data comes from</h2>
     <div class="panel">
-      <p>Checked live: <code>cutcowithluke.com/sitemap.xml</code>, direct HTTP checks on every link below, and the local repos at <code>/Users/lukehansen/cutco-guy-site</code> and <code>/Users/lukehansen/luke-maxxing-os</code>. Also used: Chrome history, Aside project memory, and local Desktop/Downloads/Aside artifact files. "Check all links" re-verifies every web link live, right now, in this browser.</p>
+      <p>Checked live: <code>cutcowithluke.com/sitemap.xml</code>, direct HTTP checks on every link below, and the local <code>cutco-guy-site</code> and <code>luke-maxxing-os</code> checkouts. Also used: browser history, project memory, and local-only artifact files. "Check all links" re-verifies every web link live, right now, in this browser.</p>
     </div>
   </section>
 
@@ -189,10 +191,17 @@ const DATA = [
   {id:'prev-8iwrs',name:'8iwrs5733 stats preview',url:'https://cutco-guy-site-8iwrs5733-lukehansen01-6567s-projects.vercel.app/stats',desc:'Stats preview deployment.',group:'preview',kind:'web'},
   {id:'prev-nqjdy',name:'nqjdyybj7 stats preview',url:'https://cutco-guy-site-nqjdyybj7-lukehansen01-6567s-projects.vercel.app/stats',desc:'Stats preview deployment.',group:'preview',kind:'web'},
 
-  {id:'loc-cc',name:'Cutco Command Center',url:'file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutco_command_center.html',desc:'Canonical local CRM/Jarvis app. 466 KB.',group:'local',kind:'local'},
-  {id:'loc-sm',name:'Cutco Sales Manager',url:'file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutco_sales_manager.html',desc:'Older local sales manager app. 18 KB.',group:'local',kind:'local'},
-  {id:'loc-refer',name:'CutcoWithLuke refer upgrade',url:'file:///Users/lukehansen/.aside/u/0/agents/main/sessions/2026-07-05_fLaoULI2gtfdvivn/artifacts/cutcowithluke_refer_upgrade.html',desc:'Local referral-upgrade page artifact. 19 KB.',group:'local',kind:'local'},
-  {id:'loc-dl',name:'Downloads Command Center copy',url:'file:///Users/lukehansen/Downloads/cutco_command_center.html',desc:'Older downloaded copy of the local CRM. 315 KB.',group:'local',kind:'local'},
+  // Local-only artifacts. These previously carried absolute file:/// URLs into a
+  // macOS home directory, written during a 2026-07-05 agent session. They never
+  // resolved on any other machine or account, and they leaked a local filesystem
+  // layout into a deployed page. The entries stay as a record of what exists
+  // locally; the paths are gone and they now render as non-clickable notes.
+  // Do not re-add an absolute path and do not invent a public URL — if one of
+  // these ever becomes a real page, give it a project-relative link instead.
+  {id:'loc-cc',name:'Cutco Command Center',url:null,note:'Local-only file, outside this repo.',desc:'Canonical local CRM/Jarvis app. 466 KB.',group:'local',kind:'local'},
+  {id:'loc-sm',name:'Cutco Sales Manager',url:null,note:'Local-only file, outside this repo.',desc:'Older local sales manager app. 18 KB.',group:'local',kind:'local'},
+  {id:'loc-refer',name:'CutcoWithLuke refer upgrade',url:null,note:'Local-only file, outside this repo.',desc:'Local referral-upgrade page artifact. 19 KB.',group:'local',kind:'local'},
+  {id:'loc-dl',name:'Downloads Command Center copy',url:null,note:'Local-only file, outside this repo.',desc:'Older downloaded copy of the local CRM. 315 KB.',group:'local',kind:'local'},
 ];
 const GROUPS = [
   {id:'all',label:'All'},
@@ -231,8 +240,10 @@ function cardHtml(item){
       <span class="status ${statusClass}" data-status-for="${item.id}"><span class="dot"></span><span class="label">${statusLabel}</span></span>
     </div>
     <div class="actions">
-      <a class="open" href="${esc(item.url)}">Open</a>
-      <button data-copy="${esc(item.url)}">Copy link</button>
+      ${item.url
+        ? `<a class="open" href="${esc(item.url)}">Open</a>
+      <button data-copy="${esc(item.url)}">Copy link</button>`
+        : `<span class="local-only">${esc(item.note || 'Local file — not part of this repository.')}</span>`}
     </div>
   </div>`;
 }
